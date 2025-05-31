@@ -88,6 +88,17 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
+  // Menu item add-ons routes
+  app.get("/api/menu-items/:id/addons", async (req, res) => {
+    try {
+      const menuItemId = parseInt(req.params.id);
+      const addons = await storage.getMenuItemAddons(menuItemId);
+      res.json(addons);
+    } catch (error) {
+      res.status(500).json({ message: "Failed to fetch menu item add-ons" });
+    }
+  });
+
   // Deals routes
   app.get("/api/deals", async (req, res) => {
     try {

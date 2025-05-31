@@ -1,13 +1,18 @@
 import { useState } from "react";
 import { X, Star, Plus, Minus } from "lucide-react";
 import { useMenuItem } from "@/hooks/use-menu";
+import { useMenuItemAddons } from "@/hooks/use-addons";
 import { useAddToCart } from "@/hooks/use-cart";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
-import { Dialog, DialogContent } from "@/components/ui/dialog";
+import { Checkbox } from "@/components/ui/checkbox";
+import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
+import { Dialog, DialogContent, DialogTitle } from "@/components/ui/dialog";
+import { VisuallyHidden } from "@radix-ui/react-visually-hidden";
 import { Skeleton } from "@/components/ui/skeleton";
 import { useToast } from "@/hooks/use-toast";
+import type { MenuItemAddon } from "@shared/schema";
 
 interface ItemDetailModalProps {
   itemId: number;
@@ -17,8 +22,11 @@ interface ItemDetailModalProps {
 export default function ItemDetailModal({ itemId, onClose }: ItemDetailModalProps) {
   const [quantity, setQuantity] = useState(1);
   const [specialInstructions, setSpecialInstructions] = useState("");
+  const [selectedAddons, setSelectedAddons] = useState<Record<number, number>>({});
+  const [spiceLevel, setSpiceLevel] = useState("");
   
   const { data: item, isLoading } = useMenuItem(itemId);
+  const { data: addons, isLoading: addonsLoading } = useMenuItemAddons(itemId);
   const addToCart = useAddToCart();
   const { toast } = useToast();
 
@@ -57,12 +65,55 @@ export default function ItemDetailModal({ itemId, onClose }: ItemDetailModalProp
     setQuantity(quantity + 1);
   };
 
-  const totalPrice = item ? (item.price * quantity).toFixed(2) : "0.00";
+  const handleAddonToggle = (addonId: number, checked: boolean) => {
+    if (checked) {
+      setSelectedAddons(prev => ({ ...prev, [addonId]: 1 }));
+    } else {
+      setSelectedAddons(prev => {
+        const updated = { ...prev };
+        delete updated[addonId];
+        return updated;
+      });
+    }
+  };
+
+  const calculateTotalPrice = () => {
+    if (!item) return "0.00";
+    
+    let basePrice = item.price * quantity;
+    let addonPrice = 0;
+    
+    if (addons) {
+      for (const [addonId, addonQuantity] of Object.entries(selectedAddons)) {
+        const addon = addons.find(a => a.id === parseInt(addonId));
+        if (addon) {
+          addonPrice += addon.price * addonQuantity;
+        }
+      }
+    }
+    
+    return (basePrice + addonPrice).toFixed(2);
+  };
+
+  const groupAddonsByCategory = (addons: MenuItemAddon[]) => {
+    return addons.reduce((acc, addon) => {
+      if (!acc[addon.category]) {
+        acc[addon.category] = [];
+      }
+      acc[addon.category].push(addon);
+      return acc;
+    }, {} as Record<string, MenuItemAddon[]>);
+  };
+
+  const totalPrice = calculateTotalPrice();
 
   return (
     <Dialog open={true} onOpenChange={onClose}>
-      <DialogContent className="max-w-2xl max-h-screen overflow-y-auto p-0">
-        {isLoading ? (
+      <DialogContent className="max-w-3xl max-h-screen overflow-y-auto p-0">
+        <VisuallyHidden>
+          <DialogTitle>Menu Item Details</DialogTitle>
+        </VisuallyHidden>
+        {isLoading || addonsLoading ? (
           <div className="space-y-4 p-6">
             <Skeleton className="w-full h-64" />
             <div className="space-y-2">
@@ -110,6 +161,70 @@ export default function ItemDetailModal({ itemId, onClose }: ItemDetailModalProp
                   {item.fullDescription || item.description}
                 </p>
               </div>
+
+              {/* Add-ons Customization */}
+              {addons && addons.length > 0 && (
+                <div className="space-y-4">
+                  <h3 className="text-lg font-semibold text-gray-900">Customize Your Order</h3>
+                  {Object.entries(groupAddonsByCategory(addons)).map(([category, categoryAddons]) => (
+                    <div key={category} className="space-y-3">
+                      <h4 className="text-md font-medium text-gray-800 capitalize">
+                        {category === 'spice' ? 'Spice Level' : 
+                         category === 'cheese' ? 'Extra Cheese' :
+                         category === 'meat' ? 'Meat Options' :
+                         category === 'sauce' ? 'Sauces' :
+                         category === 'side' ? 'Sides & Substitutions' :
+                         category === 'topping' ? 'Toppings' : category}
+                      </h4>
+                      {category === 'spice' ? (
+                        <RadioGroup value={spiceLevel} onValueChange={setSpiceLevel}>
+                          <div className="flex items-center space-x-2">
+                            <RadioGroupItem value="mild" id="mild" />
+                            <Label htmlFor="mild">Mild</Label>
+                          </div>
+                          <div className="flex items-center space-x-2">
+                            <RadioGroupItem value="medium" id="medium" />
+                            <Label htmlFor="medium">Medium</Label>
+                          </div>
+                          <div className="flex items-center space-x-2">
+                            <RadioGroupItem value="hot" id="hot" />
+                            <Label htmlFor="hot">Hot</Label>
+                          </div>
+                          <div className="flex items-center space-x-2">
+                            <RadioGroupItem value="extra-hot" id="extra-hot" />
+                            <Label htmlFor="extra-hot">Extra Hot</Label>
+                          </div>
+                        </RadioGroup>
+                      ) : (
+                        <div className="grid grid-cols-1 gap-2">
+                          {categoryAddons.map((addon) => (
+                            <div key={addon.id} className="flex items-center justify-between p-3 border border-gray-200 rounded-lg hover:bg-gray-50">
+                              <div className="flex items-center space-x-3">
+                                <Checkbox
+                                  id={`addon-${addon.id}`}
+                                  checked={selectedAddons[addon.id] > 0}
+                                  onCheckedChange={(checked) => handleAddonToggle(addon.id, checked as boolean)}
+                                />
+                                <div>
+                                  <Label htmlFor={`addon-${addon.id}`} className="font-medium text-gray-900">
+                                    {addon.name}
+                                  </Label>
+                                  {addon.description && (
+                                    <p className="text-sm text-gray-600">{addon.description}</p>
+                                  )}
+                                </div>
+                              </div>
+                              <span className="font-medium text-primary">
+                                {addon.price > 0 ? `+$${addon.price.toFixed(2)}` : 'Free'}
+                              </span>
+                            </div>
+                          ))}
+                        </div>
+                      )}
+                    </div>
+                  ))}
+                </div>
+              )}
 
               {/* Special Instructions */}
               <div className="space-y-2">
