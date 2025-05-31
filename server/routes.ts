@@ -4,7 +4,8 @@ import { storage } from "./storage";
 import { 
   insertMenuItemSchema, 
   insertCartItemSchema, 
-  insertServerCallSchema 
+  insertServerCallSchema,
+  insertCartItemAddonSchema 
 } from "@shared/schema";
 
 export async function registerRoutes(app: Express): Promise<Server> {

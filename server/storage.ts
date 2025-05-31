@@ -2,6 +2,8 @@ import {
   restaurants, 
   menuCategories, 
   menuItems, 
+  menuItemAddons,
+  cartItemAddons,
   deals, 
   cartItems, 
   serverCalls,
@@ -11,6 +13,10 @@ import {
   type InsertMenuCategory,
   type MenuItem,
   type InsertMenuItem,
+  type MenuItemAddon,
+  type InsertMenuItemAddon,
+  type CartItemAddon,
+  type InsertCartItemAddon,
   type Deal,
   type InsertDeal,
   type CartItem,
@@ -48,6 +54,15 @@ export interface IStorage {
   removeFromCart(id: number): Promise<boolean>;
   clearCart(sessionId: string): Promise<boolean>;
   
+  // Menu Item Add-ons
+  getMenuItemAddons(menuItemId: number): Promise<MenuItemAddon[]>;
+  createMenuItemAddon(addon: InsertMenuItemAddon): Promise<MenuItemAddon>;
+  
+  // Cart Item Add-ons
+  getCartItemAddons(cartItemId: number): Promise<(CartItemAddon & { addon: MenuItemAddon })[]>;
+  addCartItemAddon(addon: InsertCartItemAddon): Promise<CartItemAddon>;
+  removeCartItemAddon(id: number): Promise<boolean>;
+  
   // Server Calls
   createServerCall(call: InsertServerCall): Promise<ServerCall>;
   getServerCalls(restaurantId: number): Promise<ServerCall[]>;
@@ -58,6 +73,8 @@ export class MemStorage implements IStorage {
   private restaurants: Map<number, Restaurant>;
   private menuCategories: Map<number, MenuCategory>;
   private menuItems: Map<number, MenuItem>;
+  private menuItemAddons: Map<number, MenuItemAddon>;
+  private cartItemAddons: Map<number, CartItemAddon>;
   private deals: Map<number, Deal>;
   private cartItems: Map<number, CartItem>;
   private serverCalls: Map<number, ServerCall>;
@@ -67,6 +84,8 @@ export class MemStorage implements IStorage {
     this.restaurants = new Map();
     this.menuCategories = new Map();
     this.menuItems = new Map();
+    this.menuItemAddons = new Map();
+    this.cartItemAddons = new Map();
     this.deals = new Map();
     this.cartItems = new Map();
     this.serverCalls = new Map();
@@ -225,6 +244,38 @@ export class MemStorage implements IStorage {
     ];
     items.forEach(item => this.menuItems.set(item.id, item));
 
+    // Create menu item add-ons
+    const addons = [
+      // Calamari add-ons
+      { id: 1, menuItemId: 1, name: "Extra Marinara", description: "Additional marinara sauce", price: 1.50, category: "sauce", isRequired: false, maxSelections: 3 },
+      { id: 2, menuItemId: 1, name: "Spicy Aioli", description: "House-made spicy aioli", price: 2.00, category: "sauce", isRequired: false, maxSelections: 1 },
+      { id: 3, menuItemId: 1, name: "Lemon Wedges", description: "Fresh lemon wedges", price: 0.50, category: "side", isRequired: false, maxSelections: 2 },
+      
+      // Bruschetta add-ons
+      { id: 4, menuItemId: 2, name: "Extra Cheese", description: "Additional ricotta cheese", price: 2.50, category: "cheese", isRequired: false, maxSelections: 1 },
+      { id: 5, menuItemId: 2, name: "Balsamic Glaze", description: "Aged balsamic reduction", price: 1.75, category: "sauce", isRequired: false, maxSelections: 1 },
+      
+      // Salmon add-ons
+      { id: 6, menuItemId: 3, name: "Extra Vegetables", description: "Double portion of seasonal vegetables", price: 4.00, category: "side", isRequired: false, maxSelections: 1 },
+      { id: 7, menuItemId: 3, name: "Garlic Butter", description: "Extra garlic herb butter", price: 2.50, category: "sauce", isRequired: false, maxSelections: 2 },
+      { id: 8, menuItemId: 3, name: "Lemon Pepper Seasoning", description: "Additional lemon pepper", price: 1.00, category: "spice", isRequired: false, maxSelections: 1 },
+      
+      // Risotto add-ons
+      { id: 9, menuItemId: 4, name: "Extra Truffle Oil", description: "Additional truffle oil drizzle", price: 3.50, category: "sauce", isRequired: false, maxSelections: 2 },
+      { id: 10, menuItemId: 4, name: "Parmesan Cheese", description: "Extra aged parmesan", price: 2.75, category: "cheese", isRequired: false, maxSelections: 1 },
+      { id: 11, menuItemId: 4, name: "Wild Mushrooms", description: "Extra mixed wild mushrooms", price: 4.50, category: "topping", isRequired: false, maxSelections: 1 },
+      
+      // Burger add-ons
+      { id: 12, menuItemId: 5, name: "Bacon", description: "Crispy applewood smoked bacon", price: 3.00, category: "meat", isRequired: false, maxSelections: 2 },
+      { id: 13, menuItemId: 5, name: "Extra Cheese", description: "Additional aged cheddar slice", price: 2.00, category: "cheese", isRequired: false, maxSelections: 3 },
+      { id: 14, menuItemId: 5, name: "Avocado", description: "Fresh sliced avocado", price: 2.50, category: "topping", isRequired: false, maxSelections: 1 },
+      { id: 15, menuItemId: 5, name: "Jalapeños", description: "Fresh or pickled jalapeños", price: 1.50, category: "topping", isRequired: false, maxSelections: 1 },
+      { id: 16, menuItemId: 5, name: "Onion Rings", description: "Replace fries with onion rings", price: 3.50, category: "side", isRequired: false, maxSelections: 1 },
+      { id: 17, menuItemId: 5, name: "Sweet Potato Fries", description: "Replace fries with sweet potato fries", price: 2.50, category: "side", isRequired: false, maxSelections: 1 },
+      { id: 18, menuItemId: 5, name: "Spice Level", description: "How spicy would you like it?", price: 0.00, category: "spice", isRequired: true, maxSelections: 1 },
+    ];
+    addons.forEach(addon => this.menuItemAddons.set(addon.id, addon));
+
     // Create deals
     const dealsData = [
       {
@@ -263,7 +314,47 @@ export class MemStorage implements IStorage {
     ];
     dealsData.forEach(deal => this.deals.set(deal.id, deal));
 
-    this.currentId = 6;
+    this.currentId = 19;
+  }
+
+  // Menu Item Add-ons methods
+  async getMenuItemAddons(menuItemId: number): Promise<MenuItemAddon[]> {
+    return Array.from(this.menuItemAddons.values())
+      .filter(addon => addon.menuItemId === menuItemId);
+  }
+
+  async createMenuItemAddon(addon: InsertMenuItemAddon): Promise<MenuItemAddon> {
+    const id = this.currentId++;
+    const newAddon: MenuItemAddon = { ...addon, id };
+    this.menuItemAddons.set(id, newAddon);
+    return newAddon;
+  }
+
+  // Cart Item Add-ons methods
+  async getCartItemAddons(cartItemId: number): Promise<(CartItemAddon & { addon: MenuItemAddon })[]> {
+    const cartAddons = Array.from(this.cartItemAddons.values())
+      .filter(cartAddon => cartAddon.cartItemId === cartItemId);
+    
+    const addonsWithDetails = [];
+    for (const cartAddon of cartAddons) {
+      const addon = this.menuItemAddons.get(cartAddon.addonId);
+      if (addon) {
+        addonsWithDetails.push({ ...cartAddon, addon });
+      }
+    }
+    
+    return addonsWithDetails;
+  }
+
+  async addCartItemAddon(addon: InsertCartItemAddon): Promise<CartItemAddon> {
+    const id = this.currentId++;
+    const newCartAddon: CartItemAddon = { ...addon, id };
+    this.cartItemAddons.set(id, newCartAddon);
+    return newCartAddon;
+  }
+
+  async removeCartItemAddon(id: number): Promise<boolean> {
+    return this.cartItemAddons.delete(id);
   }
 
   async getRestaurants(): Promise<Restaurant[]> {
