@@ -4,19 +4,19 @@ import type { MenuItem, MenuCategory } from "@shared/schema";
 
 export function useMenuItems(restaurantId: number) {
   return useQuery<MenuItem[]>({
-    queryKey: ["/api/restaurants", restaurantId, "menu"],
+    queryKey: [`/api/restaurants/${restaurantId}/menu`],
   });
 }
 
 export function useMenuCategories(restaurantId: number) {
   return useQuery<MenuCategory[]>({
-    queryKey: ["/api/restaurants", restaurantId, "categories"],
+    queryKey: [`/api/restaurants/${restaurantId}/categories`],
   });
 }
 
 export function useMenuItem(id: number) {
   return useQuery<MenuItem>({
-    queryKey: ["/api/menu-items", id],
+    queryKey: [`/api/menu-items/${id}`],
   });
 }
 
@@ -30,11 +30,11 @@ export function useVoteMenuItem() {
     },
     onSuccess: (updatedItem: MenuItem) => {
       // Update the specific menu item in cache
-      queryClient.setQueryData(["/api/menu-items", updatedItem.id], updatedItem);
+      queryClient.setQueryData([`/api/menu-items/${updatedItem.id}`], updatedItem);
       
       // Update the menu items list cache
       queryClient.setQueryData(
-        ["/api/restaurants", updatedItem.restaurantId, "menu"],
+        [`/api/restaurants/${updatedItem.restaurantId}/menu`],
         (oldData: MenuItem[] | undefined) => {
           if (!oldData) return oldData;
           return oldData.map(item => item.id === updatedItem.id ? updatedItem : item);

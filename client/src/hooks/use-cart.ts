@@ -6,7 +6,7 @@ const SESSION_ID = "user-session-" + Math.random().toString(36).substr(2, 9);
 
 export function useCart() {
   return useQuery<(CartItem & { menuItem: MenuItem })[]>({
-    queryKey: ["/api/cart", SESSION_ID],
+    queryKey: [`/api/cart/${SESSION_ID}`],
   });
 }
 
