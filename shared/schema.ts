@@ -60,6 +60,24 @@ export const cartItems = pgTable("cart_items", {
   addedAt: timestamp("added_at").defaultNow(),
 });
 
+export const menuItemAddons = pgTable("menu_item_addons", {
+  id: serial("id").primaryKey(),
+  menuItemId: integer("menu_item_id").notNull(),
+  name: text("name").notNull(),
+  description: text("description"),
+  price: real("price").notNull(),
+  category: text("category").notNull(), // cheese, meat, sauce, spice, side, etc
+  isRequired: boolean("is_required").default(false),
+  maxSelections: integer("max_selections").default(1),
+});
+
+export const cartItemAddons = pgTable("cart_item_addons", {
+  id: serial("id").primaryKey(),
+  cartItemId: integer("cart_item_id").notNull(),
+  addonId: integer("addon_id").notNull(),
+  quantity: integer("quantity").default(1),
+});
+
 export const serverCalls = pgTable("server_calls", {
   id: serial("id").primaryKey(),
   restaurantId: integer("restaurant_id").notNull(),
@@ -95,6 +113,14 @@ export const insertCartItemSchema = createInsertSchema(cartItems).omit({
   addedAt: true,
 });
 
+export const insertMenuItemAddonSchema = createInsertSchema(menuItemAddons).omit({
+  id: true,
+});
+
+export const insertCartItemAddonSchema = createInsertSchema(cartItemAddons).omit({
+  id: true,
+});
+
 export const insertServerCallSchema = createInsertSchema(serverCalls).omit({
   id: true,
   createdAt: true,
@@ -108,6 +134,12 @@ export type InsertMenuCategory = z.infer<typeof insertMenuCategorySchema>;
 
 export type MenuItem = typeof menuItems.$inferSelect;
 export type InsertMenuItem = z.infer<typeof insertMenuItemSchema>;
+
+export type MenuItemAddon = typeof menuItemAddons.$inferSelect;
+export type InsertMenuItemAddon = z.infer<typeof insertMenuItemAddonSchema>;
+
+export type CartItemAddon = typeof cartItemAddons.$inferSelect;
+export type InsertCartItemAddon = z.infer<typeof insertCartItemAddonSchema>;
 
 export type Deal = typeof deals.$inferSelect;
 export type InsertDeal = z.infer<typeof insertDealSchema>;
