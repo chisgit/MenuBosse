@@ -9,7 +9,7 @@ export function useRestaurants() {
 
 export function useRestaurant(id: number) {
   return useQuery<Restaurant>({
-    queryKey: ["/api/restaurants", id],
+    queryKey: [`/api/restaurants/${id}`],
   });
 }
 
@@ -21,6 +21,6 @@ export function useDeals() {
 
 export function useRestaurantDeals(restaurantId: number) {
   return useQuery<Deal[]>({
-    queryKey: ["/api/restaurants", restaurantId, "deals"],
+    queryKey: [`/api/restaurants/${restaurantId}/deals`],
   });
 }
