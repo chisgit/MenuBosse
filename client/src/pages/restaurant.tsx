@@ -22,7 +22,7 @@ export default function RestaurantPage({ restaurantId }: RestaurantPageProps) {
   const { data: restaurant, isLoading: restaurantLoading } = useRestaurant(restaurantId);
   const { data: cartItems } = useCart();
 
-  const cartItemCount = cartItems?.reduce((sum, item) => sum + item.quantity, 0) || 0;
+  const cartItemCount = cartItems?.reduce((sum, item) => sum + (item.quantity || 0), 0) || 0;
 
   if (restaurantLoading) {
     return (
@@ -56,71 +56,67 @@ export default function RestaurantPage({ restaurantId }: RestaurantPageProps) {
     { key: 'discovery' as const, label: 'Discover' },
     { key: 'deals' as const, label: 'Deals' },
     { key: 'reviews' as const, label: 'Reviews' },
-  ];
-  return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-white to-slate-100">
+  ]; return (
+    <div className="min-h-screen bg-gradient-to-br from-slate-900 via-black to-slate-800">
       {/* Header */}
-      <header className="relative bg-white/80 backdrop-blur-md shadow-lg border-b border-white/20 sticky top-0 z-50">
-        <div className="absolute inset-0 bg-gradient-to-r from-primary/5 via-transparent to-accent/5"></div>
-        <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <header className="relative bg-black/80 backdrop-blur-md shadow-lg border-b border-white/10 sticky top-0 z-50">
+        <div className="absolute inset-0 bg-gradient-to-r from-orange-500/5 via-transparent to-orange-500/5"></div>        <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center h-20">
             <div className="flex items-center space-x-6">
-              <h1 className="text-3xl font-bold bg-gradient-to-r from-primary to-accent bg-clip-text text-transparent">
+              <h1 className="text-3xl font-bold bg-gradient-to-r from-orange-400 to-orange-600 bg-clip-text text-transparent">
                 MenuBosse
               </h1>
-              <div className="text-sm text-gray-700 bg-white/60 backdrop-blur-sm rounded-full px-4 py-2 border border-white/30">
-                <span className="font-semibold text-gray-900">{restaurant.name}</span>
-                <span className="mx-2 text-primary">•</span>
-                <span className="text-gray-600">Table 12</span>
+              <div className="text-sm text-gray-300 bg-black/60 backdrop-blur-sm rounded-full px-4 py-2 border border-white/10">
+                <span className="font-semibold text-white">{restaurant.name}</span>
+                <span className="mx-2 text-orange-400">•</span>
+                <span className="text-gray-400">Table 12</span>
               </div>
             </div>
             <div className="flex items-center space-x-4">
-              <button className="p-3 text-gray-500 hover:text-primary transition-all duration-300 hover:bg-white/50 rounded-full">
+              <button className="p-3 text-gray-400 hover:text-orange-400 transition-all duration-300 hover:bg-white/5 rounded-full">
                 <MicOff className="h-5 w-5" />
               </button>
-              <button className="relative p-3 text-gray-500 hover:text-primary transition-all duration-300 hover:bg-white/50 rounded-full group">
+              <button className="relative p-3 text-gray-400 hover:text-orange-400 transition-all duration-300 hover:bg-white/5 rounded-full group">
                 <ShoppingCart className="h-5 w-5" />
                 {cartItemCount > 0 && (
-                  <span className="absolute -top-1 -right-1 bg-gradient-to-r from-primary to-accent text-white text-xs rounded-full h-6 w-6 flex items-center justify-center text-[10px] font-bold shadow-lg pulse-glow">
+                  <span className="absolute -top-1 -right-1 bg-gradient-to-r from-orange-500 to-orange-600 text-white text-xs rounded-full h-6 w-6 flex items-center justify-center text-[10px] font-bold shadow-lg pulse-glow">
                     {cartItemCount}
                   </span>
                 )}
-                <div className="absolute inset-0 rounded-full bg-gradient-to-r from-primary/20 to-accent/20 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+                <div className="absolute inset-0 rounded-full bg-gradient-to-r from-orange-500/20 to-orange-600/20 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
               </button>
             </div>
           </div>
         </div>
-      </header>
-
-      {/* Navigation Tabs */}
-      <nav className="relative bg-white/90 backdrop-blur-md border-b border-white/20 sticky top-20 z-40">
-        <div className="absolute inset-0 bg-gradient-to-r from-primary/3 to-accent/3"></div>
+      </header>      {/* Navigation Tabs */}
+      <nav className="relative bg-black/90 backdrop-blur-md border-b border-white/10 sticky top-20 z-40">
+        <div className="absolute inset-0 bg-gradient-to-r from-orange-500/3 to-orange-600/3"></div>
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex space-x-8 overflow-x-auto">
-            {tabs.map((tab) => (
-              <button
-                key={tab.key}
-                onClick={() => setActiveTab(tab.key)}
-                className={`py-4 px-1 border-b-2 font-medium text-sm whitespace-nowrap transition-colors ${activeTab === tab.key
-                    ? 'border-primary text-primary'
-                    : 'border-transparent text-gray-500 hover:text-gray-700'
-                  }`}
-              >
-                {tab.label}
-              </button>
+            {tabs.map((tab) => (<button
+              key={tab.key}
+              onClick={() => setActiveTab(tab.key)}
+              className={`py-4 px-6 border-b-2 font-medium text-sm whitespace-nowrap transition-colors ${activeTab === tab.key
+                ? 'border-orange-500 text-orange-400'
+                : 'border-transparent text-gray-400 hover:text-gray-300'
+                }`}
+            >
+              {tab.label}
+            </button>
             ))}
           </div>
         </div>
       </nav>
 
       {/* Main Content */}
-      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
-        {activeTab === 'menu' && (
-          <MenuSection
-            restaurantId={restaurantId}
-            onItemClick={setSelectedItemId}
-          />
-        )}
+      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">        {activeTab === 'menu' && (
+        <MenuSection
+          restaurantId={restaurantId}
+          onItemClick={setSelectedItemId}
+          restaurantName={restaurant?.name}
+          tableNumber="Table 12"
+        />
+      )}
         {activeTab === 'discovery' && <DiscoverySection />}
         {activeTab === 'deals' && <DealsSection />}
         {activeTab === 'reviews' && (

@@ -12,9 +12,11 @@ import type { MenuItem } from "@shared/schema";
 interface MenuSectionProps {
   restaurantId: number;
   onItemClick: (itemId: number) => void;
+  restaurantName?: string;
+  tableNumber?: string;
 }
 
-export default function MenuSection({ restaurantId, onItemClick }: MenuSectionProps) {
+export default function MenuSection({ restaurantId, onItemClick, restaurantName, tableNumber }: MenuSectionProps) {
   const [searchTerm, setSearchTerm] = useState("");
   const [activeFilter, setActiveFilter] = useState("all");
 
@@ -101,136 +103,153 @@ export default function MenuSection({ restaurantId, onItemClick }: MenuSectionPr
     }
     return acc;
   }, {} as Record<string, MenuItem[]>) || {};
-  return (
-    <section className="fade-in space-y-8">
-      {/* Search and Filter Bar */}
-      <div className="luxury-search-container glass-card p-6 rounded-2xl border border-white/20 backdrop-blur-xl bg-gradient-to-r from-white/10 to-white/5 shadow-luxury">
-        <div className="flex flex-col sm:flex-row gap-6">
-          <div className="flex-1 relative group">
-            <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 text-primary/60 h-5 w-5 transition-colors group-hover:text-primary" />
-            <Input
-              type="text"
-              placeholder="Search culinary delights..."
-              value={searchTerm}
-              onChange={(e) => setSearchTerm(e.target.value)}
-              className="pl-12 h-14 text-lg bg-white/20 border-white/30 rounded-xl hover:bg-white/30 focus:bg-white/40 transition-all duration-300 placeholder:text-gray-500/70 text-gray-800 font-medium"
-            />
-          </div>
-          <div className="flex gap-3">
-            {filters.map((filter) => {
-              const IconComponent = filter.icon;
-              return (
-                <Button
-                  key={filter.key}
-                  variant={activeFilter === filter.key ? "default" : "outline"}
-                  onClick={() => setActiveFilter(filter.key)}
-                  className={`luxury-filter-btn h-14 px-6 rounded-xl font-medium transition-all duration-300 ${activeFilter === filter.key
-                      ? "bg-gradient-to-r from-primary to-accent text-white shadow-luxury-glow border-0"
-                      : "bg-white/20 hover:bg-white/30 border-white/30 text-gray-700 hover:text-primary"
-                    }`}
-                >
-                  <IconComponent className="h-4 w-4 mr-2" />
-                  {filter.label}
-                </Button>
-              );
-            })}
-          </div>
+  return (<section className="fade-in space-y-8">    {/* Header with restaurant name and table */}
+    <div className="text-center mb-12">
+      <h1 className="text-5xl font-bold bg-gradient-to-r from-orange-400 via-orange-500 to-orange-600 bg-clip-text text-transparent mb-2 tracking-wide drop-shadow-lg">
+        {restaurantName || 'RESTAURANT MENU'}
+      </h1>
+      <div className="flex items-center justify-center text-lg text-gray-400 font-medium">
+        <span className="bg-black/40 backdrop-blur-sm rounded-full px-4 py-2 border border-orange-500/20">
+          {tableNumber || 'Table Service'}
+        </span>
+      </div>
+      <div className="decorative-leaf" style={{ top: '-10px', right: '20%' }}></div>
+      <div className="decorative-leaf" style={{ top: '10px', left: '15%' }}></div>
+    </div>
+
+    {/* Search and Filter Bar */}
+    <div className="luxury-search-container glass-card p-6 rounded-2xl border border-white/10 backdrop-blur-xl bg-gradient-to-r from-black/20 to-black/10 shadow-luxury">
+      <div className="flex flex-col sm:flex-row gap-6">
+        <div className="flex-1 relative group">
+          <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 text-orange-400/60 h-5 w-5 transition-colors group-hover:text-orange-400" />
+          <Input
+            type="text"
+            placeholder="Search culinary delights..."
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+            className="pl-12 h-14 text-lg bg-black/30 border-white/20 rounded-xl hover:bg-black/40 focus:bg-black/40 transition-all duration-300 placeholder:text-gray-400 text-white font-medium"
+          />
+        </div>
+        <div className="flex gap-3">
+          {filters.map((filter) => {
+            const IconComponent = filter.icon;
+            return (
+              <Button
+                key={filter.key}
+                variant={activeFilter === filter.key ? "default" : "outline"}
+                onClick={() => setActiveFilter(filter.key)}
+                className={`luxury-filter-btn h-14 px-6 rounded-xl font-medium transition-all duration-300 ${activeFilter === filter.key
+                  ? "bg-gradient-to-r from-orange-500 to-orange-600 text-white shadow-luxury-glow border-0"
+                  : "bg-black/20 hover:bg-black/30 border-white/20 text-gray-300 hover:text-orange-400"
+                  }`}
+              >
+                <IconComponent className="h-4 w-4 mr-2" />
+                {filter.label}
+              </Button>
+            );
+          })}
         </div>
       </div>
+    </div>      {/* Menu Categories */}
+    <div className="space-y-12">
+      {Object.entries(groupedItems).map(([categoryName, items]) => (
+        <div key={categoryName} className="menu-category food-menu-section">
+          <div className="mb-8">
+            <h2 className="luxury-heading text-4xl font-bold bg-gradient-to-r from-white via-orange-400 to-orange-500 bg-clip-text text-transparent mb-3">
+              {categoryName}
+            </h2>
+            <div className="h-1 w-24 bg-gradient-to-r from-orange-500 to-orange-600 rounded-full"></div>
+          </div>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            {items.map((item) => (<Card
+              key={item.id}
+              className="menu-item-card group overflow-hidden cursor-pointer transform transition-all duration-500 hover:scale-105"
+              onClick={() => onItemClick(item.id)}
+            >
+              <div className="relative">
+                {/* Food Image - Larger, more prominent background */}
+                <div className="relative h-64 w-full overflow-hidden">
+                  <img
+                    src={item.imageUrl || '/placeholder-food.jpg'}
+                    alt={item.name}
+                    className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
+                  />
+                  {/* Dark overlay for better text contrast */}
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent"></div>
 
-      {/* Menu Categories */}
-      <div className="space-y-12">
-        {Object.entries(groupedItems).map(([categoryName, items]) => (
-          <div key={categoryName} className="menu-category">
-            <div className="mb-8">
-              <h2 className="luxury-heading text-4xl font-bold bg-gradient-to-r from-gray-900 via-primary to-accent bg-clip-text text-transparent mb-3">
-                {categoryName}
-              </h2>
-              <div className="h-1 w-24 bg-gradient-to-r from-primary to-accent rounded-full"></div>
-            </div>
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-              {items.map((item) => (
-                <Card
-                  key={item.id}
-                  className="luxury-food-card group overflow-hidden cursor-pointer transform transition-all duration-500 hover:scale-105 hover:shadow-luxury-glow bg-gradient-to-br from-white/95 to-white/90 backdrop-blur-sm border-0 rounded-2xl"
-                  onClick={() => onItemClick(item.id)}
-                >
-                  <div className="aspect-[4/3] overflow-hidden relative">
-                    <div className="absolute inset-0 bg-gradient-to-t from-black/30 via-transparent to-transparent z-10 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
-                    <img
-                      src={item.imageUrl || '/placeholder-food.jpg'}
-                      alt={item.name}
-                      className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700 ease-out"
-                    />
-                    <div className="absolute top-4 right-4 z-20">
-                      <div className="luxury-rating-badge bg-black/20 backdrop-blur-sm rounded-full px-3 py-1 flex items-center space-x-1">
-                        <Star className="h-4 w-4 text-yellow-400 fill-current" />
-                        <span className="text-white font-medium text-sm">
-                          {item.rating?.toFixed(1) || '0.0'}
-                        </span>
-                      </div>
+                  {/* Price Badge - Prominent circular positioning */}
+                  <div className="absolute top-4 right-4">
+                    <div className="price-badge text-lg font-bold">
+                      ${item.price.toFixed(0)}
                     </div>
                   </div>
-                  <CardContent className="p-6">
-                    <div className="flex justify-between items-start mb-3">
-                      <h3 className="text-xl font-bold text-gray-900 line-clamp-1 group-hover:text-primary transition-colors duration-300">
-                        {item.name}
-                      </h3>
-                      <span className="luxury-price text-2xl font-bold bg-gradient-to-r from-primary to-accent bg-clip-text text-transparent whitespace-nowrap">
-                        ${item.price.toFixed(2)}
+
+                  {/* Voting controls - Better positioned and visible */}
+                  <div className="absolute bottom-4 left-4 luxury-vote-container flex items-center bg-black/60 backdrop-blur-md rounded-full px-4 py-2 border border-white/20 shadow-lg">
+                    <button
+                      className="vote-animation p-1 text-gray-300 hover:text-green-400 transition-colors duration-300"
+                      onClick={(e) => handleVote(item.id, 'up', e)}
+                      disabled={voteMenuItem.isPending}
+                    >
+                      <ThumbsUp className="h-4 w-4" />
+                    </button>
+                    <span className="text-sm font-bold text-white mx-3 drop-shadow">
+                      {item.votes}
+                    </span>
+                    <button
+                      className="vote-animation p-1 text-gray-300 hover:text-red-400 transition-colors duration-300"
+                      onClick={(e) => handleVote(item.id, 'down', e)}
+                      disabled={voteMenuItem.isPending}
+                    >
+                      <ThumbsDown className="h-4 w-4" />
+                    </button>
+                  </div>
+
+                  {/* Rating badge - Better positioned */}
+                  {item.rating && (
+                    <div className="absolute bottom-4 right-4 luxury-rating-badge bg-black/60 backdrop-blur-md rounded-full px-3 py-2 flex items-center space-x-1 border border-yellow-400/30 shadow-lg">
+                      <Star className="h-4 w-4 text-yellow-400 fill-current drop-shadow-sm" />
+                      <span className="text-white font-medium text-sm drop-shadow-sm">
+                        {item.rating.toFixed(1)}
                       </span>
                     </div>
-                    <p className="text-gray-600 text-sm mb-4 line-clamp-2 leading-relaxed">
-                      {item.description}
-                    </p>
-                    <div className="flex items-center justify-between">
-                      <div className="flex items-center space-x-4">
-                        <div className="luxury-vote-container flex items-center bg-gray-50 rounded-full px-3 py-1">
-                          <button
-                            className="vote-animation p-1 text-gray-400 hover:text-green-500 transition-colors duration-300"
-                            onClick={(e) => handleVote(item.id, 'up', e)}
-                            disabled={voteMenuItem.isPending}
-                          >
-                            <ThumbsUp className="h-4 w-4" />
-                          </button>
-                          <span className="text-sm font-bold text-gray-700 mx-2">
-                            {item.votes}
-                          </span>
-                          <button
-                            className="vote-animation p-1 text-gray-400 hover:text-red-500 transition-colors duration-300"
-                            onClick={(e) => handleVote(item.id, 'down', e)}
-                            disabled={voteMenuItem.isPending}
-                          >
-                            <ThumbsDown className="h-4 w-4" />
-                          </button>
-                        </div>
-                      </div>
-                      <Button
-                        size="sm"
-                        onClick={(e) => handleAddToCart(item, e)}
-                        disabled={addToCart.isPending}
-                        className="luxury-add-btn bg-gradient-to-r from-primary to-accent hover:from-primary/90 hover:to-accent/90 text-white font-semibold px-6 py-2 rounded-full transition-all duration-300 hover:shadow-luxury-glow border-0"
-                      >
-                        {addToCart.isPending ? 'Adding...' : 'Add to Cart'}
-                      </Button>
-                    </div>
-                  </CardContent>
-                </Card>
-              ))}
-            </div>
-          </div>
-        ))}
-      </div>
+                  )}
+                </div>
 
-      {filteredItems?.length === 0 && (
-        <div className="text-center py-16 luxury-empty-state">
-          <div className="glass-card p-8 rounded-2xl bg-gradient-to-br from-white/20 to-white/10 backdrop-blur-xl border border-white/20 max-w-md mx-auto">
-            <Sparkles className="h-16 w-16 text-primary/60 mx-auto mb-4" />
-            <h3 className="text-2xl font-bold text-gray-900 mb-3">No culinary treasures found</h3>
-            <p className="text-gray-600 leading-relaxed">Try adjusting your search or explore different categories to discover amazing dishes.</p>
+                {/* Item Details - Clean text area */}
+                <div className="p-6 bg-gradient-to-br from-gray-900/95 to-gray-800/95 backdrop-blur-sm">
+                  <h3 className="text-xl font-bold text-white mb-2 group-hover:text-orange-400 transition-colors duration-300 drop-shadow-sm">
+                    {item.name}
+                  </h3>
+                  <p className="text-gray-300 text-sm mb-4 line-clamp-2 leading-relaxed">
+                    {item.description}
+                  </p>
+                  <div className="flex justify-center">
+                    <Button
+                      size="sm"
+                      onClick={(e) => handleAddToCart(item, e)}
+                      disabled={addToCart.isPending}
+                      className="luxury-add-btn bg-gradient-to-r from-orange-500 to-orange-600 hover:from-orange-600 hover:to-orange-700 text-white font-semibold px-6 py-2 rounded-full transition-all duration-300 border-0 shadow-lg hover:shadow-orange-500/25"
+                    >
+                      {addToCart.isPending ? 'Adding...' : 'Add to Cart'}
+                    </Button>
+                  </div>
+                </div>
+              </div>
+            </Card>
+            ))}
           </div>
         </div>
-      )}
-    </section>
+      ))}
+    </div>      {filteredItems?.length === 0 && (
+      <div className="text-center py-16 luxury-empty-state">
+        <div className="glass-card p-8 rounded-2xl bg-gradient-to-br from-black/20 to-black/10 backdrop-blur-xl border border-white/10 max-w-md mx-auto">
+          <Sparkles className="h-16 w-16 text-orange-400/60 mx-auto mb-4" />
+          <h3 className="text-2xl font-bold text-white mb-3">No culinary treasures found</h3>
+          <p className="text-gray-400 leading-relaxed">Try adjusting your search or explore different categories to discover amazing dishes.</p>
+        </div>
+      </div>
+    )}
+  </section>
   );
 }
