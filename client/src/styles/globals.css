@@ -1,0 +1,59 @@
+:root {
+  --primary: #F28705;
+  --secondary: #3366FF;
+  --accent: #FFD700;
+  --success: #4CAF50;
+  --warning: #FFEB3B;
+  --error: #F44336;
+  --background: #f8f8f8;
+  --text: #333;
+  --primary-text: #fff; 
+  --font-family-base: 'Playfair Display', serif; /* Example premium font */
+  --font-family-secondary: 'Open Sans', sans-serif; /* Example secondary font */
+}
+
+/* Example styles using the variables */
+body {
+  font-family: var(--font-family-base);
+}
+
+h1, h2, h3 {
+  font-family: var(--font-family-base);
+}
+
+p {
+  font-family: var(--font-family-secondary);
+}
+
+button {
+  background-color: var(--primary);
+  color: var(--primary-text);
+  padding: 1rem 2rem;
+  border: none;
+  border-radius: 0.5rem;
+  cursor: pointer;
+  transition: background-color 0.3s ease; /* Example animation */
+}
+
+button:hover {
+  background-color: darken(var(--primary), 10%); /* Darken on hover */
+}
+
+.image-container {
+  overflow: hidden; /* Hide overflowing image */
+  border-radius: 0.5rem; /* Rounded corners */
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Subtle shadow */
+}
+
+.image-container img {
+  display: block; /* Prevent extra space below image */
+  width: 100%; /* Image fills container */
+  height: auto; /* Maintain aspect ratio */
+  transition: transform 0.3s ease; /* Example animation */
+}
+
+.image-container img:hover {
+  transform: scale(1.05); /* Zoom on hover */
+}
+
+/* Add more styles as needed */
