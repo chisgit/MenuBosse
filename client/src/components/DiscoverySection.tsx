@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Star, ThumbsUp } from "lucide-react";
+import { Star, ThumbsUp, MapPin, Crown, Gem, TrendingUp, Heart, Utensils } from "lucide-react";
 import { useRestaurants } from "@/hooks/use-restaurant";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
@@ -9,14 +9,13 @@ import { Skeleton } from "@/components/ui/skeleton";
 export default function DiscoverySection() {
   const [activeFilter, setActiveFilter] = useState("all");
   const { data: restaurants, isLoading } = useRestaurants();
-
   const filters = [
-    { key: "all", label: "All" },
-    { key: "italian", label: "Italian" },
-    { key: "japanese", label: "Asian" },
-    { key: "mexican", label: "Mexican" },
-    { key: "near", label: "Near Me" },
-    { key: "hidden", label: "Hidden Gems" },
+    { key: "all", label: "All Restaurants", icon: Utensils },
+    { key: "italian", label: "Italian", icon: Heart },
+    { key: "japanese", label: "Asian", icon: Star },
+    { key: "mexican", label: "Mexican", icon: TrendingUp },
+    { key: "near", label: "Near Me", icon: MapPin },
+    { key: "hidden", label: "Hidden Gems", icon: Gem },
   ];
 
   const filteredRestaurants = restaurants?.filter(restaurant => {
@@ -25,108 +24,141 @@ export default function DiscoverySection() {
     if (activeFilter === "near") return restaurant.distance && restaurant.distance < 1;
     return restaurant.cuisine.toLowerCase().includes(activeFilter);
   });
-
   if (isLoading) {
     return (
-      <div className="space-y-6">
+      <div className="space-y-8">
         <div>
-          <Skeleton className="h-8 w-64 mb-2" />
-          <Skeleton className="h-4 w-96" />
+          <Skeleton className="h-12 w-80 mb-4 rounded-xl" />
+          <Skeleton className="h-6 w-96 rounded-lg" />
         </div>
-        <div className="flex flex-wrap gap-2">
+        <div className="flex flex-wrap gap-3">
           {[...Array(6)].map((_, i) => (
-            <Skeleton key={i} className="h-8 w-20" />
+            <Skeleton key={i} className="h-12 w-32 rounded-full" />
           ))}
         </div>
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
           {[...Array(6)].map((_, i) => (
-            <Skeleton key={i} className="h-64 w-full" />
+            <Skeleton key={i} className="h-80 w-full rounded-2xl" />
           ))}
         </div>
       </div>
     );
   }
-
   return (
-    <section className="fade-in space-y-6">
-      <div className="mb-6">
-        <h2 className="text-2xl font-bold text-gray-900 mb-4">Discover Hidden Gems</h2>
-        <p className="text-gray-600">Find the best restaurants and dishes rated by our community</p>
+    <section className="fade-in space-y-8">
+      <div className="mb-8">
+        <div className="flex items-center gap-4 mb-4">
+          <div className="luxury-icon-container p-3 bg-gradient-to-br from-primary/20 to-accent/20 rounded-2xl">
+            <Gem className="h-8 w-8 text-primary" />
+          </div>
+          <div>
+            <h2 className="luxury-heading text-4xl font-bold bg-gradient-to-r from-gray-900 via-primary to-accent bg-clip-text text-transparent">
+              Discover Culinary Treasures
+            </h2>
+            <div className="h-1 w-36 bg-gradient-to-r from-primary to-accent rounded-full mt-2"></div>
+          </div>
+        </div>
+        <p className="text-lg text-gray-600 leading-relaxed">
+          Uncover the finest restaurants and dishes curated by our community of food connoisseurs
+        </p>
       </div>
 
-      {/* Filter Pills */}
-      <div className="flex flex-wrap gap-2 mb-6">
-        {filters.map((filter) => (
-          <Button
-            key={filter.key}
-            variant={activeFilter === filter.key ? "default" : "outline"}
-            size="sm"
-            onClick={() => setActiveFilter(filter.key)}
-            className="rounded-full"
-          >
-            {filter.label}
-          </Button>
-        ))}
+      {/* Luxury Filter Pills */}
+      <div className="flex flex-wrap gap-4 mb-8">
+        {filters.map((filter) => {
+          const IconComponent = filter.icon;
+          return (
+            <Button
+              key={filter.key}
+              variant={activeFilter === filter.key ? "default" : "outline"}
+              size="lg"
+              onClick={() => setActiveFilter(filter.key)}
+              className={`luxury-filter-pill rounded-full font-semibold transition-all duration-300 ${activeFilter === filter.key
+                  ? "bg-gradient-to-r from-primary to-accent text-white shadow-luxury-glow border-0 hover:shadow-luxury-glow"
+                  : "bg-white/80 hover:bg-white border-white/60 text-gray-700 hover:text-primary backdrop-blur-sm"
+                }`}
+            >
+              <IconComponent className="h-4 w-4 mr-2" />
+              {filter.label}
+            </Button>
+          );
+        })}
       </div>
 
-      {/* Restaurant Cards */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+      {/* Premium Restaurant Cards */}
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
         {filteredRestaurants?.map((restaurant) => (
-          <Card key={restaurant.id} className="overflow-hidden hover:shadow-xl transition-shadow cursor-pointer">
-            <div className="aspect-[5/3] overflow-hidden">
-              <img 
-                src={restaurant.imageUrl || '/placeholder-restaurant.jpg'} 
+          <Card key={restaurant.id} className="luxury-restaurant-card group overflow-hidden cursor-pointer transform transition-all duration-500 hover:scale-105 hover:shadow-luxury-glow bg-gradient-to-br from-white/95 to-white/90 backdrop-blur-sm border-0 rounded-2xl">
+            <div className="aspect-[5/3] overflow-hidden relative">
+              <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-transparent z-10 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+              <img
+                src={restaurant.imageUrl || '/placeholder-restaurant.jpg'}
                 alt={restaurant.name}
-                className="w-full h-full object-cover hover:scale-105 transition-transform duration-300"
+                className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700 ease-out"
               />
-            </div>
-            <CardContent className="p-4">
-              <div className="flex justify-between items-start mb-2">
-                <h3 className="text-lg font-semibold text-gray-900">{restaurant.name}</h3>
-                <Badge 
-                  variant="secondary" 
-                  className={`text-xs font-medium ${
-                    restaurant.isHiddenGem 
-                      ? 'bg-yellow-100 text-yellow-800' 
-                      : restaurant.isTrending 
-                        ? 'bg-green-100 text-green-800'
+              <div className="absolute top-4 right-4 z-20">
+                <Badge
+                  className={`luxury-restaurant-badge backdrop-blur-sm font-bold text-sm px-3 py-1 rounded-full border-0 ${restaurant.isHiddenGem
+                      ? 'bg-gradient-to-r from-yellow-400 to-orange-500 text-white shadow-lg'
+                      : restaurant.isTrending
+                        ? 'bg-gradient-to-r from-green-400 to-emerald-500 text-white shadow-lg'
                         : restaurant.isLocalFavorite
-                          ? 'bg-blue-100 text-blue-800'
-                          : 'bg-gray-100 text-gray-800'
-                  }`}
+                          ? 'bg-gradient-to-r from-blue-400 to-indigo-500 text-white shadow-lg'
+                          : 'bg-white/90 text-gray-800'
+                    }`}
                 >
-                  {restaurant.isHiddenGem 
-                    ? 'Hidden Gem' 
-                    : restaurant.isTrending 
-                      ? 'Trending'
-                      : restaurant.isLocalFavorite
-                        ? 'Local Favorite'
-                        : 'Restaurant'
-                  }
+                  {restaurant.isHiddenGem ? (
+                    <>
+                      <Crown className="h-3 w-3 mr-1" />
+                      Hidden Gem
+                    </>
+                  ) : restaurant.isTrending ? (
+                    <>
+                      <TrendingUp className="h-3 w-3 mr-1" />
+                      Trending
+                    </>
+                  ) : restaurant.isLocalFavorite ? (
+                    <>
+                      <Heart className="h-3 w-3 mr-1" />
+                      Local Favorite
+                    </>
+                  ) : (
+                    'Restaurant'
+                  )}
                 </Badge>
               </div>
-              <p className="text-gray-600 text-sm mb-3">
-                {restaurant.description} • {restaurant.distance?.toFixed(1)} miles away
+            </div>
+            <CardContent className="p-6">
+              <div className="flex justify-between items-start mb-3">
+                <h3 className="text-xl font-bold text-gray-900 group-hover:text-primary transition-colors duration-300">{restaurant.name}</h3>
+              </div>
+              <p className="text-gray-600 text-base mb-4 leading-relaxed flex items-center">
+                {restaurant.description}
+                <span className="mx-2">•</span>
+                <span className="flex items-center text-primary font-medium">
+                  <MapPin className="h-4 w-4 mr-1" />
+                  {restaurant.distance?.toFixed(1)} mi
+                </span>
               </p>
               <div className="flex items-center justify-between">
-                <div className="flex items-center space-x-4">
-                  <div className="flex items-center">
+                <div className="flex items-center space-x-6">
+                  <div className="luxury-rating-container flex items-center bg-gray-50 rounded-full px-3 py-2">
                     <Star className="h-4 w-4 text-yellow-400 fill-current" />
-                    <span className="text-sm font-medium text-gray-600 ml-1">
+                    <span className="text-base font-bold text-gray-800 ml-1">
                       {restaurant.rating?.toFixed(1)}
                     </span>
-                    <span className="text-sm text-gray-400 ml-1">
+                    <span className="text-sm text-gray-500 ml-1">
                       ({Math.floor(Math.random() * 500) + 50})
                     </span>
                   </div>
-                  <div className="flex items-center">
+                  <div className="luxury-vote-container flex items-center bg-green-50 rounded-full px-3 py-2">
                     <ThumbsUp className="h-4 w-4 text-green-500" />
-                    <span className="text-sm text-gray-600 ml-1">
+                    <span className="text-base font-bold text-gray-800 ml-1">
                       {restaurant.votePercentage}%
                     </span>
                   </div>
                 </div>
-                <span className="text-sm text-gray-500">{restaurant.priceRange}</span>
+                <span className="luxury-price-range text-lg font-bold bg-gradient-to-r from-primary to-accent bg-clip-text text-transparent">{restaurant.priceRange}</span>
               </div>
             </CardContent>
           </Card>
@@ -134,9 +166,12 @@ export default function DiscoverySection() {
       </div>
 
       {filteredRestaurants?.length === 0 && (
-        <div className="text-center py-12">
-          <h3 className="text-lg font-semibold text-gray-900 mb-2">No restaurants found</h3>
-          <p className="text-gray-600">Try adjusting your filter criteria.</p>
+        <div className="text-center py-16 luxury-empty-state">
+          <div className="glass-card p-8 rounded-2xl bg-gradient-to-br from-white/20 to-white/10 backdrop-blur-xl border border-white/20 max-w-md mx-auto">
+            <Gem className="h-16 w-16 text-primary/60 mx-auto mb-4" />
+            <h3 className="text-2xl font-bold text-gray-900 mb-3">No culinary gems found</h3>
+            <p className="text-gray-600 leading-relaxed">Try adjusting your filters to discover amazing restaurants in your area.</p>
+          </div>
         </div>
       )}
     </section>
