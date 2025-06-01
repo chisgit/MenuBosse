@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { X, Star, Plus, Minus, MessageCircle, ChefHat } from "lucide-react";
+import { X, Star, Plus, Minus, MessageCircle, ChefHat, Sparkles, Heart, Award } from "lucide-react";
 import { useMenuItem } from "@/hooks/use-menu";
 import { useMenuItemAddons } from "@/hooks/use-addons";
 import { useAddToCart } from "@/hooks/use-cart";
@@ -119,114 +119,151 @@ export default function ItemDetailModal({ itemId, onClose }: ItemDetailModalProp
   };
 
   const totalPrice = calculateTotalPrice();
-
   return (
     <Dialog open={true} onOpenChange={onClose}>
-      <DialogContent className="max-w-4xl h-[90vh] p-0 flex flex-col">
+      <DialogContent className="max-w-5xl h-[95vh] p-0 flex flex-col bg-gradient-to-br from-white via-white/98 to-white/95 backdrop-blur-xl border-0 rounded-3xl shadow-luxury-xl overflow-hidden">
         <VisuallyHidden>
           <DialogTitle>Menu Item Details</DialogTitle>
         </VisuallyHidden>
         {isLoading || addonsLoading ? (
-          <div className="space-y-4 p-6">
-            <Skeleton className="w-full h-64" />
-            <div className="space-y-2">
-              <Skeleton className="h-8 w-3/4" />
-              <Skeleton className="h-4 w-1/2" />
-              <Skeleton className="h-20 w-full" />
+          <div className="space-y-6 p-8">
+            <Skeleton className="w-full h-80 rounded-2xl" />
+            <div className="space-y-4">
+              <Skeleton className="h-10 w-3/4" />
+              <Skeleton className="h-6 w-1/2" />
+              <Skeleton className="h-32 w-full rounded-xl" />
             </div>
           </div>
         ) : item ? (
-          <>            {/* Header with Image */}
-            <div className="relative h-48 flex-shrink-0">
+          <>
+            {/* Luxurious Header with Image */}
+            <div className="relative h-80 flex-shrink-0 overflow-hidden">
+              <div className="absolute inset-0 bg-gradient-to-br from-black/20 via-transparent to-black/40 z-10"></div>
               <img
                 src={item.imageUrl || '/placeholder-food.jpg'}
                 alt={item.name}
-                className="w-full h-full object-cover"
+                className="w-full h-full object-cover scale-105 hover:scale-110 transition-transform duration-700"
               />
-              <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/60 to-transparent p-4">
-                <h2 className="text-2xl font-bold text-white">{item.name}</h2>
-                <div className="flex items-center space-x-4 mt-2">
-                  <span className="text-xl font-bold text-white">
-                    ${item.price.toFixed(2)}
-                  </span>
-                  <div className="flex items-center">
-                    <Star className="h-4 w-4 text-yellow-400 fill-current" />
-                    <span className="ml-1 font-medium text-white">{item.rating?.toFixed(1) || '0.0'}</span>
-                    <span className="text-white/80 ml-1">• {item.votes} votes</span>
+              <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/80 via-black/40 to-transparent p-8 z-20">
+                <div className="flex items-end justify-between">
+                  <div>
+                    <h2 className="text-4xl font-bold text-white mb-2 drop-shadow-lg">{item.name}</h2>
+                    <div className="flex items-center space-x-6">
+                      <span className="text-3xl font-bold text-white drop-shadow-lg">
+                        ${item.price.toFixed(2)}
+                      </span>
+                      <div className="flex items-center bg-white/20 backdrop-blur-sm rounded-full px-4 py-2">
+                        <Star className="h-5 w-5 text-yellow-400 fill-current" />
+                        <span className="ml-2 font-bold text-white">{item.rating?.toFixed(1) || '0.0'}</span>
+                        <span className="text-white/80 ml-1">• {item.votes} votes</span>
+                      </div>
+                    </div>
+                  </div>
+                  <div className="flex space-x-2">
+                    <div className="luxury-badge bg-gradient-to-r from-accent/20 to-primary/20 backdrop-blur-sm rounded-full px-4 py-2 border border-white/30">
+                      <Award className="h-5 w-5 text-white" />
+                    </div>
+                    <div className="luxury-badge bg-gradient-to-r from-red-500/20 to-pink-500/20 backdrop-blur-sm rounded-full px-4 py-2 border border-white/30">
+                      <Heart className="h-5 w-5 text-white" />
+                    </div>
                   </div>
                 </div>
               </div>
             </div>
 
-            {/* Content with Tabs */}
+            {/* Premium Content with Tabs */}
             <div className="flex-1 overflow-hidden">
               <Tabs value={activeTab} onValueChange={setActiveTab} className="h-full flex flex-col">
-                <TabsList className="grid w-full grid-cols-2 mx-4 mt-4">
-                  <TabsTrigger value="customize" className="flex items-center gap-2">
+                <TabsList className="grid w-full grid-cols-2 mx-6 mt-6 bg-gray-100/50 backdrop-blur-sm rounded-xl p-1 border border-gray-200/50">
+                  <TabsTrigger
+                    value="customize"
+                    className="flex items-center gap-2 rounded-lg data-[state=active]:bg-white data-[state=active]:shadow-lg transition-all duration-300"
+                  >
                     <ChefHat className="h-4 w-4" />
-                    Customize
+                    Customize Your Dish
                   </TabsTrigger>
-                  <TabsTrigger value="questions" className="flex items-center gap-2">
+                  <TabsTrigger
+                    value="questions"
+                    className="flex items-center gap-2 rounded-lg data-[state=active]:bg-white data-[state=active]:shadow-lg transition-all duration-300"
+                  >
                     <MessageCircle className="h-4 w-4" />
-                    Ask Questions
+                    Ask Our Chef
                   </TabsTrigger>
                 </TabsList>
 
-                <div className="flex-1 overflow-y-auto px-4 pb-4">
-                  <TabsContent value="customize" className="space-y-4 mt-4">
-                    <p className="text-gray-600 text-sm leading-relaxed">
-                      {item.fullDescription || item.description}
-                    </p>
+                <div className="flex-1 overflow-y-auto px-6 pb-6">
+                  <TabsContent value="customize" className="space-y-6 mt-6">
+                    <div className="glass-card bg-gradient-to-br from-white/40 to-white/20 backdrop-blur-sm p-6 rounded-2xl border border-white/30">
+                      <p className="text-gray-700 text-lg leading-relaxed font-medium">
+                        {item.fullDescription || item.description}
+                      </p>
+                    </div>
 
-                    {/* Compact Add-ons */}
+                    {/* Premium Add-ons */}
                     {addons && addons.length > 0 && (
-                      <div className="space-y-3">
+                      <div className="space-y-4">
+                        <h3 className="text-2xl font-bold bg-gradient-to-r from-gray-900 to-primary bg-clip-text text-transparent flex items-center gap-2">
+                          <Sparkles className="h-6 w-6 text-primary" />
+                          Enhance Your Experience
+                        </h3>
                         {Object.entries(groupAddonsByCategory(addons)).map(([category, categoryAddons]) => (
-                          <div key={category} className="border border-gray-200 rounded-lg p-3">
-                            <h4 className="text-sm font-semibold text-gray-800 mb-2 capitalize">
+                          <div key={category} className="glass-card bg-gradient-to-br from-white/60 to-white/40 backdrop-blur-sm border border-white/40 rounded-2xl p-6 shadow-lg">
+                            <h4 className="text-xl font-bold text-gray-800 mb-4 capitalize flex items-center gap-2">
+                              <div className="w-2 h-2 bg-gradient-to-r from-primary to-accent rounded-full"></div>
                               {category === 'spice' ? 'Spice Level' :
-                                category === 'cheese' ? 'Extra Cheese' :
-                                  category === 'meat' ? 'Meat Options' :
-                                    category === 'sauce' ? 'Sauces' :
-                                      category === 'side' ? 'Sides & Substitutions' :
-                                        category === 'topping' ? 'Toppings' : category}
+                                category === 'cheese' ? 'Premium Cheese' :
+                                  category === 'meat' ? 'Protein Selection' :
+                                    category === 'sauce' ? 'Signature Sauces' :
+                                      category === 'side' ? 'Gourmet Sides' :
+                                        category === 'topping' ? 'Artisan Toppings' : category}
                             </h4>
                             {category === 'spice' ? (
-                              <RadioGroup value={spiceLevel} onValueChange={setSpiceLevel} className="flex flex-wrap gap-4">
-                                <div className="flex items-center space-x-2">
-                                  <RadioGroupItem value="mild" id="mild" />
-                                  <Label htmlFor="mild" className="text-sm">Mild</Label>
+                              <RadioGroup value={spiceLevel} onValueChange={setSpiceLevel} className="grid grid-cols-2 gap-4">
+                                <div className="luxury-radio-item bg-white/50 p-4 rounded-xl border border-white/60 hover:bg-white/70 transition-all duration-300 cursor-pointer">
+                                  <div className="flex items-center space-x-3">
+                                    <RadioGroupItem value="mild" id="mild" className="border-primary" />
+                                    <Label htmlFor="mild" className="text-base font-medium text-gray-800 cursor-pointer">🌿 Mild & Gentle</Label>
+                                  </div>
                                 </div>
-                                <div className="flex items-center space-x-2">
-                                  <RadioGroupItem value="medium" id="medium" />
-                                  <Label htmlFor="medium" className="text-sm">Medium</Label>
+                                <div className="luxury-radio-item bg-white/50 p-4 rounded-xl border border-white/60 hover:bg-white/70 transition-all duration-300 cursor-pointer">
+                                  <div className="flex items-center space-x-3">
+                                    <RadioGroupItem value="medium" id="medium" className="border-primary" />
+                                    <Label htmlFor="medium" className="text-base font-medium text-gray-800 cursor-pointer">🌶️ Medium Heat</Label>
+                                  </div>
                                 </div>
-                                <div className="flex items-center space-x-2">
-                                  <RadioGroupItem value="hot" id="hot" />
-                                  <Label htmlFor="hot" className="text-sm">Hot</Label>
+                                <div className="luxury-radio-item bg-white/50 p-4 rounded-xl border border-white/60 hover:bg-white/70 transition-all duration-300 cursor-pointer">
+                                  <div className="flex items-center space-x-3">
+                                    <RadioGroupItem value="hot" id="hot" className="border-primary" />
+                                    <Label htmlFor="hot" className="text-base font-medium text-gray-800 cursor-pointer">🔥 Fiery Hot</Label>
+                                  </div>
                                 </div>
-                                <div className="flex items-center space-x-2">
-                                  <RadioGroupItem value="extra-hot" id="extra-hot" />
-                                  <Label htmlFor="extra-hot" className="text-sm">Extra Hot</Label>
+                                <div className="luxury-radio-item bg-white/50 p-4 rounded-xl border border-white/60 hover:bg-white/70 transition-all duration-300 cursor-pointer">
+                                  <div className="flex items-center space-x-3">
+                                    <RadioGroupItem value="extra-hot" id="extra-hot" className="border-primary" />
+                                    <Label htmlFor="extra-hot" className="text-base font-medium text-gray-800 cursor-pointer">🌋 Volcanic</Label>
+                                  </div>
                                 </div>
                               </RadioGroup>
                             ) : (
-                              <div className="grid grid-cols-2 gap-2">
+                              <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
                                 {categoryAddons.map((addon) => (
-                                  <div key={addon.id} className="flex items-center justify-between p-2 bg-gray-50 rounded hover:bg-gray-100">
-                                    <div className="flex items-center space-x-2">
-                                      <Checkbox
-                                        id={`addon-${addon.id}`}
-                                        checked={selectedAddons[addon.id] > 0}
-                                        onCheckedChange={(checked) => handleAddonToggle(addon.id, checked as boolean)}
-                                      />
-                                      <Label htmlFor={`addon-${addon.id}`} className="text-xs font-medium text-gray-900">
-                                        {addon.name}
-                                      </Label>
+                                  <div key={addon.id} className="luxury-addon-item bg-white/60 p-4 rounded-xl border border-white/60 hover:bg-white/80 transition-all duration-300 hover:shadow-lg">
+                                    <div className="flex items-center justify-between">
+                                      <div className="flex items-center space-x-3">
+                                        <Checkbox
+                                          id={`addon-${addon.id}`}
+                                          checked={selectedAddons[addon.id] > 0}
+                                          onCheckedChange={(checked) => handleAddonToggle(addon.id, checked as boolean)}
+                                          className="border-primary data-[state=checked]:bg-primary"
+                                        />
+                                        <Label htmlFor={`addon-${addon.id}`} className="text-base font-medium text-gray-900 cursor-pointer">
+                                          {addon.name}
+                                        </Label>
+                                      </div>
+                                      <span className="text-base font-bold bg-gradient-to-r from-primary to-accent bg-clip-text text-transparent">
+                                        {addon.price > 0 ? `+$${addon.price.toFixed(2)}` : 'Complimentary'}
+                                      </span>
                                     </div>
-                                    <span className="text-xs font-medium text-primary">
-                                      {addon.price > 0 ? `+$${addon.price.toFixed(2)}` : 'Free'}
-                                    </span>
                                   </div>
                                 ))}
                               </div>
@@ -237,57 +274,68 @@ export default function ItemDetailModal({ itemId, onClose }: ItemDetailModalProp
                     )}
 
                     {/* Special Instructions */}
-                    <div className="space-y-2">
-                      <Label htmlFor="instructions" className="text-sm font-medium text-gray-700">
-                        Special Instructions
+                    <div className="glass-card bg-gradient-to-br from-white/60 to-white/40 backdrop-blur-sm border border-white/40 rounded-2xl p-6 shadow-lg space-y-4">
+                      <Label htmlFor="instructions" className="text-lg font-bold text-gray-800 flex items-center gap-2">
+                        <MessageCircle className="h-5 w-5 text-primary" />
+                        Special Requests
                       </Label>
                       <Textarea
                         id="instructions"
-                        placeholder="Any dietary restrictions or preferences..."
+                        placeholder="Share any dietary preferences, allergies, or special requests with our chef..."
                         value={specialInstructions}
                         onChange={(e) => setSpecialInstructions(e.target.value)}
-                        rows={2}
-                        className="text-sm"
+                        rows={3}
+                        className="text-base bg-white/50 border-white/60 rounded-xl resize-none focus:bg-white/70 transition-all duration-300"
                       />
                     </div>
                   </TabsContent>
 
-                  <TabsContent value="questions" className="space-y-4 mt-4">
-                    <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
-                      <h3 className="text-sm font-semibold text-blue-900 mb-2">Ask Our Chef</h3>
-                      <p className="text-sm text-blue-800 mb-3">
-                        Have questions about ingredients, preparation, or dietary accommodations? Our chef is here to help!
+                  <TabsContent value="questions" className="space-y-6 mt-6">
+                    <div className="glass-card bg-gradient-to-br from-blue-50/80 to-indigo-50/60 backdrop-blur-sm border border-blue-200/50 rounded-2xl p-6 shadow-lg">
+                      <h3 className="text-xl font-bold text-blue-900 mb-3 flex items-center gap-2">
+                        <ChefHat className="h-6 w-6" />
+                        Chat with Our Executive Chef
+                      </h3>
+                      <p className="text-blue-800 mb-4 leading-relaxed">
+                        Have questions about ingredients, preparation methods, dietary accommodations, or wine pairings? Our award-winning chef is here to help create your perfect dining experience!
                       </p>
-                      <div className="space-y-3">
+                      <div className="space-y-4">
                         <Textarea
-                          placeholder="Ask about ingredients, allergens, preparation method, or anything else about this dish..."
+                          placeholder="Ask about ingredients, allergens, preparation methods, wine pairings, or anything else about this exquisite dish..."
                           value={question}
                           onChange={(e) => setQuestion(e.target.value)}
-                          rows={3}
-                          className="text-sm"
+                          rows={4}
+                          className="text-base bg-white/70 border-blue-200/60 rounded-xl resize-none"
                         />
                         <Button
                           onClick={handleAskQuestion}
                           disabled={!question.trim()}
-                          size="sm"
-                          className="w-full"
+                          className="w-full bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white font-semibold py-3 rounded-xl transition-all duration-300 hover:shadow-lg"
                         >
-                          Ask Chef
+                          <MessageCircle className="h-5 w-5 mr-2" />
+                          Ask Our Chef
                         </Button>
                       </div>
                     </div>
 
                     {/* Sample Q&A */}
-                    <div className="space-y-3">
-                      <h4 className="text-sm font-semibold text-gray-800">Common Questions</h4>
-                      <div className="space-y-2">
-                        <div className="bg-gray-50 rounded-lg p-3">
-                          <p className="text-sm font-medium text-gray-900">Is this dish gluten-free?</p>
-                          <p className="text-xs text-gray-600 mt-1">We can prepare this without the bun and substitute gluten-free fries.</p>
+                    <div className="space-y-4">
+                      <h4 className="text-xl font-bold text-gray-800 flex items-center gap-2">
+                        <Sparkles className="h-5 w-5 text-primary" />
+                        Frequently Asked Questions
+                      </h4>
+                      <div className="space-y-3">
+                        <div className="glass-card bg-gradient-to-br from-white/60 to-white/40 backdrop-blur-sm rounded-xl p-4 border border-white/40">
+                          <p className="text-base font-semibold text-gray-900 mb-2">🌱 Is this dish gluten-free?</p>
+                          <p className="text-sm text-gray-700 leading-relaxed">Absolutely! We can prepare this dish completely gluten-free with our artisanal gluten-free accompaniments.</p>
                         </div>
-                        <div className="bg-gray-50 rounded-lg p-3">
-                          <p className="text-sm font-medium text-gray-900">How spicy is the medium level?</p>
-                          <p className="text-xs text-gray-600 mt-1">Medium has a gentle heat that most people enjoy - similar to mild jalapeño.</p>
+                        <div className="glass-card bg-gradient-to-br from-white/60 to-white/40 backdrop-blur-sm rounded-xl p-4 border border-white/40">
+                          <p className="text-base font-semibold text-gray-900 mb-2">🌶️ How spicy is the medium level?</p>
+                          <p className="text-sm text-gray-700 leading-relaxed">Our medium spice level offers a perfect balance - warming and flavorful without overwhelming the palate, similar to a gentle jalapeño heat.</p>
+                        </div>
+                        <div className="glass-card bg-gradient-to-br from-white/60 to-white/40 backdrop-blur-sm rounded-xl p-4 border border-white/40">
+                          <p className="text-base font-semibold text-gray-900 mb-2">🍷 What wine pairs best with this?</p>
+                          <p className="text-sm text-gray-700 leading-relaxed">Our sommelier recommends a crisp Sauvignon Blanc or a light Pinot Grigio to complement the delicate flavors perfectly.</p>
                         </div>
                       </div>
                     </div>
@@ -296,30 +344,30 @@ export default function ItemDetailModal({ itemId, onClose }: ItemDetailModalProp
               </Tabs>
             </div>
 
-            {/* Fixed Bottom Bar */}
-            <div className="border-t border-gray-200 p-4 bg-white flex items-center justify-between">
-              <div className="flex items-center space-x-3">
-                <span className="text-sm font-medium text-gray-700">Qty:</span>
-                <div className="flex items-center border border-gray-300 rounded">
+            {/* Luxurious Fixed Bottom Bar */}
+            <div className="luxury-bottom-bar bg-gradient-to-r from-white/95 to-white/90 backdrop-blur-xl border-t border-white/30 p-6 flex items-center justify-between shadow-luxury">
+              <div className="flex items-center space-x-6">
+                <span className="text-lg font-bold text-gray-800">Quantity:</span>
+                <div className="luxury-quantity-selector flex items-center bg-white/60 border border-white/60 rounded-xl overflow-hidden shadow-sm">
                   <Button
                     variant="ghost"
                     size="icon"
                     onClick={decreaseQuantity}
                     disabled={quantity <= 1}
-                    className="h-8 w-8"
+                    className="h-12 w-12 hover:bg-white/80 rounded-none"
                   >
-                    <Minus className="h-3 w-3" />
+                    <Minus className="h-4 w-4" />
                   </Button>
-                  <span className="px-3 py-1 text-sm font-medium min-w-[2rem] text-center">
+                  <span className="px-6 py-3 text-lg font-bold min-w-[3rem] text-center bg-white/40">
                     {quantity}
                   </span>
                   <Button
                     variant="ghost"
                     size="icon"
                     onClick={increaseQuantity}
-                    className="h-8 w-8"
+                    className="h-12 w-12 hover:bg-white/80 rounded-none"
                   >
-                    <Plus className="h-3 w-3" />
+                    <Plus className="h-4 w-4" />
                   </Button>
                 </div>
               </div>
@@ -327,17 +375,30 @@ export default function ItemDetailModal({ itemId, onClose }: ItemDetailModalProp
               <Button
                 onClick={handleAddToCart}
                 disabled={addToCart.isPending}
-                className="font-medium px-6"
+                className="luxury-add-to-cart bg-gradient-to-r from-primary via-primary to-accent hover:from-primary/90 hover:via-primary/90 hover:to-accent/90 text-white font-bold px-10 py-4 rounded-2xl text-lg transition-all duration-300 hover:shadow-luxury-glow border-0"
               >
-                {addToCart.isPending ? 'Adding...' : `Add to Cart - $${totalPrice}`}
+                {addToCart.isPending ? (
+                  <>
+                    <Sparkles className="h-5 w-5 mr-2 animate-spin" />
+                    Adding to Cart...
+                  </>
+                ) : (
+                  <>
+                    <Heart className="h-5 w-5 mr-2" />
+                    Add to Cart - ${totalPrice}
+                  </>
+                )}
               </Button>
             </div>
           </>
         ) : (
-          <div className="p-6 text-center">
-            <h2 className="text-xl font-semibold text-gray-900 mb-2">Item Not Found</h2>
-            <p className="text-gray-600 mb-4">The menu item you're looking for doesn't exist.</p>
-            <Button onClick={onClose}>Close</Button>
+          <div className="p-8 text-center glass-card bg-gradient-to-br from-white/60 to-white/40 backdrop-blur-sm rounded-2xl m-6 border border-white/40">
+            <Sparkles className="h-16 w-16 text-primary/60 mx-auto mb-4" />
+            <h2 className="text-2xl font-bold text-gray-900 mb-3">Dish Not Available</h2>
+            <p className="text-gray-600 mb-6 leading-relaxed">We apologize, but this culinary creation is currently unavailable.</p>
+            <Button onClick={onClose} className="bg-gradient-to-r from-primary to-accent text-white px-8 py-3 rounded-xl">
+              Explore Other Dishes
+            </Button>
           </div>
         )}
       </DialogContent>
