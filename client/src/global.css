@@ -1,0 +1,474 @@
+:root {
+    /* Dark Elegant Food Menu Palette - Inspired by Premium Restaurant Design */
+    --primary: #1a1a1a;
+    /* Deep charcoal - sophisticated dark base */
+    --secondary: #2d2d2d;
+    /* Medium charcoal - elevated surfaces */
+    --accent: #FF6B35;
+    /* Vibrant orange - pricing and call-to-action */
+    --accent-dark: #E55A2B;
+    /* Darker orange for hover states */
+    --tertiary: #3a3a3a;
+    /* Light charcoal - subtle elevation */
+
+    /* Functional Colors */
+    --success: #4CAF50;
+    /* Green - fresh, natural */
+    --warning: #FF9800;
+    /* Amber - attention */
+    --error: #F44336;
+    /* Red - alerts */
+
+    /* Dark Theme Backgrounds */
+    --background: #0f0f0f;
+    /* Almost black - main background */
+    --background-secondary: #1a1a1a;
+    /* Dark charcoal - sections */
+    --background-tertiary: #2d2d2d;
+    /* Medium charcoal - cards */
+    --surface: #2d2d2d;
+    /* Card surfaces */
+    --surface-elevated: #3a3a3a;
+    /* Elevated cards */
+    --surface-muted: #262626;
+    /* Subtle sections */
+    --overlay: rgba(255, 107, 53, 0.05);
+    /* Orange overlay */
+
+    /* Dark Theme Typography */
+    --text-primary: #FFFFFF;
+    /* Pure white - primary text */
+    --text-secondary: #E0E0E0;
+    /* Light gray - secondary text */
+    --text-muted: #9E9E9E;
+    /* Medium gray - muted text */
+    --text-accent: #FF6B35;
+    /* Orange text for highlights */
+    --primary-text: #FFFFFF;
+    /* White text on dark backgrounds */
+
+    /* Typography */
+    --font-family-base: 'Inter', 'Segoe UI', system-ui, sans-serif;
+    /* Modern, clean */
+    --font-family-heading: 'Playfair Display', serif;
+    /* Elegant headings */
+    --font-family-accent: 'Dancing Script', cursive;
+    /* Special script font */
+}
+
+/* Dark elegant restaurant theme styling */
+body {
+    font-family: var(--font-family-base);
+    background:
+        radial-gradient(circle at 20% 50%, rgba(255, 107, 53, 0.03) 0%, transparent 50%),
+        radial-gradient(circle at 80% 20%, rgba(255, 107, 53, 0.02) 0%, transparent 50%),
+        radial-gradient(circle at 40% 80%, rgba(255, 107, 53, 0.01) 0%, transparent 50%),
+        linear-gradient(135deg, var(--background) 0%, var(--background-secondary) 100%);
+    color: var(--text-primary);
+    line-height: 1.6;
+    min-height: 100vh;
+    position: relative;
+}
+
+/* Add sophisticated dark texture overlay */
+body::before {
+    content: '';
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background:
+        url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><defs><pattern id="darkgrain" width="100" height="100" patternUnits="userSpaceOnUse"><circle cx="20" cy="20" r="1" fill="%23FF6B35" opacity="0.02"/><circle cx="80" cy="40" r="1" fill="%23FFFFFF" opacity="0.01"/><circle cx="40" cy="70" r="1" fill="%23FF6B35" opacity="0.015"/><circle cx="70" cy="10" r="1" fill="%23FFFFFF" opacity="0.008"/><circle cx="10" cy="80" r="1" fill="%23FF6B35" opacity="0.01"/></pattern></defs><rect width="100" height="100" fill="url(%23darkgrain)"/></svg>'),
+        linear-gradient(45deg, transparent 49%, rgba(255, 107, 53, 0.005) 50%, transparent 51%);
+    pointer-events: none;
+    z-index: -1;
+}
+
+h1,
+h2,
+h3 {
+    font-family: var(--font-family-heading);
+    color: var(--text-primary);
+    font-weight: 700;
+}
+
+h1 {
+    font-size: 2.5rem;
+    margin-bottom: 1rem;
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+}
+
+h2 {
+    font-size: 2rem;
+    margin-bottom: 0.875rem;
+}
+
+h3 {
+    font-size: 1.5rem;
+    margin-bottom: 0.75rem;
+}
+
+p {
+    font-family: var(--font-family-secondary);
+    color: var(--text-secondary);
+    font-size: 1rem;
+    line-height: 1.7;
+}
+
+/* Dark theme sophisticated button styling */
+button {
+    background: linear-gradient(135deg, var(--accent) 0%, var(--accent-dark) 100%);
+    color: var(--primary-text);
+    padding: 0.875rem 2rem;
+    border: none;
+    border-radius: 0.75rem;
+    cursor: pointer;
+    font-family: var(--font-family-base);
+    font-weight: 600;
+    font-size: 1rem;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    box-shadow:
+        0 4px 14px rgba(255, 107, 53, 0.3),
+        0 2px 8px rgba(0, 0, 0, 0.2);
+    position: relative;
+    overflow: hidden;
+}
+
+button::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+    transition: left 0.5s ease;
+}
+
+button:hover {
+    transform: translateY(-2px);
+    box-shadow:
+        0 8px 25px rgba(255, 107, 53, 0.4),
+        0 4px 15px rgba(0, 0, 0, 0.3);
+    background: linear-gradient(135deg, var(--accent-dark) 0%, var(--accent) 100%);
+}
+
+button:hover::before {
+    left: 100%;
+}
+
+button:active {
+    transform: translateY(0);
+    box-shadow:
+        0 4px 14px rgba(255, 107, 53, 0.3),
+        0 2px 8px rgba(0, 0, 0, 0.2);
+}
+
+/* Enhanced image styling for food photography */
+.image-container {
+    overflow: hidden;
+    border-radius: 1rem;
+    box-shadow:
+        0 8px 30px rgba(139, 69, 19, 0.15),
+        0 2px 8px rgba(0, 0, 0, 0.1);
+    position: relative;
+    background: var(--surface);
+}
+
+.image-container::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(135deg,
+            rgba(218, 165, 32, 0.1) 0%,
+            transparent 50%,
+            rgba(139, 69, 19, 0.1) 100%);
+    pointer-events: none;
+    z-index: 1;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.image-container:hover::before {
+    opacity: 1;
+}
+
+.image-container img {
+    display: block;
+    width: 100%;
+    height: auto;
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    filter: brightness(1) contrast(1.05) saturate(1.1);
+}
+
+.image-container:hover img {
+    transform: scale(1.08);
+    filter: brightness(1.1) contrast(1.1) saturate(1.2);
+}
+
+/* Food-specific enhancements */
+.food-image {
+    border-radius: 1rem;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 20px rgba(139, 69, 19, 0.2);
+}
+
+.food-image:hover {
+    box-shadow: 0 8px 35px rgba(139, 69, 19, 0.3);
+    transform: translateY(-4px);
+}
+
+/* Dark theme card styling for restaurant/food context */
+.card {
+    background:
+        linear-gradient(135deg, var(--surface-elevated) 0%, var(--surface) 100%);
+    border-radius: 1.25rem;
+    box-shadow:
+        0 10px 40px rgba(0, 0, 0, 0.3),
+        0 2px 8px rgba(0, 0, 0, 0.2),
+        inset 0 1px 0 rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 107, 53, 0.1);
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    overflow: hidden;
+    position: relative;
+    backdrop-filter: blur(10px);
+}
+
+.card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 3px;
+    background: linear-gradient(90deg, var(--accent), var(--accent-dark), var(--accent));
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.card::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background:
+        radial-gradient(circle at 30% 20%, rgba(255, 107, 53, 0.03) 0%, transparent 50%),
+        radial-gradient(circle at 70% 80%, rgba(255, 107, 53, 0.02) 0%, transparent 50%);
+    pointer-events: none;
+    z-index: 0;
+}
+
+.card:hover {
+    transform: translateY(-8px);
+    box-shadow:
+        0 20px 60px rgba(0, 0, 0, 0.4),
+        0 8px 20px rgba(255, 107, 53, 0.1);
+}
+
+.card:hover::before {
+    opacity: 1;
+}
+
+/* Special classes for food menu design inspired by elegant dark restaurant theme */
+
+/* Price badge styling - orange circular badges like in the reference image */
+.price-badge {
+    background: linear-gradient(135deg, var(--accent) 0%, var(--accent-dark) 100%);
+    color: var(--primary-text);
+    font-weight: 700;
+    font-size: 1.1rem;
+    padding: 0.75rem 1rem;
+    border-radius: 50%;
+    min-width: 3.5rem;
+    min-height: 3.5rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow:
+        0 8px 25px rgba(255, 107, 53, 0.4),
+        0 4px 12px rgba(0, 0, 0, 0.3),
+        0 0 20px rgba(255, 107, 53, 0.2);
+    position: relative;
+    z-index: 10;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    text-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
+}
+
+.price-badge:hover {
+    transform: scale(1.05);
+    box-shadow:
+        0 12px 35px rgba(255, 107, 53, 0.5),
+        0 6px 15px rgba(0, 0, 0, 0.4),
+        0 0 25px rgba(255, 107, 53, 0.3);
+}
+
+/* Food image container - larger, more tantalizing circular presentation */
+.food-image-circle {
+    border-radius: 50%;
+    overflow: hidden;
+    aspect-ratio: 1;
+    box-shadow:
+        0 20px 45px rgba(0, 0, 0, 0.5),
+        0 8px 20px rgba(255, 107, 53, 0.15),
+        inset 0 0 0 1px rgba(255, 255, 255, 0.1);
+    border: 3px solid rgba(255, 107, 53, 0.2);
+    position: relative;
+    background: var(--surface);
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.food-image-circle img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    filter: contrast(1.1) saturate(1.2);
+}
+
+.food-image-circle:hover {
+    transform: translateY(-4px);
+    box-shadow:
+        0 25px 55px rgba(0, 0, 0, 0.6),
+        0 12px 25px rgba(255, 107, 53, 0.25),
+        inset 0 0 0 1px rgba(255, 255, 255, 0.15);
+    border-color: rgba(255, 107, 53, 0.4);
+}
+
+.food-image-circle:hover img {
+    transform: scale(1.08);
+    filter: contrast(1.15) saturate(1.3) brightness(1.05);
+}
+
+/* Menu item card with enhanced dark theme and better food presentation */
+.menu-item-card {
+    background: linear-gradient(135deg, var(--surface) 0%, var(--surface-elevated) 100%);
+    border-radius: 1.5rem;
+    padding: 1.5rem;
+    position: relative;
+    border: 1px solid rgba(255, 107, 53, 0.15);
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    overflow: hidden;
+    box-shadow:
+        0 8px 25px rgba(0, 0, 0, 0.3),
+        0 2px 10px rgba(255, 107, 53, 0.05);
+}
+
+.menu-item-card:hover {
+    transform: translateY(-2px);
+    border-color: rgba(255, 107, 53, 0.3);
+    box-shadow:
+        0 15px 40px rgba(0, 0, 0, 0.4),
+        0 5px 15px rgba(255, 107, 53, 0.15);
+}
+
+.menu-item-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 2px;
+    background: linear-gradient(90deg, transparent, var(--accent), transparent);
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.menu-item-card:hover::before {
+    opacity: 1;
+}
+
+.menu-item-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: radial-gradient(circle at 50% 50%, rgba(255, 107, 53, 0.02) 0%, transparent 70%);
+    pointer-events: none;
+}
+
+.menu-item-card:hover {
+    transform: translateY(-4px);
+    box-shadow:
+        0 20px 40px rgba(0, 0, 0, 0.3),
+        0 8px 16px rgba(255, 107, 53, 0.1);
+    border-color: rgba(255, 107, 53, 0.2);
+}
+
+/* Dark theme heading styles */
+.menu-heading {
+    font-family: var(--font-family-heading);
+    font-size: 2.5rem;
+    font-weight: 700;
+    color: var(--text-primary);
+    text-align: center;
+    margin-bottom: 2rem;
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+}
+
+.menu-heading .accent-text {
+    color: var(--accent);
+    font-family: var(--font-family-accent);
+    font-style: italic;
+    font-size: 2rem;
+    display: block;
+    margin-top: 0.5rem;
+}
+
+/* Decorative leaf elements - green accent like in the image */
+.decorative-leaf {
+    position: absolute;
+    width: 2rem;
+    height: 2rem;
+    background: #4CAF50;
+    border-radius: 0 100% 0 100%;
+    transform: rotate(45deg);
+    opacity: 0.7;
+    animation: float 3s ease-in-out infinite;
+}
+
+.decorative-leaf:nth-child(2) {
+    animation-delay: 1s;
+    background: #66BB6A;
+}
+
+.decorative-leaf:nth-child(3) {
+    animation-delay: 2s;
+    background: #81C784;
+}
+
+@keyframes float {
+
+    0%,
+    100% {
+        transform: rotate(45deg) translateY(0px);
+    }
+
+    50% {
+        transform: rotate(45deg) translateY(-10px);
+    }
+}
+
+/* Special section backgrounds for food menu */
+.food-menu-section {
+    background: var(--background-secondary);
+    border-radius: 2rem;
+    padding: 3rem 2rem;
+    margin: 2rem 0;
+    position: relative;
+    overflow: hidden;
+}
+
+.food-menu-section::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background:
+        radial-gradient(circle at 20% 30%, rgba(255, 107, 53, 0.03) 0%, transparent 50%),
+        radial-gradient(circle at 80% 70%, rgba(255, 107, 53, 0.02) 0%, transparent 50%);
+    pointer-events: none;
+}
