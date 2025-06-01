@@ -27,7 +27,7 @@ export default function ItemDetailModal({ itemId, onClose }: ItemDetailModalProp
   const [spiceLevel, setSpiceLevel] = useState("");
   const [activeTab, setActiveTab] = useState("customize");
   const [question, setQuestion] = useState("");
-  
+
   const { data: item, isLoading } = useMenuItem(itemId);
   const { data: addons, isLoading: addonsLoading } = useMenuItemAddons(itemId);
   const addToCart = useAddToCart();
@@ -35,19 +35,19 @@ export default function ItemDetailModal({ itemId, onClose }: ItemDetailModalProp
 
   const handleAddToCart = async () => {
     if (!item) return;
-    
+
     try {
       await addToCart.mutateAsync({
         menuItemId: item.id,
         quantity,
         specialInstructions: specialInstructions || undefined,
       });
-      
+
       toast({
         title: "Added to cart",
         description: `${quantity} x ${item.name} has been added to your cart.`,
       });
-      
+
       onClose();
     } catch (error) {
       toast({
@@ -82,10 +82,10 @@ export default function ItemDetailModal({ itemId, onClose }: ItemDetailModalProp
 
   const calculateTotalPrice = () => {
     if (!item) return "0.00";
-    
+
     let basePrice = item.price * quantity;
     let addonPrice = 0;
-    
+
     if (addons) {
       for (const [addonId, addonQuantity] of Object.entries(selectedAddons)) {
         const addon = addons.find(a => a.id === parseInt(addonId));
@@ -94,7 +94,7 @@ export default function ItemDetailModal({ itemId, onClose }: ItemDetailModalProp
         }
       }
     }
-    
+
     return (basePrice + addonPrice).toFixed(2);
   };
 
@@ -110,7 +110,7 @@ export default function ItemDetailModal({ itemId, onClose }: ItemDetailModalProp
 
   const handleAskQuestion = () => {
     if (!question.trim()) return;
-    
+
     toast({
       title: "Question submitted",
       description: "Our chef will answer your question about this dish shortly.",
@@ -136,22 +136,13 @@ export default function ItemDetailModal({ itemId, onClose }: ItemDetailModalProp
             </div>
           </div>
         ) : item ? (
-          <>
-            {/* Header with Image */}
+          <>            {/* Header with Image */}
             <div className="relative h-48 flex-shrink-0">
-              <img 
-                src={item.imageUrl || '/placeholder-food.jpg'} 
+              <img
+                src={item.imageUrl || '/placeholder-food.jpg'}
                 alt={item.name}
                 className="w-full h-full object-cover"
               />
-              <Button
-                variant="ghost"
-                size="icon"
-                className="absolute top-4 right-4 bg-white/80 hover:bg-white"
-                onClick={onClose}
-              >
-                <X className="h-4 w-4" />
-              </Button>
               <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/60 to-transparent p-4">
                 <h2 className="text-2xl font-bold text-white">{item.name}</h2>
                 <div className="flex items-center space-x-4 mt-2">
@@ -166,7 +157,7 @@ export default function ItemDetailModal({ itemId, onClose }: ItemDetailModalProp
                 </div>
               </div>
             </div>
-            
+
             {/* Content with Tabs */}
             <div className="flex-1 overflow-hidden">
               <Tabs value={activeTab} onValueChange={setActiveTab} className="h-full flex flex-col">
@@ -193,12 +184,12 @@ export default function ItemDetailModal({ itemId, onClose }: ItemDetailModalProp
                         {Object.entries(groupAddonsByCategory(addons)).map(([category, categoryAddons]) => (
                           <div key={category} className="border border-gray-200 rounded-lg p-3">
                             <h4 className="text-sm font-semibold text-gray-800 mb-2 capitalize">
-                              {category === 'spice' ? 'Spice Level' : 
-                               category === 'cheese' ? 'Extra Cheese' :
-                               category === 'meat' ? 'Meat Options' :
-                               category === 'sauce' ? 'Sauces' :
-                               category === 'side' ? 'Sides & Substitutions' :
-                               category === 'topping' ? 'Toppings' : category}
+                              {category === 'spice' ? 'Spice Level' :
+                                category === 'cheese' ? 'Extra Cheese' :
+                                  category === 'meat' ? 'Meat Options' :
+                                    category === 'sauce' ? 'Sauces' :
+                                      category === 'side' ? 'Sides & Substitutions' :
+                                        category === 'topping' ? 'Toppings' : category}
                             </h4>
                             {category === 'spice' ? (
                               <RadioGroup value={spiceLevel} onValueChange={setSpiceLevel} className="flex flex-wrap gap-4">
@@ -275,7 +266,7 @@ export default function ItemDetailModal({ itemId, onClose }: ItemDetailModalProp
                           rows={3}
                           className="text-sm"
                         />
-                        <Button 
+                        <Button
                           onClick={handleAskQuestion}
                           disabled={!question.trim()}
                           size="sm"
@@ -285,7 +276,7 @@ export default function ItemDetailModal({ itemId, onClose }: ItemDetailModalProp
                         </Button>
                       </div>
                     </div>
-                    
+
                     {/* Sample Q&A */}
                     <div className="space-y-3">
                       <h4 className="text-sm font-semibold text-gray-800">Common Questions</h4>
@@ -332,8 +323,8 @@ export default function ItemDetailModal({ itemId, onClose }: ItemDetailModalProp
                   </Button>
                 </div>
               </div>
-              
-              <Button 
+
+              <Button
                 onClick={handleAddToCart}
                 disabled={addToCart.isPending}
                 className="font-medium px-6"
