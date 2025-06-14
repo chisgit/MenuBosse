@@ -420,3 +420,30 @@ button:active {
         0 3px 10px rgba(255, 107, 53, 0.2),
         inset 0 1px 0 rgba(255, 255, 255, 0.15);
 }
+
+/* Enhanced Navigation Tab Glow Effects */
+.nav-tab-active {
+  position: relative;
+  box-shadow: 
+    0 0 20px rgba(255, 107, 53, 0.3),
+    0 4px 12px rgba(255, 107, 53, 0.2);
+}
+
+.nav-tab-active::before {
+  content: '';
+  position: absolute;
+  top: -2px;
+  left: -8px;
+  right: -8px;
+  bottom: -2px;
+  background: linear-gradient(135deg, rgba(255, 107, 53, 0.1), rgba(255, 107, 53, 0.05));
+  border-radius: 8px;
+  z-index: -1;
+  opacity: 0.8;
+}
+
+/* Ensure nav container has enough padding for glow effects */
+.nav-tabs-container {
+  padding-left: 12px;
+  padding-right: 12px;
+}

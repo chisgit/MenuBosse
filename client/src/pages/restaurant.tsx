@@ -102,13 +102,16 @@ export default function RestaurantPage({ restaurantId }: RestaurantPageProps) {
               <button
                 key={tab.key}
                 onClick={() => setActiveTab(tab.key)}
-                className={`py-3 px-8 border-b-2 font-medium text-sm md:text-base whitespace-nowrap transition-colors ${
+                className={`relative py-3 px-8 border-b-2 font-medium text-sm md:text-base whitespace-nowrap transition-all duration-300 ${
                   activeTab === tab.key
-                    ? 'border-orange-500 text-orange-400'
-                    : 'border-transparent text-gray-400 hover:text-gray-300'
+                    ? 'border-orange-500 text-orange-400 nav-tab-active'
+                    : 'border-transparent text-gray-400 hover:text-gray-300 hover:border-gray-600'
                 }`}
               >
                 {tab.label}
+                {activeTab === tab.key && (
+                  <div className="absolute inset-0 rounded-lg bg-gradient-to-r from-orange-500/10 to-orange-600/10 -z-10"></div>
+                )}
               </button>
             ))}
           </div>
