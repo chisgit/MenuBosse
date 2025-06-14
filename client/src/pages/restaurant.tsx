@@ -96,13 +96,13 @@ export default function RestaurantPage({ restaurantId }: RestaurantPageProps) {
       {/* Navigation Tabs */}
       <nav className="relative bg-black/90 backdrop-blur-md border-b border-white/10 sticky top-20 z-40">
         <div className="absolute inset-0 bg-gradient-to-r from-orange-500/3 to-orange-600/3"></div>
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex space-x-8 overflow-x-auto py-1">
+        <div className="max-w-7xl mx-auto px-8 sm:px-10 lg:px-12">
+          <div className="flex space-x-8 overflow-x-auto py-4">
             {tabs.map((tab) => (
               <button
                 key={tab.key}
                 onClick={() => setActiveTab(tab.key)}
-                className={`py-3 px-6 border-b-2 font-medium text-sm whitespace-nowrap transition-colors ${
+                className={`py-2 px-6 border-b-2 font-medium text-sm whitespace-nowrap transition-colors ${
                   activeTab === tab.key
                     ? 'border-orange-500 text-orange-400'
                     : 'border-transparent text-gray-400 hover:text-gray-300'
