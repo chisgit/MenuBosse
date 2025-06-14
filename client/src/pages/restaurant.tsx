@@ -56,11 +56,14 @@ export default function RestaurantPage({ restaurantId }: RestaurantPageProps) {
     { key: 'discovery' as const, label: 'Discover' },
     { key: 'deals' as const, label: 'Deals' },
     { key: 'reviews' as const, label: 'Reviews' },
-  ]; return (
+  ];
+
+  return (
     <div className="min-h-screen bg-gradient-to-br from-slate-900 via-black to-slate-800">
       {/* Header */}
       <header className="relative bg-black/80 backdrop-blur-md shadow-lg border-b border-white/10 sticky top-0 z-50">
-        <div className="absolute inset-0 bg-gradient-to-r from-orange-500/5 via-transparent to-orange-500/5"></div>        <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="absolute inset-0 bg-gradient-to-r from-orange-500/5 via-transparent to-orange-500/5"></div>
+        <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center h-20">
             <div className="flex items-center space-x-6">
               <h1 className="text-3xl font-bold bg-gradient-to-r from-orange-400 to-orange-600 bg-clip-text text-transparent">
@@ -88,35 +91,40 @@ export default function RestaurantPage({ restaurantId }: RestaurantPageProps) {
             </div>
           </div>
         </div>
-      </header>      {/* Navigation Tabs */}
+      </header>
+
+      {/* Navigation Tabs */}
       <nav className="relative bg-black/90 backdrop-blur-md border-b border-white/10 sticky top-20 z-40">
         <div className="absolute inset-0 bg-gradient-to-r from-orange-500/3 to-orange-600/3"></div>
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex space-x-8 overflow-x-auto">
-            {tabs.map((tab) => (<button
-              key={tab.key}
-              onClick={() => setActiveTab(tab.key)}
-              className={`py-3 px-6 border-b-2 font-medium text-sm whitespace-nowrap transition-colors ${activeTab === tab.key
-                ? 'border-orange-500 text-orange-400'
-                : 'border-transparent text-gray-400 hover:text-gray-300'
+          <div className="flex space-x-8 overflow-x-auto py-1">
+            {tabs.map((tab) => (
+              <button
+                key={tab.key}
+                onClick={() => setActiveTab(tab.key)}
+                className={`py-3 px-6 border-b-2 font-medium text-sm whitespace-nowrap transition-colors ${
+                  activeTab === tab.key
+                    ? 'border-orange-500 text-orange-400'
+                    : 'border-transparent text-gray-400 hover:text-gray-300'
                 }`}
-            >
-              {tab.label}
-            </button>
+              >
+                {tab.label}
+              </button>
             ))}
           </div>
         </div>
       </nav>
 
       {/* Main Content */}
-      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">        {activeTab === 'menu' && (
-        <MenuSection
-          restaurantId={restaurantId}
-          onItemClick={setSelectedItemId}
-          restaurantName={restaurant?.name}
-          tableNumber="Table 12"
-        />
-      )}
+      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
+        {activeTab === 'menu' && (
+          <MenuSection
+            restaurantId={restaurantId}
+            onItemClick={setSelectedItemId}
+            restaurantName={restaurant?.name}
+            tableNumber="Table 12"
+          />
+        )}
         {activeTab === 'discovery' && <DiscoverySection />}
         {activeTab === 'deals' && <DealsSection />}
         {activeTab === 'reviews' && (
