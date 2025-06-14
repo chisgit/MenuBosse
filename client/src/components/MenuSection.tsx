@@ -166,62 +166,56 @@ export default function MenuSection({ restaurantId, onItemClick, restaurantName,
               className="menu-item-card group overflow-hidden cursor-pointer transform transition-all duration-500 hover:scale-105"
               onClick={() => onItemClick(item.id)}
             >
-              <div className="relative">
-                {/* Food Image - Larger, more prominent background */}
-                <div className="relative h-64 w-full overflow-hidden">
+              <div className="relative">                {/* Food Image - Even larger for maximum visual impact */}
+                <div className="relative h-96 w-full overflow-hidden">
                   <img
                     src={item.imageUrl || '/placeholder-food.jpg'}
                     alt={item.name}
                     className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
-                  />
-                  {/* Dark overlay for better text contrast */}
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent"></div>
+                  />                  {/* Lighter overlay for better image visibility */}
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-black/5 to-transparent"></div>
 
-                  {/* Price Badge - Prominent circular positioning */}
-                  <div className="absolute top-4 right-4">
-                    <div className="price-badge text-lg font-bold">
+                  {/* Price Badge - More prominent and eye-catching */}
+                  <div className="absolute top-6 right-6">
+                    <div className="enhanced-price-badge text-xl font-extrabold">
                       ${item.price.toFixed(0)}
                     </div>
-                  </div>
+                  </div>                  {/* Rating badge - Enhanced visibility */}
+                  {item.rating && (
+                    <div className="absolute top-6 left-6 enhanced-rating-badge bg-black/85 backdrop-blur-xl rounded-full px-4 py-3 flex items-center space-x-2 border-2 border-yellow-400/50 shadow-2xl">
+                      <Star className="h-5 w-5 text-yellow-400 fill-current drop-shadow-sm" />
+                      <span className="text-white font-bold text-sm drop-shadow-sm">
+                        {item.rating.toFixed(1)}
+                      </span>
+                    </div>
+                  )}
 
-                  {/* Voting controls - Better positioned and visible */}
-                  <div className="absolute bottom-4 left-4 luxury-vote-container flex items-center bg-black/60 backdrop-blur-md rounded-full px-4 py-2 border border-white/20 shadow-lg">
+                  {/* Voting controls - Bottom right corner */}
+                  <div className="absolute bottom-6 right-6 enhanced-vote-container flex items-center bg-black/85 backdrop-blur-xl rounded-full px-4 py-2 border-2 border-orange-400/40 shadow-2xl">
                     <button
-                      className="vote-animation p-1 text-gray-300 hover:text-green-400 transition-colors duration-300"
+                      className="vote-animation p-1.5 text-gray-200 hover:text-green-400 hover:bg-green-400/20 rounded-full transition-all duration-300"
                       onClick={(e) => handleVote(item.id, 'up', e)}
                       disabled={voteMenuItem.isPending}
                     >
                       <ThumbsUp className="h-4 w-4" />
                     </button>
-                    <span className="text-sm font-bold text-white mx-3 drop-shadow">
+                    <span className="text-sm font-bold text-white mx-3 drop-shadow-lg">
                       {item.votes}
                     </span>
                     <button
-                      className="vote-animation p-1 text-gray-300 hover:text-red-400 transition-colors duration-300"
+                      className="vote-animation p-1.5 text-gray-200 hover:text-red-400 hover:bg-red-400/20 rounded-full transition-all duration-300"
                       onClick={(e) => handleVote(item.id, 'down', e)}
                       disabled={voteMenuItem.isPending}
                     >
                       <ThumbsDown className="h-4 w-4" />
                     </button>
                   </div>
-
-                  {/* Rating badge - Better positioned */}
-                  {item.rating && (
-                    <div className="absolute bottom-4 right-4 luxury-rating-badge bg-black/60 backdrop-blur-md rounded-full px-3 py-2 flex items-center space-x-1 border border-yellow-400/30 shadow-lg">
-                      <Star className="h-4 w-4 text-yellow-400 fill-current drop-shadow-sm" />
-                      <span className="text-white font-medium text-sm drop-shadow-sm">
-                        {item.rating.toFixed(1)}
-                      </span>
-                    </div>
-                  )}
-                </div>
-
-                {/* Item Details - Clean text area */}
-                <div className="p-6 bg-gradient-to-br from-gray-900/95 to-gray-800/95 backdrop-blur-sm">
+                </div>                {/* Item Details - Much more transparent for better food visibility */}
+                <div className="p-6 bg-gradient-to-br from-gray-900/30 to-gray-800/20 backdrop-blur-md border-t border-white/10">
                   <h3 className="text-xl font-bold text-white mb-2 group-hover:text-orange-400 transition-colors duration-300 drop-shadow-sm">
                     {item.name}
                   </h3>
-                  <p className="text-gray-300 text-sm mb-4 line-clamp-2 leading-relaxed">
+                  <p className="text-gray-200 text-sm mb-4 line-clamp-2 leading-relaxed">
                     {item.description}
                   </p>
                   <div className="flex justify-center">
