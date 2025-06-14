@@ -47,18 +47,14 @@
     --primary-text: #FFFFFF;
     /* White text on dark backgrounds */
 
-    /* Typography */
-    --font-family-base: 'Inter', 'Segoe UI', system-ui, sans-serif;
-    /* Modern, clean */
+    /* Standardized Font System - Only 2 fonts */
     --font-family-heading: 'Playfair Display', serif;
-    /* Elegant headings */
-    --font-family-accent: 'Dancing Script', cursive;
-    /* Special script font */
+    --font-family-body: 'Inter', 'Segoe UI', system-ui, sans-serif;
 }
 
 /* Dark elegant restaurant theme styling */
 body {
-    font-family: var(--font-family-base);
+    font-family: var(--font-family-body);
     background:
         radial-gradient(circle at 20% 50%, rgba(255, 107, 53, 0.03) 0%, transparent 50%),
         radial-gradient(circle at 80% 20%, rgba(255, 107, 53, 0.02) 0%, transparent 50%),
@@ -85,12 +81,17 @@ body::before {
     z-index: -1;
 }
 
+/* Standardized Typography */
 h1,
 h2,
-h3 {
+h3,
+h4,
+h5,
+h6 {
     font-family: var(--font-family-heading);
     color: var(--text-primary);
     font-weight: 700;
+    line-height: 1.2;
 }
 
 h1 {
@@ -109,11 +110,26 @@ h3 {
     margin-bottom: 0.75rem;
 }
 
-p {
-    font-family: var(--font-family-secondary);
+h4 {
+    font-size: 1.25rem;
+    margin-bottom: 0.625rem;
+}
+
+h5 {
+    font-size: 1.125rem;
+    margin-bottom: 0.5rem;
+}
+
+h6 {
+    font-size: 1rem;
+    margin-bottom: 0.5rem;
+}
+
+p, span, div {
+    font-family: var(--font-family-body);
     color: var(--text-secondary);
     font-size: 1rem;
-    line-height: 1.7;
+    line-height: 1.6;
 }
 
 /* Dark theme sophisticated button styling */
@@ -124,7 +140,7 @@ button {
     border: none;
     border-radius: 0.75rem;
     cursor: pointer;
-    font-family: var(--font-family-base);
+    font-family: var(--font-family-body);
     font-weight: 600;
     font-size: 1rem;
     transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
