@@ -27,10 +27,10 @@ export default function RestaurantPage({ restaurantId }: RestaurantPageProps) {
   if (restaurantLoading) {
     return (
       <div className="min-h-screen bg-gray-50">
-        <div className="max-w-7xl mx-auto px-4 py-8">
+        <div className="max-w-7xl mx-auto container-spacing padding-section">
           <Skeleton className="h-8 w-64 mb-4" />
-          <Skeleton className="h-4 w-96 mb-8" />
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          <Skeleton className="h-6 w-96 mb-8" />
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 grid-spacing">
             {[...Array(6)].map((_, i) => (
               <Skeleton key={i} className="h-64 w-full" />
             ))}
@@ -43,7 +43,7 @@ export default function RestaurantPage({ restaurantId }: RestaurantPageProps) {
   if (!restaurant) {
     return (
       <div className="min-h-screen bg-gray-50 flex items-center justify-center">
-        <div className="text-center">
+        <div className="text-center card-spacing">
           <h1 className="text-2xl font-bold text-gray-900 mb-2">Restaurant Not Found</h1>
           <p className="text-gray-600">The restaurant you're looking for doesn't exist.</p>
         </div>
@@ -60,26 +60,26 @@ export default function RestaurantPage({ restaurantId }: RestaurantPageProps) {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-900 via-black to-slate-800">
-      {/* Header */}
+      {/* Enhanced Header with Better Spacing */}
       <header className="relative bg-black/80 backdrop-blur-md shadow-lg border-b border-white/10 sticky top-0 z-50">
         <div className="absolute inset-0 bg-gradient-to-r from-orange-500/5 via-transparent to-orange-500/5"></div>
-        <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex justify-between items-center h-20">
-            <div className="flex items-center space-x-6">
-              <h1 className="text-3xl font-bold bg-gradient-to-r from-orange-400 to-orange-600 bg-clip-text text-transparent">
+        <div className="relative max-w-7xl mx-auto container-spacing">
+          <div className="flex justify-between items-center h-24 md:h-28">
+            <div className="flex items-center space-x-8">
+              <h1 className="text-3xl md:text-4xl font-bold bg-gradient-to-r from-orange-400 to-orange-600 bg-clip-text text-transparent">
                 MenuBosse
               </h1>
-              <div className="text-sm text-gray-300 bg-black/60 backdrop-blur-sm rounded-full px-4 py-2 border border-white/10">
+              <div className="text-sm md:text-base text-gray-300 bg-black/60 backdrop-blur-sm rounded-full px-6 py-3 border border-white/10">
                 <span className="font-semibold text-white">{restaurant.name}</span>
                 <span className="mx-2 text-orange-400">•</span>
                 <span className="text-gray-400">Table 12</span>
               </div>
             </div>
-            <div className="flex items-center space-x-4">
-              <button className="p-3 text-gray-400 hover:text-orange-400 transition-all duration-300 hover:bg-white/5 rounded-full">
+            <div className="flex items-center space-x-6">
+              <button className="p-4 text-gray-400 hover:text-orange-400 transition-all duration-300 hover:bg-white/5 rounded-full">
                 <MicOff className="h-5 w-5" />
               </button>
-              <button className="relative p-3 text-gray-400 hover:text-orange-400 transition-all duration-300 hover:bg-white/5 rounded-full group">
+              <button className="relative p-4 text-gray-400 hover:text-orange-400 transition-all duration-300 hover:bg-white/5 rounded-full group">
                 <ShoppingCart className="h-5 w-5" />
                 {cartItemCount > 0 && (
                   <span className="absolute -top-1 -right-1 bg-gradient-to-r from-orange-500 to-orange-600 text-white text-xs rounded-full h-6 w-6 flex items-center justify-center text-[10px] font-bold shadow-lg pulse-glow">
@@ -93,19 +93,20 @@ export default function RestaurantPage({ restaurantId }: RestaurantPageProps) {
         </div>
       </header>
 
-      {/* Navigation Tabs */}
-      <nav className="relative bg-black/90 backdrop-blur-md border-b border-white/10 sticky top-20 z-40">
+      {/* Enhanced Navigation Tabs with Better Spacing */}
+      <nav className="relative bg-black/90 backdrop-blur-md border-b border-white/10 sticky top-24 md:top-28 z-40">
         <div className="absolute inset-0 bg-gradient-to-r from-orange-500/3 to-orange-600/3"></div>
-        <div className="max-w-7xl mx-auto px-8 sm:px-10 lg:px-12">
-          <div className="flex space-x-8 overflow-x-auto py-4">
+        <div className="max-w-7xl mx-auto container-spacing">
+          <div className="flex space-x-8 overflow-x-auto py-6">
             {tabs.map((tab) => (
               <button
                 key={tab.key}
                 onClick={() => setActiveTab(tab.key)}
-                className={`py-2 px-6 border-b-2 font-medium text-sm whitespace-nowrap transition-colors ${activeTab === tab.key
+                className={`py-3 px-8 border-b-2 font-medium text-sm md:text-base whitespace-nowrap transition-colors ${
+                  activeTab === tab.key
                     ? 'border-orange-500 text-orange-400'
                     : 'border-transparent text-gray-400 hover:text-gray-300'
-                  }`}
+                }`}
               >
                 {tab.label}
               </button>
@@ -114,8 +115,8 @@ export default function RestaurantPage({ restaurantId }: RestaurantPageProps) {
         </div>
       </nav>
 
-      {/* Main Content */}
-      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
+      {/* Enhanced Main Content with Better Spacing */}
+      <main className="max-w-7xl mx-auto container-spacing padding-section">
         {activeTab === 'menu' && (
           <MenuSection
             restaurantId={restaurantId}
@@ -127,7 +128,7 @@ export default function RestaurantPage({ restaurantId }: RestaurantPageProps) {
         {activeTab === 'discovery' && <DiscoverySection />}
         {activeTab === 'deals' && <DealsSection />}
         {activeTab === 'reviews' && (
-          <div className="text-center py-12">
+          <div className="text-center padding-section">
             <h2 className="text-xl font-semibold text-gray-900 mb-2">Reviews Coming Soon</h2>
             <p className="text-gray-600">Customer reviews and ratings will be available here.</p>
           </div>
