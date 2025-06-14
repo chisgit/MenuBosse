@@ -1,0 +1,41 @@
+{
+  "github.copilot.enable": {
+    "*": true,
+    "yaml": true,
+    "plaintext": true,
+    "markdown": true
+  },
+  "github.copilot.advanced": {
+    "length": 500,
+    "temperature": 0.1,
+    "top_p": 1,
+    "listCount": 10,
+    "inlineSuggestCount": 3
+  },
+  "github.copilot.chat.localeOverride": "en",
+  "github.copilot.chat.welcomeMessage": "always",
+  "github.copilot.editor.enableCodeActions": true,
+  "github.copilot.chat.useProjectFiles": true,
+  "github.copilot.chat.projectContext": {
+    "includeFiles": [
+      "plan.md",
+      ".github/copilot-instructions.md",
+      "README.md",
+      "package.json",
+      "tsconfig.json"
+    ],
+    "excludeFiles": [
+      "node_modules/**",
+      ".git/**",
+      "*.log",
+      "*.tmp"
+    ]
+  },
+  "github.copilot.referencesInChat": true,
+  "github.copilot.chat.codeGeneration.instructions": [
+    "Always read and reference the plan.md file before making any code changes",
+    "Follow the architectural guidelines specified in plan.md",
+    "Ensure all changes align with the project roadmap in plan.md",
+    "Reference the .github/copilot-instructions.md for coding standards"
+  ]
+}

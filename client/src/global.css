@@ -302,173 +302,105 @@ button:active {
         0 0 25px rgba(255, 107, 53, 0.3);
 }
 
-/* Food image container - larger, more tantalizing circular presentation */
-.food-image-circle {
+/* Enhanced price badge - More prominent and eye-catching */
+.enhanced-price-badge {
+    background: linear-gradient(135deg, var(--accent) 0%, var(--accent-dark) 100%);
+    color: var(--primary-text);
+    font-weight: 900;
+    font-size: 1.25rem;
+    padding: 1rem 1.25rem;
     border-radius: 50%;
-    overflow: hidden;
-    aspect-ratio: 1;
+    min-width: 4rem;
+    min-height: 4rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
     box-shadow:
-        0 20px 45px rgba(0, 0, 0, 0.5),
-        0 8px 20px rgba(255, 107, 53, 0.15),
-        inset 0 0 0 1px rgba(255, 255, 255, 0.1);
-    border: 3px solid rgba(255, 107, 53, 0.2);
+        0 12px 35px rgba(255, 107, 53, 0.6),
+        0 6px 15px rgba(0, 0, 0, 0.4),
+        0 0 30px rgba(255, 107, 53, 0.3),
+        inset 0 1px 0 rgba(255, 255, 255, 0.2);
     position: relative;
-    background: var(--surface);
-    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    z-index: 10;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.4);
+    border: 2px solid rgba(255, 255, 255, 0.1);
 }
 
-.food-image-circle img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-    filter: contrast(1.1) saturate(1.2);
-}
-
-.food-image-circle:hover {
-    transform: translateY(-4px);
-    box-shadow:
-        0 25px 55px rgba(0, 0, 0, 0.6),
-        0 12px 25px rgba(255, 107, 53, 0.25),
-        inset 0 0 0 1px rgba(255, 255, 255, 0.15);
-    border-color: rgba(255, 107, 53, 0.4);
-}
-
-.food-image-circle:hover img {
+.enhanced-price-badge:hover {
     transform: scale(1.08);
-    filter: contrast(1.15) saturate(1.3) brightness(1.05);
-}
-
-/* Menu item card with enhanced dark theme and better food presentation */
-.menu-item-card {
-    background: linear-gradient(135deg, var(--surface) 0%, var(--surface-elevated) 100%);
-    border-radius: 1.5rem;
-    padding: 1.5rem;
-    position: relative;
-    border: 1px solid rgba(255, 107, 53, 0.15);
-    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-    overflow: hidden;
     box-shadow:
-        0 8px 25px rgba(0, 0, 0, 0.3),
-        0 2px 10px rgba(255, 107, 53, 0.05);
+        0 16px 45px rgba(255, 107, 53, 0.7),
+        0 8px 20px rgba(0, 0, 0, 0.5),
+        0 0 40px rgba(255, 107, 53, 0.4),
+        inset 0 1px 0 rgba(255, 255, 255, 0.3);
 }
 
-.menu-item-card:hover {
-    transform: translateY(-2px);
-    border-color: rgba(255, 107, 53, 0.3);
+/* Enhanced voting container - High contrast and better visibility */
+.enhanced-vote-container {
+    background: rgba(0, 0, 0, 0.85) !important;
+    backdrop-filter: blur(20px);
+    border: 2px solid rgba(255, 107, 53, 0.4) !important;
     box-shadow:
-        0 15px 40px rgba(0, 0, 0, 0.4),
-        0 5px 15px rgba(255, 107, 53, 0.15);
+        0 8px 32px rgba(0, 0, 0, 0.5),
+        0 4px 16px rgba(255, 107, 53, 0.2),
+        inset 0 1px 0 rgba(255, 255, 255, 0.1);
+    transition: all 0.3s ease;
 }
 
-.menu-item-card::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    height: 2px;
-    background: linear-gradient(90deg, transparent, var(--accent), transparent);
-    opacity: 0;
-    transition: opacity 0.3s ease;
-}
-
-.menu-item-card:hover::before {
-    opacity: 1;
-}
-
-.menu-item-card::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background: radial-gradient(circle at 50% 50%, rgba(255, 107, 53, 0.02) 0%, transparent 70%);
-    pointer-events: none;
-}
-
-.menu-item-card:hover {
-    transform: translateY(-4px);
+.enhanced-vote-container:hover {
+    border-color: rgba(255, 107, 53, 0.6) !important;
     box-shadow:
-        0 20px 40px rgba(0, 0, 0, 0.3),
-        0 8px 16px rgba(255, 107, 53, 0.1);
-    border-color: rgba(255, 107, 53, 0.2);
+        0 12px 40px rgba(0, 0, 0, 0.6),
+        0 6px 20px rgba(255, 107, 53, 0.3),
+        inset 0 1px 0 rgba(255, 255, 255, 0.15);
 }
 
-/* Dark theme heading styles */
-.menu-heading {
-    font-family: var(--font-family-heading);
-    font-size: 2.5rem;
-    font-weight: 700;
-    color: var(--text-primary);
-    text-align: center;
-    margin-bottom: 2rem;
-    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+/* Enhanced rating badge - Better visibility */
+.enhanced-rating-badge {
+    background: rgba(0, 0, 0, 0.85) !important;
+    backdrop-filter: blur(20px);
+    border: 2px solid rgba(255, 193, 7, 0.5) !important;
+    box-shadow:
+        0 8px 32px rgba(0, 0, 0, 0.5),
+        0 4px 16px rgba(255, 193, 7, 0.2),
+        inset 0 1px 0 rgba(255, 255, 255, 0.1);
+    transition: all 0.3s ease;
 }
 
-.menu-heading .accent-text {
-    color: var(--accent);
-    font-family: var(--font-family-accent);
-    font-style: italic;
-    font-size: 2rem;
-    display: block;
-    margin-top: 0.5rem;
+.enhanced-rating-badge:hover {
+    border-color: rgba(255, 193, 7, 0.7) !important;
+    box-shadow:
+        0 12px 40px rgba(0, 0, 0, 0.6),
+        0 6px 20px rgba(255, 193, 7, 0.3),
+        inset 0 1px 0 rgba(255, 255, 255, 0.15);
 }
 
-/* Decorative leaf elements - green accent like in the image */
-.decorative-leaf {
-    position: absolute;
-    width: 2rem;
-    height: 2rem;
-    background: #4CAF50;
-    border-radius: 0 100% 0 100%;
-    transform: rotate(45deg);
-    opacity: 0.7;
-    animation: float 3s ease-in-out infinite;
+/* Voting button enhancements */
+.vote-animation {
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-.decorative-leaf:nth-child(2) {
-    animation-delay: 1s;
-    background: #66BB6A;
+.vote-animation:hover {
+    transform: scale(1.1);
 }
 
-.decorative-leaf:nth-child(3) {
-    animation-delay: 2s;
-    background: #81C784;
+/* Compact voting container - Smaller, positioned next to title */
+.compact-vote-container {
+    background: rgba(0, 0, 0, 0.7) !important;
+    backdrop-filter: blur(12px);
+    border: 1px solid rgba(255, 107, 53, 0.3) !important;
+    box-shadow:
+        0 4px 16px rgba(0, 0, 0, 0.4),
+        0 2px 8px rgba(255, 107, 53, 0.15),
+        inset 0 1px 0 rgba(255, 255, 255, 0.1);
+    transition: all 0.3s ease;
 }
 
-@keyframes float {
-
-    0%,
-    100% {
-        transform: rotate(45deg) translateY(0px);
-    }
-
-    50% {
-        transform: rotate(45deg) translateY(-10px);
-    }
-}
-
-/* Special section backgrounds for food menu */
-.food-menu-section {
-    background: var(--background-secondary);
-    border-radius: 2rem;
-    padding: 3rem 2rem;
-    margin: 2rem 0;
-    position: relative;
-    overflow: hidden;
-}
-
-.food-menu-section::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background:
-        radial-gradient(circle at 20% 30%, rgba(255, 107, 53, 0.03) 0%, transparent 50%),
-        radial-gradient(circle at 80% 70%, rgba(255, 107, 53, 0.02) 0%, transparent 50%);
-    pointer-events: none;
+.compact-vote-container:hover {
+    border-color: rgba(255, 107, 53, 0.5) !important;
+    box-shadow:
+        0 6px 20px rgba(0, 0, 0, 0.5),
+        0 3px 10px rgba(255, 107, 53, 0.2),
+        inset 0 1px 0 rgba(255, 255, 255, 0.15);
 }
