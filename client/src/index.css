@@ -1,3 +1,7 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
 :root {
   /* Dark elegant restaurant palette */
   --background: 0 0% 6%;
