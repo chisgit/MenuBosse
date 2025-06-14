@@ -1,3 +1,101 @@
+@layer base {
+  * {
+    @apply border-border;
+  }
+
+  body {
+    @apply font-sans antialiased bg-background text-foreground;
+    font-family: var(--font-family-body);
+  }
+
+  /* Standardized Typography Hierarchy */
+  h1, h2, h3, h4, h5, h6 {
+    font-family: var(--font-family-heading);
+    font-weight: 700;
+    line-height: 1.2;
+    color: hsl(var(--foreground));
+  }
+
+  h1 {
+    font-size: 2.5rem;
+    margin-bottom: 1rem;
+  }
+
+  h2 {
+    font-size: 2rem;
+    margin-bottom: 0.875rem;
+  }
+
+  h3 {
+    font-size: 1.5rem;
+    margin-bottom: 0.75rem;
+  }
+
+  h4 {
+    font-size: 1.25rem;
+    margin-bottom: 0.625rem;
+  }
+
+  h5 {
+    font-size: 1.125rem;
+    margin-bottom: 0.5rem;
+  }
+
+  h6 {
+    font-size: 1rem;
+    margin-bottom: 0.5rem;
+  }
+
+  p, span, div {
+    font-family: var(--font-family-body);
+    line-height: 1.6;
+  }
+
+  /* Button text uses body font */
+  button {
+    font-family: var(--font-family-body);
+  }
+}
+
+@layer utilities {
+  .fade-in {
+    animation: fadeIn 0.3s ease-in;
+  }
+
+  @keyframes fadeIn {
+    from {
+      opacity: 0;
+      transform: translateY(10px);
+    }
+
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  .vote-animation {
+    transition: all 0.2s ease;
+  }
+
+  .vote-animation:active {
+    transform: scale(0.95);
+  }
+
+  .floating-btn {
+    animation: pulse 2s infinite;
+  }
+
+  @keyframes pulse {
+    0%, 100% {
+      transform: scale(1);
+    }
+    50% {
+      transform: scale(1.05);
+    }
+  }
+}
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -142,102 +240,4 @@ body::after {
       rgba(218, 165, 32, 0.01) 4px);
   pointer-events: none;
   z-index: -1;
-}
-
-@layer base {
-  * {
-    @apply border-border;
-  }
-
-  body {
-    @apply font-sans antialiased bg-background text-foreground;
-    font-family: var(--font-family-body);
-  }
-
-  /* Standardized Typography Hierarchy */
-  h1, h2, h3, h4, h5, h6 {
-    font-family: var(--font-family-heading);
-    font-weight: 700;
-    line-height: 1.2;
-    color: hsl(var(--foreground));
-  }
-
-  h1 {
-    font-size: 2.5rem;
-    margin-bottom: 1rem;
-  }
-
-  h2 {
-    font-size: 2rem;
-    margin-bottom: 0.875rem;
-  }
-
-  h3 {
-    font-size: 1.5rem;
-    margin-bottom: 0.75rem;
-  }
-
-  h4 {
-    font-size: 1.25rem;
-    margin-bottom: 0.625rem;
-  }
-
-  h5 {
-    font-size: 1.125rem;
-    margin-bottom: 0.5rem;
-  }
-
-  h6 {
-    font-size: 1rem;
-    margin-bottom: 0.5rem;
-  }
-
-  p, span, div {
-    font-family: var(--font-family-body);
-    line-height: 1.6;
-  }
-
-  /* Button text uses body font */
-  button {
-    font-family: var(--font-family-body);
-  }
-}
-
-@layer utilities {
-  .fade-in {
-    animation: fadeIn 0.3s ease-in;
-  }
-
-  @keyframes fadeIn {
-    from {
-      opacity: 0;
-      transform: translateY(10px);
-    }
-
-    to {
-      opacity: 1;
-      transform: translateY(0);
-    }
-  }
-
-  .vote-animation {
-    transition: all 0.2s ease;
-  }
-
-  .vote-animation:active {
-    transform: scale(0.95);
-  }
-
-  .floating-btn {
-    animation: pulse 2s infinite;
-  }
-
-  @keyframes pulse {
-    0%, 100% {
-      transform: scale(1);
-    }
-    50% {
-      transform: scale(1.05);
-    }
-  }
 }
