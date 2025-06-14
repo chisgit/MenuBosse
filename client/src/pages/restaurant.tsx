@@ -61,25 +61,25 @@ export default function RestaurantPage({ restaurantId }: RestaurantPageProps) {
       {/* Header */}
       <header className="relative bg-black/80 backdrop-blur-md shadow-lg border-b border-white/10 sticky top-0 z-50">
         <div className="absolute inset-0 bg-gradient-to-r from-orange-500/5 via-transparent to-orange-500/5"></div>        <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex justify-between items-center h-16">
-            <div className="flex items-center space-x-6">
-              <h1 className="text-2xl font-bold bg-gradient-to-r from-orange-400 to-orange-600 bg-clip-text text-transparent">
+          <div className="flex justify-between items-center h-12">
+            <div className="flex items-center space-x-4">
+              <h1 className="text-xl font-bold bg-gradient-to-r from-orange-400 to-orange-600 bg-clip-text text-transparent">
                 MenuBosse
               </h1>
-              <div className="text-sm text-gray-300 bg-black/60 backdrop-blur-sm rounded-full px-3 py-1.5 border border-white/10">
+              <div className="text-xs text-gray-300 bg-black/60 backdrop-blur-sm rounded-full px-2 py-1 border border-white/10">
                 <span className="font-semibold text-white">{restaurant.name}</span>
-                <span className="mx-2 text-orange-400">•</span>
+                <span className="mx-1 text-orange-400">•</span>
                 <span className="text-gray-400">Table 12</span>
               </div>
             </div>
-            <div className="flex items-center space-x-3">
-              <button className="p-2 text-gray-400 hover:text-orange-400 transition-all duration-300 hover:bg-white/5 rounded-full">
+            <div className="flex items-center space-x-2">
+              <button className="p-1.5 text-gray-400 hover:text-orange-400 transition-all duration-300 hover:bg-white/5 rounded-full">
                 <MicOff className="h-4 w-4" />
               </button>
-              <button className="relative p-2 text-gray-400 hover:text-orange-400 transition-all duration-300 hover:bg-white/5 rounded-full group">
+              <button className="relative p-1.5 text-gray-400 hover:text-orange-400 transition-all duration-300 hover:bg-white/5 rounded-full group">
                 <ShoppingCart className="h-4 w-4" />
                 {cartItemCount > 0 && (
-                  <span className="absolute -top-1 -right-1 bg-gradient-to-r from-orange-500 to-orange-600 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center text-[10px] font-bold shadow-lg pulse-glow">
+                  <span className="absolute -top-0.5 -right-0.5 bg-gradient-to-r from-orange-500 to-orange-600 text-white text-xs rounded-full h-4 w-4 flex items-center justify-center text-[9px] font-bold shadow-lg pulse-glow">
                     {cartItemCount}
                   </span>
                 )}
@@ -89,14 +89,14 @@ export default function RestaurantPage({ restaurantId }: RestaurantPageProps) {
           </div>
         </div>
       </header>      {/* Navigation Tabs */}
-      <nav className="relative bg-black/90 backdrop-blur-md border-b border-white/10 sticky top-16 z-40">
+      <nav className="relative bg-black/90 backdrop-blur-md border-b border-white/10 sticky top-12 z-40">
         <div className="absolute inset-0 bg-gradient-to-r from-orange-500/3 to-orange-600/3"></div>
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex space-x-6 overflow-x-auto">
+          <div className="flex space-x-4 overflow-x-auto">
             {tabs.map((tab) => (<button
               key={tab.key}
               onClick={() => setActiveTab(tab.key)}
-              className={`py-3 px-4 border-b-2 font-medium text-sm whitespace-nowrap transition-colors ${activeTab === tab.key
+              className={`py-2 px-3 border-b-2 font-medium text-sm whitespace-nowrap transition-colors ${activeTab === tab.key
                 ? 'border-orange-500 text-orange-400'
                 : 'border-transparent text-gray-400 hover:text-gray-300'
                 }`}
