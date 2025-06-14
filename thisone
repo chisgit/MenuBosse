@@ -1,0 +1,22 @@
+* [33m3fa4706[m[33m ([m[1;36mHEAD[m[33m -> [m[1;32mmain[m[33m, [m[1;31morigin/main[m[33m, [m[1;31morigin/HEAD[m[33m)[m Update styling and menu components - improve UI layout and add VS Code settings
+* [33m4ac9240[m dark mode, title fixed, square images, half tile photo, need to fix more visible upvote and downvote, add proper padding for the top nav
+* [33m2c816fe[m Restructure: Move project files to top level directory
+* [33m0a043c3[m Complete luxury transformation: Premium UI/UX redesign with glass morphism, luxury animations, and mouth-watering visual effects
+* [33m1d33b12[m Updated .gitignore
+* [33m7ce456c[m Initial commit through Bolt
+[31m|[m * [33mb5dd231[m[33m ([m[1;32mstyling[m[33m)[m Update styling and menu components - improve UI layout and add VS Code settings
+[31m|[m * [33m6620dec[m[33m ([m[1;31morigin/styling[m[33m)[m dark mode, title fixed, square images, half tile photo, need to fix more visible upvote and downvote, add proper padding for the top nav
+[31m|[m * [33m9a8edc5[m Restructure: Move project files to top level directory
+[31m|[m * [33maa3ea86[m Complete luxury transformation: Premium UI/UX redesign with glass morphism, luxury animations, and mouth-watering visual effects
+[31m|[m[31m/[m  
+* [33md0e36c2[m Fix double X close button in menu details modal
+*   [33mf77750f[m Merge branch 'main' of https://github.com/chisgit/MenuBosse
+[33m|[m[34m\[m  
+[33m|[m * [33m1d43b1d[m Initial commit
+* [33m9e205ef[m Improve the menu item detail pop-up with tabs and direct questions
+* [33mb179f2e[m Let customers customize dishes with add-ons, toppings, and spice levels
+* [33m3e57bd7[m Allow users to customize their dishes with add-ons to enhance dining options
+* [33m8b03e6b[m Improve retrieval of restaurant information, menus, and special offers
+* [33m092ee9b[m Build core app structure for restaurant discovery and management
+* [33me431127[m Started building your app
+* [33m910b38e[m Initial commit
