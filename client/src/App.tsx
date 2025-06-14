@@ -8,7 +8,7 @@ import { queryClient } from "@/lib/queryClient";
 function App() {
   return (
     <QueryClientProvider client={queryClient}>
-      <div className="min-h-screen">
+      <div className="min-h-screen bg-gradient-to-br from-slate-900 via-black to-slate-800">
         <Switch>
           <Route path="/" component={() => <RestaurantPage restaurantId={1} />} />
           <Route path="/restaurant/:id">
