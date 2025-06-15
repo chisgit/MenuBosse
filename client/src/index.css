@@ -1,207 +1,3 @@
-@layer base {
-  * {
-    @apply border-border;
-  }
-
-  body {
-    @apply font-sans antialiased bg-background text-foreground;
-    font-family: var(--font-family-body);
-  }
-
-  /* Standardized Typography Hierarchy with Better Spacing */
-  h1, h2, h3, h4, h5, h6 {
-    font-family: var(--font-family-heading);
-    font-weight: 700;
-    line-height: 1.2;
-    color: hsl(var(--foreground));
-    letter-spacing: -0.025em; /* Tighter letter spacing for elegance */
-  }
-
-  h1 {
-    font-size: 3rem; /* Increased from 2.5rem */
-    margin-bottom: 1.5rem; /* Increased spacing */
-    font-weight: 800; /* Bolder weight */
-  }
-
-  h2 {
-    font-size: 2.25rem; /* Increased from 2rem */
-    margin-bottom: 1.25rem; /* Increased spacing */
-    font-weight: 700;
-  }
-
-  h3 {
-    font-size: 1.75rem; /* Increased from 1.5rem */
-    margin-bottom: 1rem; /* Increased spacing */
-    font-weight: 600;
-  }
-
-  h4 {
-    font-size: 1.375rem; /* Increased from 1.25rem */
-    margin-bottom: 0.875rem; /* Increased spacing */
-    font-weight: 600;
-  }
-
-  h5 {
-    font-size: 1.125rem;
-    margin-bottom: 0.75rem; /* Increased spacing */
-    font-weight: 600;
-  }
-
-  h6 {
-    font-size: 1rem;
-    margin-bottom: 0.625rem; /* Increased spacing */
-    font-weight: 600;
-  }
-
-  /* Enhanced Body Text with Better Spacing */
-  p, span, div {
-    font-family: var(--font-family-body);
-    line-height: 1.7; /* Increased from 1.6 for better readability */
-    margin-bottom: 1rem; /* Add consistent bottom margin */
-  }
-
-  /* Enhanced Button Typography */
-  button {
-    font-family: var(--font-family-body);
-    font-weight: 600;
-    letter-spacing: 0.025em; /* Slight letter spacing for buttons */
-  }
-
-  /* Improved Link Styling */
-  a {
-    font-family: var(--font-family-body);
-    transition: all 0.2s ease;
-  }
-
-  /* Enhanced List Spacing */
-  ul, ol {
-    margin-bottom: 1.5rem;
-    padding-left: 1.5rem;
-  }
-
-  li {
-    margin-bottom: 0.5rem;
-    line-height: 1.6;
-  }
-}
-
-@layer components {
-  /* Enhanced Section Spacing */
-  .section-spacing {
-    @apply py-16 md:py-20 lg:py-24;
-  }
-
-  .section-spacing-sm {
-    @apply py-8 md:py-12 lg:py-16;
-  }
-
-  /* Enhanced Container Spacing */
-  .container-spacing {
-    @apply px-6 md:px-8 lg:px-12 xl:px-16;
-  }
-
-  /* Enhanced Card Spacing */
-  .card-spacing {
-    @apply p-6 md:p-8 lg:p-10;
-  }
-
-  .card-spacing-sm {
-    @apply p-4 md:p-6 lg:p-8;
-  }
-
-  /* Enhanced Grid Spacing */
-  .grid-spacing {
-    @apply gap-6 md:gap-8 lg:gap-10;
-  }
-
-  .grid-spacing-sm {
-    @apply gap-4 md:gap-6 lg:gap-8;
-  }
-
-  /* Enhanced Text Spacing Classes */
-  .text-spacing {
-    @apply space-y-4 md:space-y-6;
-  }
-
-  .text-spacing-sm {
-    @apply space-y-2 md:space-y-4;
-  }
-
-  /* Enhanced Visual Hierarchy Classes */
-  .visual-hierarchy-1 {
-    @apply mb-8 md:mb-12 lg:mb-16;
-  }
-
-  .visual-hierarchy-2 {
-    @apply mb-6 md:mb-8 lg:mb-12;
-  }
-
-  .visual-hierarchy-3 {
-    @apply mb-4 md:mb-6 lg:mb-8;
-  }
-
-  .visual-hierarchy-4 {
-    @apply mb-3 md:mb-4 lg:mb-6;
-  }
-}
-
-@layer utilities {
-  .fade-in {
-    animation: fadeIn 0.3s ease-in;
-  }
-
-  @keyframes fadeIn {
-    from {
-      opacity: 0;
-      transform: translateY(10px);
-    }
-
-    to {
-      opacity: 1;
-      transform: translateY(0);
-    }
-  }
-
-  .vote-animation {
-    transition: all 0.2s ease;
-  }
-
-  .vote-animation:active {
-    transform: scale(0.95);
-  }
-
-  .floating-btn {
-    animation: pulse 2s infinite;
-  }
-
-  @keyframes pulse {
-    0%, 100% {
-      transform: scale(1);
-    }
-    50% {
-      transform: scale(1.05);
-    }
-  }
-
-  /* Enhanced Spacing Utilities */
-  .spacing-xs { @apply space-y-2; }
-  .spacing-sm { @apply space-y-4; }
-  .spacing-md { @apply space-y-6; }
-  .spacing-lg { @apply space-y-8; }
-  .spacing-xl { @apply space-y-12; }
-  .spacing-2xl { @apply space-y-16; }
-
-  /* Enhanced Margin Utilities */
-  .margin-section { @apply my-16 md:my-20 lg:my-24; }
-  .margin-component { @apply my-8 md:my-12 lg:my-16; }
-  .margin-element { @apply my-4 md:my-6 lg:my-8; }
-
-  /* Enhanced Padding Utilities */
-  .padding-section { @apply py-16 md:py-20 lg:py-24; }
-  .padding-component { @apply py-8 md:py-12 lg:py-16; }
-  .padding-element { @apply py-4 md:py-6 lg:py-8; }
-}
-
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -264,20 +60,9 @@
   /* #CD853F Peru */
   --chart-5: 120 61% 34%;
   /* Success green */
-  
-  /* Standardized Font System - Only 2 fonts */
-  --font-family-heading: 'Playfair Display', serif;
-  --font-family-body: 'Inter', 'Segoe UI', system-ui, sans-serif;
-
-  /* Enhanced Spacing Scale */
-  --spacing-xs: 0.25rem;   /* 4px */
-  --spacing-sm: 0.5rem;    /* 8px */
-  --spacing-md: 1rem;      /* 16px */
-  --spacing-lg: 1.5rem;    /* 24px */
-  --spacing-xl: 2rem;      /* 32px */
-  --spacing-2xl: 3rem;     /* 48px */
-  --spacing-3xl: 4rem;     /* 64px */
-  --spacing-4xl: 6rem;     /* 96px */
+  --font-family-base: 'Playfair Display', serif;
+  --font-family-secondary: 'Source Sans Pro', sans-serif;
+  --font-family-accent: 'Dancing Script', cursive;
 }
 
 .dark {
@@ -323,6 +108,9 @@
   --chart-3: 43 85% 60%;
   --chart-4: 30 65% 50%;
   --chart-5: 120 50% 40%;
+  --font-family-base: 'Playfair Display', serif;
+  --font-family-secondary: 'Source Sans Pro', sans-serif;
+  --font-family-accent: 'Dancing Script', cursive;
 }
 
 * {
@@ -335,7 +123,7 @@ body {
     radial-gradient(circle at 25% 25%, rgba(218, 165, 32, 0.06) 0%, transparent 50%),
     radial-gradient(circle at 75% 75%, rgba(139, 69, 19, 0.04) 0%, transparent 50%),
     linear-gradient(135deg, hsl(var(--background)) 0%, hsl(var(--muted)) 100%);
-  font-family: var(--font-family-body);
+  font-family: var(--font-family-base);
   min-height: 100vh;
   position: relative;
 }
@@ -356,4 +144,54 @@ body::after {
       rgba(218, 165, 32, 0.01) 4px);
   pointer-events: none;
   z-index: -1;
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+
+  body {
+    @apply font-sans antialiased bg-background text-foreground;
+    font-family: var(--font-family-base);
+  }
+}
+
+@layer utilities {
+  .fade-in {
+    animation: fadeIn 0.3s ease-in;
+  }
+
+  @keyframes fadeIn {
+    from {
+      opacity: 0;
+      transform: translateY(10px);
+    }
+
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  .vote-animation {
+    transition: all 0.2s ease;
+  }
+
+  .vote-animation:active {
+    transform: scale(0.95);
+  }
+
+  .floating-btn {
+    animation: pulse 2s infinite;
+  }
+
+  @keyframes pulse {
+    0%, 100% {
+      transform: scale(1);
+    }
+    50% {
+      transform: scale(1.05);
+    }
+  }
 }
