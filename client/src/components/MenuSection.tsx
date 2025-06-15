@@ -106,14 +106,14 @@ export default function MenuSection({ restaurantId, onItemClick, restaurantName,
   }, {} as Record<string, MenuItem[]>) || {};
 
   return (
-    <section className="fade-in spacing-lg">
-      {/* Enhanced Header with Better Spacing */}
-      <div className="text-center visual-hierarchy-1">
-        <h1 className="text-5xl md:text-6xl lg:text-7xl font-bold bg-gradient-to-r from-orange-400 via-orange-500 to-orange-600 bg-clip-text text-transparent mb-6 tracking-wide drop-shadow-lg">
+    <section className="fade-in space-y-8">
+      {/* Header with restaurant name and table */}
+      <div className="text-center mb-12">
+        <h1 className="text-5xl font-bold bg-gradient-to-r from-orange-400 via-orange-500 to-orange-600 bg-clip-text text-transparent mb-2 tracking-wide drop-shadow-lg">
           {restaurantName || 'RESTAURANT MENU'}
         </h1>
         <div className="flex items-center justify-center text-lg text-gray-400 font-medium">
-          <span className="bg-black/40 backdrop-blur-sm rounded-full px-6 py-3 border border-orange-500/20">
+          <span className="bg-black/40 backdrop-blur-sm rounded-full px-4 py-2 border border-orange-500/20">
             {tableNumber || 'Table Service'}
           </span>
         </div>
@@ -121,9 +121,9 @@ export default function MenuSection({ restaurantId, onItemClick, restaurantName,
         <div className="decorative-leaf" style={{ top: '10px', left: '15%' }}></div>
       </div>
 
-      {/* Enhanced Search and Filter Bar with Better Spacing */}
-      <div className="luxury-search-container glass-card card-spacing rounded-2xl border border-white/10 backdrop-blur-xl bg-gradient-to-r from-black/20 to-black/10 shadow-luxury visual-hierarchy-2">
-        <div className="flex flex-col sm:flex-row gap-8">
+      {/* Search and Filter Bar */}
+      <div className="luxury-search-container glass-card p-6 rounded-2xl border border-white/10 backdrop-blur-xl bg-gradient-to-r from-black/20 to-black/10 shadow-luxury">
+        <div className="flex flex-col sm:flex-row gap-6">
           <div className="flex-1 relative group">
             <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 text-orange-400/60 h-5 w-5 transition-colors group-hover:text-orange-400" />
             <Input
@@ -131,10 +131,10 @@ export default function MenuSection({ restaurantId, onItemClick, restaurantName,
               placeholder="Search culinary delights..."
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
-              className="pl-12 h-16 text-lg bg-black/30 border-white/20 rounded-xl hover:bg-black/40 focus:bg-black/40 transition-all duration-300 placeholder:text-gray-400 text-white font-medium"
+              className="pl-12 h-14 text-lg bg-black/30 border-white/20 rounded-xl hover:bg-black/40 focus:bg-black/40 transition-all duration-300 placeholder:text-gray-400 text-white font-medium"
             />
           </div>
-          <div className="flex gap-4">
+          <div className="flex gap-3">
             {filters.map((filter) => {
               const IconComponent = filter.icon;
               return (
@@ -142,7 +142,7 @@ export default function MenuSection({ restaurantId, onItemClick, restaurantName,
                   key={filter.key}
                   variant={activeFilter === filter.key ? "default" : "outline"}
                   onClick={() => setActiveFilter(filter.key)}
-                  className={`luxury-filter-btn h-16 px-8 rounded-xl font-medium transition-all duration-300 ${
+                  className={`luxury-filter-btn h-14 px-6 rounded-xl font-medium transition-all duration-300 ${
                     activeFilter === filter.key
                       ? "bg-gradient-to-r from-orange-500 to-orange-600 text-white shadow-luxury-glow border-0"
                       : "bg-black/20 hover:bg-black/30 border-white/20 text-gray-300 hover:text-orange-400"
@@ -157,17 +157,17 @@ export default function MenuSection({ restaurantId, onItemClick, restaurantName,
         </div>
       </div>
 
-      {/* Enhanced Menu Categories with Better Spacing */}
-      <div className="spacing-2xl">
+      {/* Menu Categories */}
+      <div className="space-y-12">
         {Object.entries(groupedItems).map(([categoryName, items]) => (
-          <div key={categoryName} className="menu-category food-menu-section margin-component">
-            <div className="visual-hierarchy-2">
-              <h2 className="luxury-heading text-4xl md:text-5xl lg:text-6xl font-bold bg-gradient-to-r from-white via-orange-400 to-orange-500 bg-clip-text text-transparent mb-6">
+          <div key={categoryName} className="menu-category food-menu-section">
+            <div className="mb-8">
+              <h2 className="luxury-heading text-4xl font-bold bg-gradient-to-r from-white via-orange-400 to-orange-500 bg-clip-text text-transparent mb-3">
                 {categoryName}
               </h2>
-              <div className="h-1 w-32 bg-gradient-to-r from-orange-500 to-orange-600 rounded-full"></div>
+              <div className="h-1 w-24 bg-gradient-to-r from-orange-500 to-orange-600 rounded-full"></div>
             </div>
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 grid-spacing">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
               {items.map((item) => (
                 <Card
                   key={item.id}
@@ -175,8 +175,8 @@ export default function MenuSection({ restaurantId, onItemClick, restaurantName,
                   onClick={() => onItemClick(item.id)}
                 >
                   <div className="relative">
-                    {/* Enhanced Food Image with Better Proportions */}
-                    <div className="relative h-80 md:h-96 w-full overflow-hidden">
+                    {/* Food Image - Even larger for maximum visual impact */}
+                    <div className="relative h-96 w-full overflow-hidden">
                       <img
                         src={item.imageUrl || '/placeholder-food.jpg'}
                         alt={item.name}
@@ -186,14 +186,14 @@ export default function MenuSection({ restaurantId, onItemClick, restaurantName,
                       {/* Lighter overlay for better image visibility */}
                       <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-black/5 to-transparent"></div>
 
-                      {/* Enhanced Price Badge with Better Spacing */}
+                      {/* Price Badge - More prominent and eye-catching */}
                       <div className="absolute top-6 right-6">
-                        <div className="enhanced-price-badge text-xl md:text-2xl font-extrabold">
+                        <div className="enhanced-price-badge text-xl font-extrabold">
                           ${item.price.toFixed(0)}
                         </div>
                       </div>
 
-                      {/* Enhanced Rating badge with Better Spacing */}
+                      {/* Rating badge - Enhanced visibility */}
                       {item.rating && (
                         <div className="absolute top-6 left-6 enhanced-rating-badge bg-black/85 backdrop-blur-xl rounded-full px-4 py-3 flex items-center space-x-2 border-2 border-yellow-400/50 shadow-2xl">
                           <Star className="h-5 w-5 text-yellow-400 fill-current drop-shadow-sm" />
@@ -203,20 +203,20 @@ export default function MenuSection({ restaurantId, onItemClick, restaurantName,
                         </div>
                       )}
 
-                      {/* Enhanced Voting controls with Better Spacing */}
+                      {/* Voting controls - Bottom right corner */}
                       <div className="absolute bottom-6 right-6 enhanced-vote-container flex items-center bg-black/85 backdrop-blur-xl rounded-full px-4 py-2 border-2 border-orange-400/40 shadow-2xl">
                         <button
-                          className="vote-animation p-2 text-gray-200 hover:text-green-400 hover:bg-green-400/20 rounded-full transition-all duration-300"
+                          className="vote-animation p-1.5 text-gray-200 hover:text-green-400 hover:bg-green-400/20 rounded-full transition-all duration-300"
                           onClick={(e) => handleVote(item.id, 'up', e)}
                           disabled={voteMenuItem.isPending}
                         >
                           <ThumbsUp className="h-4 w-4" />
                         </button>
-                        <span className="text-sm font-bold text-white mx-4 drop-shadow-lg">
+                        <span className="text-sm font-bold text-white mx-3 drop-shadow-lg">
                           {item.votes}
                         </span>
                         <button
-                          className="vote-animation p-2 text-gray-200 hover:text-red-400 hover:bg-red-400/20 rounded-full transition-all duration-300"
+                          className="vote-animation p-1.5 text-gray-200 hover:text-red-400 hover:bg-red-400/20 rounded-full transition-all duration-300"
                           onClick={(e) => handleVote(item.id, 'down', e)}
                           disabled={voteMenuItem.isPending}
                         >
@@ -225,20 +225,20 @@ export default function MenuSection({ restaurantId, onItemClick, restaurantName,
                       </div>
                     </div>
 
-                    {/* Enhanced Item Details with Better Spacing */}
-                    <div className="card-spacing-sm bg-gradient-to-br from-gray-900/30 to-gray-800/20 backdrop-blur-md border-t border-white/10">
-                      <h3 className="text-xl md:text-2xl font-bold text-white mb-3 group-hover:text-orange-400 transition-colors duration-300 drop-shadow-sm">
+                    {/* Item Details - Much more transparent for better food visibility */}
+                    <div className="p-6 bg-gradient-to-br from-gray-900/30 to-gray-800/20 backdrop-blur-md border-t border-white/10">
+                      <h3 className="text-xl font-bold text-white mb-2 group-hover:text-orange-400 transition-colors duration-300 drop-shadow-sm">
                         {item.name}
                       </h3>
-                      <p className="text-gray-200 text-sm md:text-base mb-6 line-clamp-2 leading-relaxed">
+                      <p className="text-gray-200 text-sm mb-4 line-clamp-2 leading-relaxed">
                         {item.description}
                       </p>
                       <div className="flex justify-center">
                         <Button
-                          size="lg"
+                          size="sm"
                           onClick={(e) => handleAddToCart(item, e)}
                           disabled={addToCart.isPending}
-                          className="luxury-add-btn bg-gradient-to-r from-orange-500 to-orange-600 hover:from-orange-600 hover:to-orange-700 text-white font-semibold px-8 py-3 rounded-full transition-all duration-300 border-0 shadow-lg hover:shadow-orange-500/25"
+                          className="luxury-add-btn bg-gradient-to-r from-orange-500 to-orange-600 hover:from-orange-600 hover:to-orange-700 text-white font-semibold px-6 py-2 rounded-full transition-all duration-300 border-0 shadow-lg hover:shadow-orange-500/25"
                         >
                           {addToCart.isPending ? 'Adding...' : 'Add to Cart'}
                         </Button>
@@ -252,13 +252,12 @@ export default function MenuSection({ restaurantId, onItemClick, restaurantName,
         ))}
       </div>
 
-      {/* Enhanced Empty State with Better Spacing */}
       {filteredItems?.length === 0 && (
-        <div className="text-center padding-section luxury-empty-state">
-          <div className="glass-card card-spacing rounded-2xl bg-gradient-to-br from-black/20 to-black/10 backdrop-blur-xl border border-white/10 max-w-md mx-auto">
-            <Sparkles className="h-16 w-16 text-orange-400/60 mx-auto mb-6" />
-            <h3 className="text-2xl md:text-3xl font-bold text-white mb-4">No culinary treasures found</h3>
-            <p className="text-gray-400 leading-relaxed text-lg">Try adjusting your search or explore different categories to discover amazing dishes.</p>
+        <div className="text-center py-16 luxury-empty-state">
+          <div className="glass-card p-8 rounded-2xl bg-gradient-to-br from-black/20 to-black/10 backdrop-blur-xl border border-white/10 max-w-md mx-auto">
+            <Sparkles className="h-16 w-16 text-orange-400/60 mx-auto mb-4" />
+            <h3 className="text-2xl font-bold text-white mb-3">No culinary treasures found</h3>
+            <p className="text-gray-400 leading-relaxed">Try adjusting your search or explore different categories to discover amazing dishes.</p>
           </div>
         </div>
       )}
