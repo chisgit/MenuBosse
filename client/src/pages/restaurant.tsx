@@ -60,23 +60,41 @@ export default function RestaurantPage({ restaurantId }: RestaurantPageProps) {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-900 via-black to-slate-800">
-      {/* Header */}
+      {/* Enhanced Header with Integrated Navigation */}
       <header className="relative bg-black/80 backdrop-blur-md shadow-lg border-b border-white/10 sticky top-0 z-50">
         <div className="absolute inset-0 bg-gradient-to-r from-orange-500/5 via-transparent to-orange-500/5"></div>
-        <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex justify-between items-center h-20">
-            <div className="flex items-center space-x-6">
-              <h1 className="text-3xl font-bold bg-gradient-to-r from-orange-400 to-orange-600 bg-clip-text text-transparent">
-                MenuBosse
-              </h1>
-              <div className="text-sm text-gray-300 bg-black/60 backdrop-blur-sm rounded-full px-4 py-2 border border-white/10">
-                <span className="font-semibold text-white">{restaurant.name}</span>
-                <span className="mx-2 text-orange-400">•</span>
-                <span className="text-gray-400">Table 12</span>
+        <div className="relative max-w-7xl mx-auto container-spacing">
+          <div className="flex justify-between items-start py-4 min-h-[100px] md:min-h-[110px]">
+            <div className="flex flex-col items-start space-y-2">
+              <div className="flex items-center space-x-8">
+                <h1 className="text-3xl md:text-4xl font-bold bg-gradient-to-r from-orange-400 to-orange-600 bg-clip-text text-transparent">
+                  MenuBosse
+                </h1>
+                <div className="text-sm md:text-base text-gray-300 bg-black/60 backdrop-blur-sm rounded-full px-6 py-3 border border-white/10">
+                  <span className="font-semibold text-white">{restaurant.name}</span>
+                  <span className="mx-2 text-orange-400">•</span>
+                  <span className="text-gray-400">Table 12</span>
+                </div>
+              </div>
+              {/* Navigation Tabs Under Logo */}
+              <div className="flex space-x-6">
+                {tabs.map((tab) => (
+                  <button
+                    key={tab.key}
+                    onClick={() => setActiveTab(tab.key)}
+                    className={`py-1 px-4 border-b-2 font-medium text-sm whitespace-nowrap transition-colors ${
+                      activeTab === tab.key
+                        ? 'border-orange-500 text-orange-400'
+                        : 'border-transparent text-gray-400 hover:text-gray-300'
+                    }`}
+                  >
+                    {tab.label}
+                  </button>
+                ))}
               </div>
             </div>
-            <div className="flex items-center space-x-4">
-              <button className="p-3 text-gray-400 hover:text-orange-400 transition-all duration-300 hover:bg-white/5 rounded-full">
+            <div className="flex items-start pt-2 space-x-6">
+              <button className="p-4 text-gray-400 hover:text-orange-400 transition-all duration-300 hover:bg-white/5 rounded-full">
                 <MicOff className="h-5 w-5" />
               </button>
               <button className="relative p-3 text-gray-400 hover:text-orange-400 transition-all duration-300 hover:bg-white/5 rounded-full group">
@@ -92,31 +110,9 @@ export default function RestaurantPage({ restaurantId }: RestaurantPageProps) {
           </div>
         </div>
       </header>
-
-      {/* Navigation Tabs */}
-      <nav className="relative bg-black/90 backdrop-blur-md border-b border-white/10 sticky top-20 z-40">
-        <div className="absolute inset-0 bg-gradient-to-r from-orange-500/3 to-orange-600/3"></div>
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex space-x-8 overflow-x-auto">
-            {tabs.map((tab) => (
-              <button
-                key={tab.key}
-                onClick={() => setActiveTab(tab.key)}
-                className={`py-4 px-6 border-b-2 font-medium text-sm whitespace-nowrap transition-colors ${
-                  activeTab === tab.key
-                    ? 'border-orange-500 text-orange-400'
-                    : 'border-transparent text-gray-400 hover:text-gray-300'
-                }`}
-              >
-                {tab.label}
-              </button>
-            ))}
-          </div>
-        </div>
-      </nav>
-
-      {/* Main Content */}
-      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
+      
+      {/* Enhanced Main Content */}
+      <main className="max-w-7xl mx-auto container-spacing padding-section">
         {activeTab === 'menu' && (
           <MenuSection
             restaurantId={restaurantId}
