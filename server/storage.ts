@@ -1,13 +1,13 @@
-import { 
-  restaurants, 
-  menuCategories, 
-  menuItems, 
+import {
+  restaurants,
+  menuCategories,
+  menuItems,
   menuItemAddons,
   cartItemAddons,
-  deals, 
-  cartItems, 
+  deals,
+  cartItems,
   serverCalls,
-  type Restaurant, 
+  type Restaurant,
   type InsertRestaurant,
   type MenuCategory,
   type InsertMenuCategory,
@@ -30,39 +30,39 @@ export interface IStorage {
   getRestaurants(): Promise<Restaurant[]>;
   getRestaurant(id: number): Promise<Restaurant | undefined>;
   createRestaurant(restaurant: InsertRestaurant): Promise<Restaurant>;
-  
+
   // Menu Categories
   getMenuCategories(restaurantId: number): Promise<MenuCategory[]>;
   createMenuCategory(category: InsertMenuCategory): Promise<MenuCategory>;
-  
+
   // Menu Items
   getMenuItems(restaurantId: number): Promise<MenuItem[]>;
   getMenuItemsByCategory(categoryId: number): Promise<MenuItem[]>;
   getMenuItem(id: number): Promise<MenuItem | undefined>;
   createMenuItem(item: InsertMenuItem): Promise<MenuItem>;
   updateMenuItemVotes(id: number, upvotes: number, downvotes: number): Promise<MenuItem | undefined>;
-  
+
   // Deals
   getDeals(): Promise<Deal[]>;
   getRestaurantDeals(restaurantId: number): Promise<Deal[]>;
   createDeal(deal: InsertDeal): Promise<Deal>;
-  
+
   // Cart
   getCartItems(sessionId: string): Promise<(CartItem & { menuItem: MenuItem })[]>;
   addToCart(item: InsertCartItem): Promise<CartItem>;
   updateCartItem(id: number, quantity: number, specialInstructions?: string): Promise<CartItem | undefined>;
   removeFromCart(id: number): Promise<boolean>;
   clearCart(sessionId: string): Promise<boolean>;
-  
+
   // Menu Item Add-ons
   getMenuItemAddons(menuItemId: number): Promise<MenuItemAddon[]>;
   createMenuItemAddon(addon: InsertMenuItemAddon): Promise<MenuItemAddon>;
-  
+
   // Cart Item Add-ons
   getCartItemAddons(cartItemId: number): Promise<(CartItemAddon & { addon: MenuItemAddon })[]>;
   addCartItemAddon(addon: InsertCartItemAddon): Promise<CartItemAddon>;
   removeCartItemAddon(id: number): Promise<boolean>;
-  
+
   // Server Calls
   createServerCall(call: InsertServerCall): Promise<ServerCall>;
   getServerCalls(restaurantId: number): Promise<ServerCall[]>;
@@ -90,7 +90,7 @@ export class MemStorage implements IStorage {
     this.cartItems = new Map();
     this.serverCalls = new Map();
     this.currentId = 1;
-    
+
     // Initialize with sample data
     this.initializeData();
   }
@@ -184,8 +184,7 @@ export class MemStorage implements IStorage {
         votes: 89,
         upvotes: 80,
         downvotes: 9,
-      },
-      {
+      }, {
         id: 2,
         restaurantId: 1,
         categoryId: 1,
@@ -197,6 +196,19 @@ export class MemStorage implements IStorage {
         rating: 4.6,
         votes: 76,
         upvotes: 68,
+        downvotes: 8,
+      },
+      {
+        id: 6,
+        restaurantId: 1,
+        categoryId: 1,
+        name: "Pan-Seared Scallops",
+        description: "Perfectly seared diver scallops with cauliflower purée, pancetta crisps, and microgreens.",
+        fullDescription: "Three jumbo diver scallops seared to golden perfection, served atop silky cauliflower purée with crispy pancetta, drizzled with brown butter sauce and garnished with fresh microgreens.", price: 16.99,
+        imageUrl: "/assets/images/food/pan-seared-scallops.png",
+        rating: 4.9,
+        votes: 127,
+        upvotes: 119,
         downvotes: 8,
       },
       {
@@ -250,21 +262,20 @@ export class MemStorage implements IStorage {
       { id: 1, menuItemId: 1, name: "Extra Marinara", description: "Additional marinara sauce", price: 1.50, category: "sauce", isRequired: false, maxSelections: 3 },
       { id: 2, menuItemId: 1, name: "Spicy Aioli", description: "House-made spicy aioli", price: 2.00, category: "sauce", isRequired: false, maxSelections: 1 },
       { id: 3, menuItemId: 1, name: "Lemon Wedges", description: "Fresh lemon wedges", price: 0.50, category: "side", isRequired: false, maxSelections: 2 },
-      
+
       // Bruschetta add-ons
       { id: 4, menuItemId: 2, name: "Extra Cheese", description: "Additional ricotta cheese", price: 2.50, category: "cheese", isRequired: false, maxSelections: 1 },
       { id: 5, menuItemId: 2, name: "Balsamic Glaze", description: "Aged balsamic reduction", price: 1.75, category: "sauce", isRequired: false, maxSelections: 1 },
-      
+
       // Salmon add-ons
       { id: 6, menuItemId: 3, name: "Extra Vegetables", description: "Double portion of seasonal vegetables", price: 4.00, category: "side", isRequired: false, maxSelections: 1 },
       { id: 7, menuItemId: 3, name: "Garlic Butter", description: "Extra garlic herb butter", price: 2.50, category: "sauce", isRequired: false, maxSelections: 2 },
       { id: 8, menuItemId: 3, name: "Lemon Pepper Seasoning", description: "Additional lemon pepper", price: 1.00, category: "spice", isRequired: false, maxSelections: 1 },
-      
+
       // Risotto add-ons
       { id: 9, menuItemId: 4, name: "Extra Truffle Oil", description: "Additional truffle oil drizzle", price: 3.50, category: "sauce", isRequired: false, maxSelections: 2 },
       { id: 10, menuItemId: 4, name: "Parmesan Cheese", description: "Extra aged parmesan", price: 2.75, category: "cheese", isRequired: false, maxSelections: 1 },
       { id: 11, menuItemId: 4, name: "Wild Mushrooms", description: "Extra mixed wild mushrooms", price: 4.50, category: "topping", isRequired: false, maxSelections: 1 },
-      
       // Burger add-ons
       { id: 12, menuItemId: 5, name: "Bacon", description: "Crispy applewood smoked bacon", price: 3.00, category: "meat", isRequired: false, maxSelections: 2 },
       { id: 13, menuItemId: 5, name: "Extra Cheese", description: "Additional aged cheddar slice", price: 2.00, category: "cheese", isRequired: false, maxSelections: 3 },
@@ -273,6 +284,14 @@ export class MemStorage implements IStorage {
       { id: 16, menuItemId: 5, name: "Onion Rings", description: "Replace fries with onion rings", price: 3.50, category: "side", isRequired: false, maxSelections: 1 },
       { id: 17, menuItemId: 5, name: "Sweet Potato Fries", description: "Replace fries with sweet potato fries", price: 2.50, category: "side", isRequired: false, maxSelections: 1 },
       { id: 18, menuItemId: 5, name: "Spice Level", description: "How spicy would you like it?", price: 0.00, category: "spice", isRequired: true, maxSelections: 1 },
+
+      // Pan-Seared Scallops add-ons
+      { id: 19, menuItemId: 6, name: "Extra Scallop", description: "Add a fourth jumbo scallop", price: 8.00, category: "protein", isRequired: false, maxSelections: 2 },
+      { id: 20, menuItemId: 6, name: "Truffle Shavings", description: "Fresh black truffle shavings", price: 12.00, category: "topping", isRequired: false, maxSelections: 1 },
+      { id: 21, menuItemId: 6, name: "Crispy Pancetta", description: "Extra crispy pancetta crisps", price: 4.50, category: "meat", isRequired: false, maxSelections: 1 },
+      { id: 22, menuItemId: 6, name: "Cauliflower Purée", description: "Extra portion of silky cauliflower purée", price: 3.50, category: "side", isRequired: false, maxSelections: 1 },
+      { id: 23, menuItemId: 6, name: "Brown Butter Sauce", description: "Additional brown butter sauce", price: 2.75, category: "sauce", isRequired: false, maxSelections: 2 },
+      { id: 24, menuItemId: 6, name: "Microgreens", description: "Premium microgreens medley", price: 3.00, category: "topping", isRequired: false, maxSelections: 1 },
     ];
     addons.forEach(addon => this.menuItemAddons.set(addon.id, addon));
 
@@ -325,7 +344,13 @@ export class MemStorage implements IStorage {
 
   async createMenuItemAddon(addon: InsertMenuItemAddon): Promise<MenuItemAddon> {
     const id = this.currentId++;
-    const newAddon: MenuItemAddon = { ...addon, id };
+    const newAddon: MenuItemAddon = {
+      ...addon,
+      id,
+      description: addon.description ?? null,
+      isRequired: addon.isRequired ?? null,
+      maxSelections: addon.maxSelections ?? null,
+    };
     this.menuItemAddons.set(id, newAddon);
     return newAddon;
   }
@@ -334,7 +359,7 @@ export class MemStorage implements IStorage {
   async getCartItemAddons(cartItemId: number): Promise<(CartItemAddon & { addon: MenuItemAddon })[]> {
     const cartAddons = Array.from(this.cartItemAddons.values())
       .filter(cartAddon => cartAddon.cartItemId === cartItemId);
-    
+
     const addonsWithDetails = [];
     for (const cartAddon of cartAddons) {
       const addon = this.menuItemAddons.get(cartAddon.addonId);
@@ -342,13 +367,17 @@ export class MemStorage implements IStorage {
         addonsWithDetails.push({ ...cartAddon, addon });
       }
     }
-    
+
     return addonsWithDetails;
   }
 
   async addCartItemAddon(addon: InsertCartItemAddon): Promise<CartItemAddon> {
     const id = this.currentId++;
-    const newCartAddon: CartItemAddon = { ...addon, id };
+    const newCartAddon: CartItemAddon = {
+      ...addon,
+      id,
+      quantity: addon.quantity ?? null,
+    };
     this.cartItemAddons.set(id, newCartAddon);
     return newCartAddon;
   }
@@ -367,7 +396,19 @@ export class MemStorage implements IStorage {
 
   async createRestaurant(restaurant: InsertRestaurant): Promise<Restaurant> {
     const id = this.currentId++;
-    const newRestaurant: Restaurant = { ...restaurant, id };
+    const newRestaurant: Restaurant = {
+      ...restaurant,
+      id,
+      description: restaurant.description ?? null,
+      imageUrl: restaurant.imageUrl ?? null,
+      priceRange: restaurant.priceRange ?? null,
+      distance: restaurant.distance ?? null,
+      isHiddenGem: restaurant.isHiddenGem ?? null,
+      isTrending: restaurant.isTrending ?? null,
+      isLocalFavorite: restaurant.isLocalFavorite ?? null,
+      rating: null,
+      votePercentage: null,
+    };
     this.restaurants.set(id, newRestaurant);
     return newRestaurant;
   }
@@ -375,12 +416,16 @@ export class MemStorage implements IStorage {
   async getMenuCategories(restaurantId: number): Promise<MenuCategory[]> {
     return Array.from(this.menuCategories.values())
       .filter(cat => cat.restaurantId === restaurantId)
-      .sort((a, b) => a.order - b.order);
+      .sort((a, b) => (a.order ?? Infinity) - (b.order ?? Infinity));
   }
 
   async createMenuCategory(category: InsertMenuCategory): Promise<MenuCategory> {
     const id = this.currentId++;
-    const newCategory: MenuCategory = { ...category, id };
+    const newCategory: MenuCategory = {
+      ...category,
+      id,
+      order: category.order ?? null,
+    };
     this.menuCategories.set(id, newCategory);
     return newCategory;
   }
@@ -401,7 +446,17 @@ export class MemStorage implements IStorage {
 
   async createMenuItem(item: InsertMenuItem): Promise<MenuItem> {
     const id = this.currentId++;
-    const newItem: MenuItem = { ...item, id, rating: 0, votes: 0, upvotes: 0, downvotes: 0 };
+    const newItem: MenuItem = {
+      ...item,
+      id,
+      description: item.description ?? null,
+      imageUrl: item.imageUrl ?? null,
+      fullDescription: item.fullDescription ?? null,
+      rating: 0,
+      votes: 0,
+      upvotes: 0,
+      downvotes: 0,
+    };
     this.menuItems.set(id, newItem);
     return newItem;
   }
@@ -409,10 +464,10 @@ export class MemStorage implements IStorage {
   async updateMenuItemVotes(id: number, upvotes: number, downvotes: number): Promise<MenuItem | undefined> {
     const item = this.menuItems.get(id);
     if (!item) return undefined;
-    
+
     const votes = upvotes + downvotes;
     const rating = votes > 0 ? (upvotes / votes) * 5 : 0;
-    
+
     const updatedItem = { ...item, upvotes, downvotes, votes, rating };
     this.menuItems.set(id, updatedItem);
     return updatedItem;
@@ -429,7 +484,16 @@ export class MemStorage implements IStorage {
 
   async createDeal(deal: InsertDeal): Promise<Deal> {
     const id = this.currentId++;
-    const newDeal: Deal = { ...deal, id };
+    const newDeal: Deal = {
+      ...deal,
+      id,
+      restaurantId: deal.restaurantId ?? null,
+      discountType: deal.discountType ?? null,
+      discountValue: deal.discountValue ?? null,
+      validUntil: deal.validUntil ?? null,
+      backgroundColor: deal.backgroundColor ?? null,
+      isGlobal: deal.isGlobal ?? null,
+    };
     this.deals.set(id, newDeal);
     return newDeal;
   }
@@ -437,7 +501,7 @@ export class MemStorage implements IStorage {
   async getCartItems(sessionId: string): Promise<(CartItem & { menuItem: MenuItem })[]> {
     const items = Array.from(this.cartItems.values())
       .filter(item => item.sessionId === sessionId);
-    
+
     const itemsWithMenuData = [];
     for (const item of items) {
       const menuItem = this.menuItems.get(item.menuItemId);
@@ -445,16 +509,18 @@ export class MemStorage implements IStorage {
         itemsWithMenuData.push({ ...item, menuItem });
       }
     }
-    
+
     return itemsWithMenuData;
   }
 
   async addToCart(item: InsertCartItem): Promise<CartItem> {
     const id = this.currentId++;
-    const newItem: CartItem = { 
-      ...item, 
-      id, 
-      addedAt: new Date().toISOString() as any 
+    const newItem: CartItem = {
+      ...item,
+      id,
+      quantity: item.quantity ?? null,
+      specialInstructions: item.specialInstructions ?? null,
+      addedAt: new Date()
     };
     this.cartItems.set(id, newItem);
     return newItem;
@@ -463,8 +529,12 @@ export class MemStorage implements IStorage {
   async updateCartItem(id: number, quantity: number, specialInstructions?: string): Promise<CartItem | undefined> {
     const item = this.cartItems.get(id);
     if (!item) return undefined;
-    
-    const updatedItem = { ...item, quantity, specialInstructions };
+
+    const updatedItem: CartItem = { // Ensure updatedItem conforms to CartItem
+      ...item,
+      quantity,
+      specialInstructions: specialInstructions ?? null
+    };
     this.cartItems.set(id, updatedItem);
     return updatedItem;
   }
@@ -476,17 +546,18 @@ export class MemStorage implements IStorage {
   async clearCart(sessionId: string): Promise<boolean> {
     const items = Array.from(this.cartItems.entries())
       .filter(([_, item]) => item.sessionId === sessionId);
-    
+
     items.forEach(([id]) => this.cartItems.delete(id));
     return true;
   }
 
   async createServerCall(call: InsertServerCall): Promise<ServerCall> {
     const id = this.currentId++;
-    const newCall: ServerCall = { 
-      ...call, 
-      id, 
-      createdAt: new Date().toISOString() as any 
+    const newCall: ServerCall = {
+      ...call,
+      id,
+      status: call.status ?? null,
+      createdAt: new Date()
     };
     this.serverCalls.set(id, newCall);
     return newCall;
@@ -500,7 +571,7 @@ export class MemStorage implements IStorage {
   async updateServerCallStatus(id: number, status: string): Promise<ServerCall | undefined> {
     const call = this.serverCalls.get(id);
     if (!call) return undefined;
-    
+
     const updatedCall = { ...call, status };
     this.serverCalls.set(id, updatedCall);
     return updatedCall;
