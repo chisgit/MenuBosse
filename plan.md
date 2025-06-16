@@ -1,5 +1,40 @@
 # MenuBosse - Digital Restaurant Menu Platform
 
+## CRITICAL DEVELOPMENT RULES
+
+### PowerShell Syntax Requirements
+- **ALWAYS use PowerShell syntax** - This project is Windows PowerShell optimized
+- **NO BASH SYNTAX** - Never use bash/Unix commands in documentation or scripts
+- **Environment Variables**: Use `$env:VARIABLE_NAME='value'` syntax
+- **Commands**: All terminal commands must be PowerShell compatible
+- **Documentation**: All code examples must use PowerShell syntax
+
+### Command Examples (CORRECT - PowerShell):
+```powershell
+# Navigate to project
+cd c:\Users\User\MenuBosse
+
+# Install dependencies
+npm install
+
+# Development server
+npm run dev
+
+# Environment variable setting
+$env:NODE_ENV='development'
+
+# Multiple commands
+npm install; npm run dev
+```
+
+### Command Examples (INCORRECT - Bash/Unix):
+```bash
+# DON'T USE THESE
+cd ~/MenuBosse
+export NODE_ENV=development
+npm install && npm run dev
+```
+
 ## Project Overview
 MenuBosse is a modern, dark-themed digital restaurant menu platform that provides an elegant dining experience through technology.
 
@@ -12,6 +47,54 @@ MenuBosse is a modern, dark-themed digital restaurant menu platform that provide
 3. **Voting System Contrast** - Improved like/dislike buttons with better visual separation from cards
 4. **Bottom Panel Transparency** - More transparent bottom sections to showcase food images
 5. **Visual Hierarchy** - Clear distinction between interactive elements
+
+### Development Environment
+- **Platform Compatibility**: Windows PowerShell optimized
+- **Environment Variables**: PowerShell syntax (`$env:NODE_ENV='development'`)
+- **Shell Commands**: All npm scripts use PowerShell-compatible syntax
+- **Development Server**: Uses tsx for TypeScript execution with hot reloading
+
+### PowerShell Syntax Rules
+**CRITICAL: Always use PowerShell syntax, never bash/Unix syntax**
+
+**Command Chaining:**
+- ✅ CORRECT: Use semicolon (`;`) to chain commands
+- ❌ WRONG: Never use `&&` (bash syntax)
+
+**Environment Variables:**
+- ✅ CORRECT: `$env:VARIABLE_NAME='value'`
+- ❌ WRONG: `VARIABLE_NAME=value` (bash syntax)
+
+**Examples:**
+```powershell
+# Correct PowerShell syntax
+npm run build; npm run start
+$env:NODE_ENV='development'; tsx server/index.ts
+cd c:\Users\User\MenuBosse; npm run dev
+
+# NEVER use these (bash syntax)
+npm run build && npm run start  # ❌
+NODE_ENV=development tsx server/index.ts  # ❌
+cd c:\Users\User\MenuBosse && npm run dev  # ❌
+```
+
+### Quick Start Commands (PowerShell)
+```powershell
+# Development server
+npm run dev
+
+# Production build
+npm run build
+
+# Start production server
+npm run start
+
+# Type checking
+npm run check
+
+# Database operations
+npm run db:push
+```
 
 ### Technical Architecture
 - **Frontend**: React + TypeScript + Vite
