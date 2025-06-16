@@ -425,20 +425,20 @@ button:active {
 /* Container spacing to prevent navigation cutoff */
 .container-spacing {
     padding-left: 2rem;
-    padding-right: 1.5rem;
+    padding-right: 2rem;
 }
 
 @media (min-width: 640px) {
     .container-spacing {
         padding-left: 2.5rem;
-        padding-right: 2rem;
+        padding-right: 2.5rem;
     }
 }
 
 @media (min-width: 1024px) {
     .container-spacing {
         padding-left: 3rem;
-        padding-right: 2.5rem;
+        padding-right: 3rem;
     }
 }
 
@@ -470,4 +470,36 @@ button:active {
         margin-left: 1rem;
         margin-right: 1rem;
     }
+}
+
+/* Custom scrollbar styles for better visibility */
+::-webkit-scrollbar {
+    width: 12px;
+    height: 12px;
+}
+
+::-webkit-scrollbar-track {
+    background: rgba(0, 0, 0, 0.1);
+    border-radius: 10px;
+}
+
+::-webkit-scrollbar-thumb {
+    background: linear-gradient(135deg, var(--accent) 0%, var(--accent-dark) 100%);
+    border-radius: 10px;
+    border: 2px solid rgba(0, 0, 0, 0.1);
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: linear-gradient(135deg, var(--accent-dark) 0%, var(--accent) 100%);
+    box-shadow: 0 0 10px rgba(255, 107, 53, 0.3);
+}
+
+::-webkit-scrollbar-corner {
+    background: rgba(0, 0, 0, 0.1);
+}
+
+/* For Firefox */
+* {
+    scrollbar-width: thick;
+    scrollbar-color: var(--accent) rgba(0, 0, 0, 0.1);
 }
