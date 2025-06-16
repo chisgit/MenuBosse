@@ -122,7 +122,7 @@ export default function ItemDetailModal({ itemId, onClose }: ItemDetailModalProp
   
   return (
     <Dialog open={true} onOpenChange={onClose}>
-      <DialogContent className="max-w-4xl h-[90vh] p-0 flex flex-col bg-gradient-to-br from-gray-900 via-gray-800/98 to-gray-900/95 backdrop-blur-xl border border-orange-500/20 rounded-3xl shadow-luxury-xl overflow-hidden">
+      <DialogContent className="max-w-5xl h-[92vh] p-0 flex flex-col bg-gradient-to-br from-gray-900 via-gray-800/98 to-gray-900/95 backdrop-blur-xl border border-orange-500/20 rounded-3xl shadow-luxury-xl overflow-hidden">
         {/* Close Button */}
         <button
           onClick={onClose}
@@ -184,25 +184,31 @@ export default function ItemDetailModal({ itemId, onClose }: ItemDetailModalProp
             {/* Content with Tabs */}
             <div className="flex-1 overflow-hidden flex flex-col">
               <Tabs value={activeTab} onValueChange={setActiveTab} className="h-full flex flex-col">
-                <TabsList className="grid w-full grid-cols-2 mx-6 mt-4 bg-gray-800/50 backdrop-blur-sm rounded-xl p-1 border border-gray-700/50">
-                  <TabsTrigger
-                    value="customize"
-                    className="flex items-center gap-2 rounded-lg data-[state=active]:bg-gray-700 data-[state=active]:text-white data-[state=active]:shadow-lg transition-all duration-300 text-gray-300 py-3"
-                  >
-                    <ChefHat className="h-4 w-4" />
-                    Customize Your Dish
-                  </TabsTrigger>
-                  <TabsTrigger
-                    value="questions"
-                    className="flex items-center gap-2 rounded-lg data-[state=active]:bg-gray-700 data-[state=active]:text-white data-[state=active]:shadow-lg transition-all duration-300 text-gray-300 py-3"
-                  >
-                    <MessageCircle className="h-4 w-4" />
-                    Ask Our Chef
-                  </TabsTrigger>
-                </TabsList>
+                {/* Tab Navigation with Better Spacing */}
+                <div className="px-6 pt-6 pb-2">
+                  <TabsList className="grid w-full grid-cols-2 gap-4 bg-gray-800/50 backdrop-blur-sm rounded-xl p-2 border border-gray-700/50">
+                    <TabsTrigger
+                      value="customize"
+                      className="flex items-center justify-center gap-2 rounded-lg data-[state=active]:bg-gray-700 data-[state=active]:text-white data-[state=active]:shadow-lg transition-all duration-300 text-gray-300 py-4 px-4 text-sm font-medium whitespace-nowrap"
+                    >
+                      <ChefHat className="h-4 w-4 flex-shrink-0" />
+                      <span className="hidden sm:inline">Customize Your Dish</span>
+                      <span className="sm:hidden">Customize</span>
+                    </TabsTrigger>
+                    <TabsTrigger
+                      value="questions"
+                      className="flex items-center justify-center gap-2 rounded-lg data-[state=active]:bg-gray-700 data-[state=active]:text-white data-[state=active]:shadow-lg transition-all duration-300 text-gray-300 py-4 px-4 text-sm font-medium whitespace-nowrap"
+                    >
+                      <MessageCircle className="h-4 w-4 flex-shrink-0" />
+                      <span className="hidden sm:inline">Ask Our Chef</span>
+                      <span className="sm:hidden">Ask Chef</span>
+                    </TabsTrigger>
+                  </TabsList>
+                </div>
 
+                {/* Tab Content with Proper Scrolling */}
                 <div className="flex-1 overflow-y-auto px-6 pb-4">
-                  <TabsContent value="customize" className="space-y-6 mt-4">
+                  <TabsContent value="customize" className="space-y-6 mt-2">
                     {/* Description */}
                     <div className="glass-card bg-gradient-to-br from-gray-800/40 to-gray-900/20 backdrop-blur-sm p-5 rounded-2xl border border-gray-700/30">
                       <p className="text-gray-300 text-base leading-relaxed font-medium">
@@ -229,7 +235,7 @@ export default function ItemDetailModal({ itemId, onClose }: ItemDetailModalProp
                                         category === 'topping' ? 'Artisan Toppings' : category}
                             </h4>
                             {category === 'spice' ? (
-                              <RadioGroup value={spiceLevel} onValueChange={setSpiceLevel} className="grid grid-cols-2 gap-3">
+                              <RadioGroup value={spiceLevel} onValueChange={setSpiceLevel} className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                                 <div className="luxury-radio-item bg-gray-800/50 p-3 rounded-xl border border-gray-700/60 hover:bg-gray-700/70 transition-all duration-300 cursor-pointer">
                                   <div className="flex items-center space-x-2">
                                     <RadioGroupItem value="mild" id="mild" className="border-primary" />
@@ -301,7 +307,7 @@ export default function ItemDetailModal({ itemId, onClose }: ItemDetailModalProp
                     </div>
                   </TabsContent>
 
-                  <TabsContent value="questions" className="space-y-5 mt-4">
+                  <TabsContent value="questions" className="space-y-5 mt-2">
                     <div className="glass-card bg-gradient-to-br from-gray-800/80 to-gray-900/60 backdrop-blur-sm border border-gray-700/50 rounded-2xl p-5 shadow-lg">
                       <h3 className="text-lg font-bold text-orange-400 mb-3 flex items-center gap-2">
                         <ChefHat className="h-5 w-5" />
@@ -315,13 +321,13 @@ export default function ItemDetailModal({ itemId, onClose }: ItemDetailModalProp
                           placeholder="Ask about ingredients, allergens, preparation methods, wine pairings, or anything else about this exquisite dish..."
                           value={question}
                           onChange={(e) => setQuestion(e.target.value)}
-                          rows={3}
-                          className="text-sm bg-gray-800/70 border-gray-700/60 text-gray-200 rounded-xl resize-none"
+                          rows={4}
+                          className="text-sm bg-gray-800/70 border-gray-700/60 text-gray-200 rounded-xl resize-none w-full"
                         />
                         <Button
                           onClick={handleAskQuestion}
                           disabled={!question.trim()}
-                          className="w-full bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white font-semibold py-2 rounded-xl transition-all duration-300 hover:shadow-lg"
+                          className="w-full bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white font-semibold py-3 rounded-xl transition-all duration-300 hover:shadow-lg"
                         >
                           <MessageCircle className="h-4 w-4 mr-2" />
                           Ask Our Chef
