@@ -1,15 +1,18 @@
 # MenuBosse - Digital Restaurant Menu Platform
 
-## CRITICAL DEVELOPMENT RULES
+## 🚨 CRITICAL DEVELOPMENT RULES - MUST FOLLOW
 
-### PowerShell Syntax Requirements
+### 1. POWERSHELL SYNTAX ONLY (PRIMARY RULE)
+**⚠️ CRITICAL: This project ONLY uses PowerShell syntax - NEVER bash/Unix syntax**
+
 - **ALWAYS use PowerShell syntax** - This project is Windows PowerShell optimized
-- **NO BASH SYNTAX** - Never use bash/Unix commands in documentation or scripts
-- **Environment Variables**: Use `$env:VARIABLE_NAME='value'` syntax
+- **NO BASH SYNTAX EVER** - Never use bash/Unix commands in documentation or scripts
+- **NO `&&` OPERATOR** - Use semicolon (`;`) for command chaining instead
+- **Environment Variables**: Use `$env:VARIABLE_NAME='value'` syntax ONLY
 - **Commands**: All terminal commands must be PowerShell compatible
 - **Documentation**: All code examples must use PowerShell syntax
 
-### Command Examples (CORRECT - PowerShell):
+### ✅ CORRECT PowerShell Syntax Examples:
 ```powershell
 # Navigate to project
 cd c:\Users\User\MenuBosse
@@ -23,17 +26,30 @@ npm run dev
 # Environment variable setting
 $env:NODE_ENV='development'
 
-# Multiple commands
+# Command chaining (USE SEMICOLON)
 npm install; npm run dev
+npm run build; npm run start
+
+# Multiple operations
+$env:NODE_ENV='development'; tsx server/index.ts
+cd c:\Users\User\MenuBosse; npm run dev
 ```
 
-### Command Examples (INCORRECT - Bash/Unix):
+### ❌ FORBIDDEN Bash/Unix Syntax (NEVER USE):
 ```bash
-# DON'T USE THESE
-cd ~/MenuBosse
-export NODE_ENV=development
-npm install && npm run dev
+# NEVER USE THESE - THEY ARE BASH SYNTAX
+cd ~/MenuBosse                          # ❌ Wrong
+export NODE_ENV=development             # ❌ Wrong  
+npm install && npm run dev              # ❌ Wrong - NO && operator
+NODE_ENV=development tsx server/index.ts # ❌ Wrong
+cd ~/MenuBosse && npm run dev           # ❌ Wrong
 ```
+
+### 2. Code Quality & Codacy Integration
+- Run Codacy analysis after ANY file edit
+- Fix all security issues immediately
+- Follow TypeScript strict mode
+- Use proper error handling
 
 ## Project Overview
 MenuBosse is a modern, dark-themed digital restaurant menu platform that provides an elegant dining experience through technology.

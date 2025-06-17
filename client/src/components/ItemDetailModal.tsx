@@ -182,7 +182,7 @@ export default function ItemDetailModal({ itemId, onClose }: ItemDetailModalProp
             {/* Premium Content with Tabs */}
             <div className="flex-1 overflow-hidden">
               <Tabs value={activeTab} onValueChange={setActiveTab} className="h-full flex flex-col">
-                <TabsList className="grid w-full grid-cols-2 mx-6 mt-6 bg-gray-800/50 backdrop-blur-sm rounded-xl p-1 border border-gray-700/50">
+                <TabsList className="grid w-full grid-cols-2 mx-6 mt-6 bg-gray-800/50 backdrop-blur-sm rounded-xl p-2 gap-2 border border-gray-700/50">
                   <TabsTrigger
                     value="customize"
                     className="flex items-center gap-2 rounded-lg data-[state=active]:bg-gray-700 data-[state=active]:text-white data-[state=active]:shadow-lg transition-all duration-300 text-gray-300"
@@ -199,7 +199,7 @@ export default function ItemDetailModal({ itemId, onClose }: ItemDetailModalProp
                   </TabsTrigger>
                 </TabsList>
 
-                <div className="flex-1 overflow-y-auto px-6 pb-6">
+                <div className="flex-1 overflow-y-auto px-6 pb-12">
                   <TabsContent value="customize" className="space-y-8 mt-6">
                     <div className="glass-card bg-gradient-to-br from-gray-800/40 to-gray-900/20 backdrop-blur-sm p-6 rounded-2xl border border-gray-700/30">
                       <p className="text-gray-300 text-lg leading-relaxed font-medium">
@@ -314,11 +314,10 @@ export default function ItemDetailModal({ itemId, onClose }: ItemDetailModalProp
                           onChange={(e) => setQuestion(e.target.value)}
                           rows={4}
                           className="text-base bg-gray-800/70 border-gray-700/60 text-gray-200 rounded-xl resize-none"
-                        />
-                        <Button
+                        />                        <Button
                           onClick={handleAskQuestion}
                           disabled={!question.trim()}
-                          className="w-full bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white font-semibold py-3 rounded-xl transition-all duration-300 hover:shadow-lg"
+                          className="w-full bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white font-semibold py-3 rounded-xl transition-all duration-300 hover:shadow-lg mb-8"
                         >
                           <MessageCircle className="h-5 w-5 mr-2" />
                           Ask Our Chef
