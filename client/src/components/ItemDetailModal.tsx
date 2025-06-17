@@ -182,11 +182,7 @@ export default function ItemDetailModal({ itemId, onClose }: ItemDetailModalProp
             {/* Premium Content with Tabs */}
             <div className="flex-1 overflow-hidden">
               <Tabs value={activeTab} onValueChange={setActiveTab} className="h-full flex flex-col">
-<<<<<<< HEAD
-                <TabsList className="grid w-full grid-cols-2 mx-6 mt-6 bg-gray-800/50 backdrop-blur-sm rounded-xl p-1 border border-gray-700/50 gap-2">
-=======
                 <TabsList className="grid w-full grid-cols-2 mx-6 mt-6 bg-gray-800/50 backdrop-blur-sm rounded-xl p-2 gap-2 border border-gray-700/50">
->>>>>>> 407ea6d (increased spacing)
                   <TabsTrigger
                     value="customize"
                     className="flex items-center gap-2 rounded-lg data-[state=active]:bg-gray-700 data-[state=active]:text-white data-[state=active]:shadow-lg transition-all duration-300 text-gray-300"
