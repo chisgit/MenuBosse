@@ -154,6 +154,7 @@ export default function ItemDetailModal({ itemId, onClose }: ItemDetailModalProp
               />
               <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/80 via-black/40 to-transparent p-8 z-20">
                 <div className="flex items-end justify-between">
+                  {/* Title, Price/Rating Block */}
                   <div>
                     <h2 className="text-4xl font-bold text-white mb-2 drop-shadow-lg">{item.name}</h2>
                     <div className="flex items-center space-x-6">
@@ -167,6 +168,8 @@ export default function ItemDetailModal({ itemId, onClose }: ItemDetailModalProp
                       </div>
                     </div>
                   </div>
+
+                  {/* Badges Block */}
                   <div className="flex space-x-2">
                     <div className="luxury-badge bg-gradient-to-r from-accent/20 to-primary/20 backdrop-blur-sm rounded-full px-4 py-2 border border-white/30">
                       <Award className="h-5 w-5 text-white" />
@@ -177,31 +180,38 @@ export default function ItemDetailModal({ itemId, onClose }: ItemDetailModalProp
                   </div>
                 </div>
               </div>
-            </div>            {/* Premium Content with Tabs */}
-            <div className="flex-1 overflow-hidden">
+            </div>
+
+            {/* Item Description - MOVED BACK HERE, BELOW HEADER, ABOVE TABS */}
+            <div className="px-6 pt-2 pb-2"> {/* Added pb-2 for minimal bottom padding */}
+              <div className="glass-card bg-gradient-to-br from-gray-800/40 to-gray-900/20 backdrop-blur-sm px-6 py-3 rounded-2xl border border-gray-700/30">
+                <p className="text-gray-300 text-lg leading-relaxed font-medium">
+                  {item.fullDescription || item.description}
+                </p>
+              </div>
+            </div>
+
+            {/* Premium Content with Tabs */}
+            <div className="flex-1 overflow-hidden px-6">
               <Tabs value={activeTab} onValueChange={setActiveTab} className="h-full flex flex-col">
-                <TabsList className="grid w-full grid-cols-2 mx-6 mt-6 bg-gray-800/50 backdrop-blur-sm rounded-xl p-2 gap-2 border border-gray-700/50">
+                <TabsList className="grid w-full grid-cols-2 mt-2 bg-gray-800/50 backdrop-blur-sm rounded-xl p-2 gap-2"> {/* Reduced top margin from mt-6 to mt-2 */}
                   <TabsTrigger
                     value="customize"
-                    className="flex items-center gap-2 rounded-lg data-[state=active]:bg-gray-700 data-[state=active]:text-white data-[state=active]:shadow-lg transition-all duration-300 text-gray-300"
+                    className="flex items-center gap-2 rounded-lg border-0 data-[state=active]:bg-gray-700 data-[state=active]:text-white data-[state=active]:shadow-lg transition-all duration-300 text-gray-300"
                   >
                     <ChefHat className="h-4 w-4" />
                     Customize Your Dish
-                  </TabsTrigger>                  <TabsTrigger
+                  </TabsTrigger>
+                  <TabsTrigger
                     value="questions"
-                    className="flex items-center gap-2 rounded-lg data-[state=active]:bg-gray-700 data-[state=active]:text-white data-[state=active]:shadow-lg transition-all duration-300 text-gray-300"
+                    className="flex items-center gap-2 rounded-lg border-0 data-[state=active]:bg-gray-700 data-[state=active]:text-white data-[state=active]:shadow-lg transition-all duration-300 text-gray-300"
                   >
                     <MessageCircle className="h-4 w-4" />
                     Ask Our Chef
                   </TabsTrigger>
-                </TabsList>                <div className="flex-1 overflow-y-auto px-6 pb-12">
+                </TabsList>
+                <div className="flex-1 overflow-y-auto pb-12">
                   <TabsContent value="customize" className="space-y-8 mt-6">
-                    <div className="glass-card bg-gradient-to-br from-gray-800/40 to-gray-900/20 backdrop-blur-sm p-6 rounded-2xl border border-gray-700/30">
-                      <p className="text-gray-300 text-lg leading-relaxed font-medium">
-                        {item.fullDescription || item.description}
-                      </p>
-                    </div>
-
                     {/* Premium Add-ons */}
                     {addons && addons.length > 0 && (
                       <div className="space-y-6">

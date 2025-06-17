@@ -45,9 +45,7 @@ NODE_ENV=development tsx server/index.ts # ❌ Wrong
 cd ~/MenuBosse && npm run dev           # ❌ Wrong
 ```
 
-### 2. Code Quality & Codacy Integration
-- Run Codacy analysis after ANY file edit
-- Fix all security issues immediately
+### 2. Code Quality
 - Follow TypeScript strict mode
 - Use proper error handling
 
