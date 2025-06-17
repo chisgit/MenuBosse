@@ -177,9 +177,7 @@ export default function ItemDetailModal({ itemId, onClose }: ItemDetailModalProp
                   </div>
                 </div>
               </div>
-            </div>
-
-            {/* Premium Content with Tabs */}
+            </div>            {/* Premium Content with Tabs */}
             <div className="flex-1 overflow-hidden">
               <Tabs value={activeTab} onValueChange={setActiveTab} className="h-full flex flex-col">
                 <TabsList className="grid w-full grid-cols-2 mx-6 mt-6 bg-gray-800/50 backdrop-blur-sm rounded-xl p-2 gap-2 border border-gray-700/50">
@@ -189,17 +187,14 @@ export default function ItemDetailModal({ itemId, onClose }: ItemDetailModalProp
                   >
                     <ChefHat className="h-4 w-4" />
                     Customize Your Dish
-                  </TabsTrigger>
-                  <TabsTrigger
+                  </TabsTrigger>                  <TabsTrigger
                     value="questions"
                     className="flex items-center gap-2 rounded-lg data-[state=active]:bg-gray-700 data-[state=active]:text-white data-[state=active]:shadow-lg transition-all duration-300 text-gray-300"
                   >
                     <MessageCircle className="h-4 w-4" />
                     Ask Our Chef
                   </TabsTrigger>
-                </TabsList>
-
-                <div className="flex-1 overflow-y-auto px-6 pb-12">
+                </TabsList>                <div className="flex-1 overflow-y-auto px-6 pb-12">
                   <TabsContent value="customize" className="space-y-8 mt-6">
                     <div className="glass-card bg-gradient-to-br from-gray-800/40 to-gray-900/20 backdrop-blur-sm p-6 rounded-2xl border border-gray-700/30">
                       <p className="text-gray-300 text-lg leading-relaxed font-medium">
@@ -349,10 +344,10 @@ export default function ItemDetailModal({ itemId, onClose }: ItemDetailModalProp
                   </TabsContent>
                 </div>
               </Tabs>
-            </div>
+            </div >
 
             {/* Premium Footer with Actions */}
-            <div className="border-t border-gray-700/50 bg-gradient-to-r from-gray-900/90 to-gray-800/90 backdrop-blur-sm p-6">
+            < div className="border-t border-gray-700/50 bg-gradient-to-r from-gray-900/90 to-gray-800/90 backdrop-blur-sm p-6" >
               <div className="flex items-center justify-between mb-6">
                 <div className="flex items-center space-x-6">
                   <span className="text-lg font-bold text-gray-200">Quantity:</span>
@@ -398,7 +393,7 @@ export default function ItemDetailModal({ itemId, onClose }: ItemDetailModalProp
                   </>
                 )}
               </Button>
-            </div>
+            </div >
           </>
         ) : (
           <div className="p-8 text-center glass-card bg-gradient-to-br from-gray-800/60 to-gray-900/40 backdrop-blur-sm rounded-2xl m-6 border border-gray-700/40">
@@ -409,8 +404,9 @@ export default function ItemDetailModal({ itemId, onClose }: ItemDetailModalProp
               Explore Other Dishes
             </Button>
           </div>
-        )}
-      </DialogContent>
-    </Dialog>
+        )
+        }
+      </DialogContent >
+    </Dialog >
   );
 }
