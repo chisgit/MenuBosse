@@ -97,7 +97,6 @@ export default function ItemDetailModal({ itemId, onClose }: ItemDetailModalProp
 
     return (basePrice + addonPrice).toFixed(2);
   };
-
   const groupAddonsByCategory = (addons: MenuItemAddon[]) => {
     return addons.reduce((acc, addon) => {
       if (!acc[addon.category]) {
@@ -106,6 +105,21 @@ export default function ItemDetailModal({ itemId, onClose }: ItemDetailModalProp
       acc[addon.category].push(addon);
       return acc;
     }, {} as Record<string, MenuItemAddon[]>);
+  };
+
+  const getOptimizedLayout = (categorizedAddons: Record<string, MenuItemAddon[]>) => {
+    const singleItemCategories: [string, MenuItemAddon[]][] = [];
+    const multiItemCategories: [string, MenuItemAddon[]][] = [];
+
+    Object.entries(categorizedAddons).forEach(([category, items]) => {
+      if (items.length === 1) {
+        singleItemCategories.push([category, items]);
+      } else {
+        multiItemCategories.push([category, items]);
+      }
+    });
+
+    return { singleItemCategories, multiItemCategories };
   };
 
   const handleAskQuestion = () => {
@@ -211,78 +225,128 @@ export default function ItemDetailModal({ itemId, onClose }: ItemDetailModalProp
                   </TabsTrigger>
                 </TabsList>
                 <div className="flex-1 overflow-y-auto pb-12">
-                  <TabsContent value="customize" className="space-y-8 mt-6">
-                    {/* Premium Add-ons */}
+                  <TabsContent value="customize" className="space-y-8 mt-6">                    {/* Premium Add-ons */}
                     {addons && addons.length > 0 && (
                       <div className="space-y-6">
                         <h3 className="text-2xl font-bold bg-gradient-to-r from-gray-300 to-orange-400 bg-clip-text text-transparent flex items-center gap-3">
                           <Sparkles className="h-6 w-6 text-primary" />
                           Enhance Your Experience
                         </h3>
-                        {Object.entries(groupAddonsByCategory(addons)).map(([category, categoryAddons]) => (
-                          <div key={category} className="glass-card bg-gradient-to-br from-gray-800/60 to-gray-900/40 backdrop-blur-sm border border-gray-700/40 rounded-2xl p-6 shadow-lg">
-                            <h4 className="text-xl font-bold text-gray-200 mb-5 capitalize flex items-center gap-3">
-                              <div className="w-2 h-2 bg-gradient-to-r from-primary to-accent rounded-full"></div>
-                              {category === 'spice' ? 'Spice Level' :
-                                category === 'cheese' ? 'Premium Cheese' :
-                                  category === 'meat' ? 'Protein Selection' :
-                                    category === 'sauce' ? 'Signature Sauces' :
-                                      category === 'side' ? 'Gourmet Sides' :
-                                        category === 'topping' ? 'Artisan Toppings' : category}
-                            </h4>
-                            {category === 'spice' ? (
-                              <RadioGroup value={spiceLevel} onValueChange={setSpiceLevel} className="grid grid-cols-2 gap-4">
-                                <div className="luxury-radio-item bg-gray-800/50 p-4 rounded-xl border border-gray-700/60 hover:bg-gray-700/70 transition-all duration-300 cursor-pointer">
-                                  <div className="flex items-center space-x-3">
-                                    <RadioGroupItem value="mild" id="mild" className="border-primary" />
-                                    <Label htmlFor="mild" className="text-base font-medium text-gray-200 cursor-pointer">🌿 Mild & Gentle</Label>
-                                  </div>
-                                </div>
-                                <div className="luxury-radio-item bg-gray-800/50 p-4 rounded-xl border border-gray-700/60 hover:bg-gray-700/70 transition-all duration-300 cursor-pointer">
-                                  <div className="flex items-center space-x-3">
-                                    <RadioGroupItem value="medium" id="medium" className="border-primary" />
-                                    <Label htmlFor="medium" className="text-base font-medium text-gray-200 cursor-pointer">🌶️ Medium Heat</Label>
-                                  </div>
-                                </div>
-                                <div className="luxury-radio-item bg-gray-800/50 p-4 rounded-xl border border-gray-700/60 hover:bg-gray-700/70 transition-all duration-300 cursor-pointer">
-                                  <div className="flex items-center space-x-3">
-                                    <RadioGroupItem value="hot" id="hot" className="border-primary" />
-                                    <Label htmlFor="hot" className="text-base font-medium text-gray-200 cursor-pointer">🔥 Fiery Hot</Label>
-                                  </div>
-                                </div>
-                                <div className="luxury-radio-item bg-gray-800/50 p-4 rounded-xl border border-gray-700/60 hover:bg-gray-700/70 transition-all duration-300 cursor-pointer">
-                                  <div className="flex items-center space-x-3">
-                                    <RadioGroupItem value="extra-hot" id="extra-hot" className="border-primary" />
-                                    <Label htmlFor="extra-hot" className="text-base font-medium text-gray-200 cursor-pointer">🌋 Volcanic</Label>
-                                  </div>
-                                </div>
-                              </RadioGroup>
-                            ) : (
-                              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                                {categoryAddons.map((addon) => (
-                                  <div key={addon.id} className="luxury-addon-item bg-gray-800/60 p-4 rounded-xl border border-gray-700/60 hover:bg-gray-700/80 transition-all duration-300 hover:shadow-lg">
-                                    <div className="flex items-center justify-between">
-                                      <div className="flex items-center space-x-3">
-                                        <Checkbox
-                                          id={`addon-${addon.id}`}
-                                          checked={selectedAddons[addon.id] > 0}
-                                          onCheckedChange={(checked) => handleAddonToggle(addon.id, checked as boolean)}
-                                          className="border-primary data-[state=checked]:bg-primary"
-                                        />
-                                        <Label htmlFor={`addon-${addon.id}`} className="text-base font-medium text-gray-200 cursor-pointer">
-                                          {addon.name}
-                                        </Label>
+
+                        {(() => {
+                          const categorizedAddons = groupAddonsByCategory(addons);
+                          const { singleItemCategories, multiItemCategories } = getOptimizedLayout(categorizedAddons);
+
+                          return (
+                            <>
+                              {/* Multi-item categories - full width */}
+                              {multiItemCategories.map(([category, categoryAddons]) => (
+                                <div key={category} className="glass-card bg-gradient-to-br from-gray-800/60 to-gray-900/40 backdrop-blur-sm border border-gray-700/40 rounded-2xl p-6 shadow-lg">
+                                  <h4 className="text-xl font-bold text-gray-200 mb-5 capitalize flex items-center gap-3">
+                                    <div className="w-2 h-2 bg-gradient-to-r from-primary to-accent rounded-full"></div>
+                                    {category === 'spice' ? 'Spice Level' :
+                                      category === 'cheese' ? 'Premium Cheese' :
+                                        category === 'meat' ? 'Protein Selection' :
+                                          category === 'sauce' ? 'Signature Sauces' :
+                                            category === 'side' ? 'Gourmet Sides' :
+                                              category === 'topping' ? 'Artisan Toppings' : category}
+                                  </h4>
+                                  {category === 'spice' ? (
+                                    <RadioGroup value={spiceLevel} onValueChange={setSpiceLevel} className="grid grid-cols-2 gap-4">
+                                      <div className="luxury-radio-item bg-gray-800/50 p-4 rounded-xl border border-gray-700/60 hover:bg-gray-700/70 transition-all duration-300 cursor-pointer">
+                                        <div className="flex items-center space-x-3">
+                                          <RadioGroupItem value="mild" id="mild" className="border-primary" />
+                                          <Label htmlFor="mild" className="text-base font-medium text-gray-200 cursor-pointer">🌿 Mild & Gentle</Label>
+                                        </div>
                                       </div>
-                                      <span className="text-base font-bold bg-gradient-to-r from-primary to-accent bg-clip-text text-transparent">
-                                        {addon.price > 0 ? `+$${addon.price.toFixed(2)}` : 'Complimentary'}
-                                      </span>
+                                      <div className="luxury-radio-item bg-gray-800/50 p-4 rounded-xl border border-gray-700/60 hover:bg-gray-700/70 transition-all duration-300 cursor-pointer">
+                                        <div className="flex items-center space-x-3">
+                                          <RadioGroupItem value="medium" id="medium" className="border-primary" />
+                                          <Label htmlFor="medium" className="text-base font-medium text-gray-200 cursor-pointer">🌶️ Medium Heat</Label>
+                                        </div>
+                                      </div>
+                                      <div className="luxury-radio-item bg-gray-800/50 p-4 rounded-xl border border-gray-700/60 hover:bg-gray-700/70 transition-all duration-300 cursor-pointer">
+                                        <div className="flex items-center space-x-3">
+                                          <RadioGroupItem value="hot" id="hot" className="border-primary" />
+                                          <Label htmlFor="hot" className="text-base font-medium text-gray-200 cursor-pointer">🔥 Fiery Hot</Label>
+                                        </div>
+                                      </div>
+                                      <div className="luxury-radio-item bg-gray-800/50 p-4 rounded-xl border border-gray-700/60 hover:bg-gray-700/70 transition-all duration-300 cursor-pointer">
+                                        <div className="flex items-center space-x-3">
+                                          <RadioGroupItem value="extra-hot" id="extra-hot" className="border-primary" />
+                                          <Label htmlFor="extra-hot" className="text-base font-medium text-gray-200 cursor-pointer">🌋 Volcanic</Label>
+                                        </div>
+                                      </div>
+                                    </RadioGroup>
+                                  ) : (
+                                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                      {categoryAddons.map((addon) => (
+                                        <div key={addon.id} className="luxury-addon-item bg-gray-800/60 p-4 rounded-xl border border-gray-700/60 hover:bg-gray-700/80 transition-all duration-300 hover:shadow-lg">
+                                          <div className="flex items-center justify-between">
+                                            <div className="flex items-center space-x-3">
+                                              <Checkbox
+                                                id={`addon-${addon.id}`}
+                                                checked={selectedAddons[addon.id] > 0}
+                                                onCheckedChange={(checked) => handleAddonToggle(addon.id, checked as boolean)}
+                                                className="border-primary data-[state=checked]:bg-primary"
+                                              />
+                                              <Label htmlFor={`addon-${addon.id}`} className="text-base font-medium text-gray-200 cursor-pointer">
+                                                {addon.name}
+                                              </Label>
+                                            </div>
+                                            <span className="text-base font-bold bg-gradient-to-r from-primary to-accent bg-clip-text text-transparent">
+                                              {addon.price > 0 ? `+$${addon.price.toFixed(2)}` : 'Complimentary'}
+                                            </span>
+                                          </div>
+                                        </div>
+                                      ))}
                                     </div>
-                                  </div>
-                                ))}
-                              </div>
-                            )}
-                          </div>
-                        ))}
+                                  )}
+                                </div>
+                              ))}
+
+                              {/* Single-item categories - compact 2-column layout */}
+                              {singleItemCategories.length > 0 && (
+                                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                  {singleItemCategories.map(([category, categoryAddons]) => {
+                                    const addon = categoryAddons[0];
+                                    return (
+                                      <div key={category} className="glass-card bg-gradient-to-br from-gray-800/60 to-gray-900/40 backdrop-blur-sm border border-gray-700/40 rounded-xl p-4 shadow-lg">
+                                        <h4 className="text-lg font-bold text-gray-200 mb-3 capitalize flex items-center gap-2">
+                                          <div className="w-1.5 h-1.5 bg-gradient-to-r from-primary to-accent rounded-full"></div>
+                                          {category === 'spice' ? 'Spice Level' :
+                                            category === 'cheese' ? 'Premium Cheese' :
+                                              category === 'meat' ? 'Protein Selection' :
+                                                category === 'sauce' ? 'Signature Sauces' :
+                                                  category === 'side' ? 'Gourmet Sides' :
+                                                    category === 'topping' ? 'Artisan Toppings' : category}
+                                        </h4>
+                                        <div className="luxury-addon-item bg-gray-800/60 p-3 rounded-lg border border-gray-700/60 hover:bg-gray-700/80 transition-all duration-300 hover:shadow-lg">
+                                          <div className="flex items-center justify-between">
+                                            <div className="flex items-center space-x-3">
+                                              <Checkbox
+                                                id={`addon-${addon.id}`}
+                                                checked={selectedAddons[addon.id] > 0}
+                                                onCheckedChange={(checked) => handleAddonToggle(addon.id, checked as boolean)}
+                                                className="border-primary data-[state=checked]:bg-primary"
+                                              />
+                                              <Label htmlFor={`addon-${addon.id}`} className="text-sm font-medium text-gray-200 cursor-pointer">
+                                                {addon.name}
+                                              </Label>
+                                            </div>
+                                            <span className="text-sm font-bold bg-gradient-to-r from-primary to-accent bg-clip-text text-transparent">
+                                              {addon.price > 0 ? `+$${addon.price.toFixed(2)}` : 'Free'}
+                                            </span>
+                                          </div>
+                                        </div>
+                                      </div>
+                                    );
+                                  })}
+                                </div>
+                              )}
+                            </>
+                          );
+                        })()}
                       </div>
                     )}
 
