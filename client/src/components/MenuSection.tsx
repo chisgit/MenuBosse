@@ -25,14 +25,13 @@ export default function MenuSection({ restaurantId, onItemClick, restaurantName,
   const addToCart = useAddToCart();
   const voteMenuItem = useVoteMenuItem();
   const { toast } = useToast();
-  
+
   const filters = [
     { key: "all", label: "All", icon: Sparkles },
     { key: "appetizers", label: "Appetizers", icon: Heart },
     { key: "mains", label: "Mains", icon: Star },
     { key: "desserts", label: "Desserts", icon: Clock },
   ];
-
   const filteredItems = menuItems?.filter(item => {
     const matchesSearch = item.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
       item.description?.toLowerCase().includes(searchTerm.toLowerCase());
@@ -40,7 +39,24 @@ export default function MenuSection({ restaurantId, onItemClick, restaurantName,
     if (activeFilter === "all") return matchesSearch;
 
     const category = categories?.find(cat => cat.id === item.categoryId);
-    const matchesFilter = category?.name.toLowerCase().includes(activeFilter);
+    let matchesFilter = false;
+
+    if (category) {
+      const categoryName = category.name.toLowerCase();
+      switch (activeFilter) {
+        case "appetizers":
+          matchesFilter = categoryName === "appetizers";
+          break;
+        case "mains":
+          matchesFilter = categoryName === "main dishes";
+          break;
+        case "desserts":
+          matchesFilter = categoryName === "desserts";
+          break;
+        default:
+          matchesFilter = false;
+      }
+    }
 
     return matchesSearch && matchesFilter;
   });
@@ -142,11 +158,10 @@ export default function MenuSection({ restaurantId, onItemClick, restaurantName,
                   key={filter.key}
                   variant={activeFilter === filter.key ? "default" : "outline"}
                   onClick={() => setActiveFilter(filter.key)}
-                  className={`luxury-filter-btn h-14 px-6 rounded-xl font-medium transition-all duration-300 ${
-                    activeFilter === filter.key
+                  className={`luxury-filter-btn h-14 px-6 rounded-xl font-medium transition-all duration-300 ${activeFilter === filter.key
                       ? "bg-gradient-to-r from-orange-500 to-orange-600 text-white shadow-luxury-glow border-0"
                       : "bg-black/20 hover:bg-black/30 border-white/20 text-gray-300 hover:text-orange-400"
-                  }`}
+                    }`}
                 >
                   <IconComponent className="h-4 w-4 mr-2" />
                   {filter.label}
@@ -182,7 +197,7 @@ export default function MenuSection({ restaurantId, onItemClick, restaurantName,
                         alt={item.name}
                         className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
                       />
-                      
+
                       {/* Lighter overlay for better image visibility */}
                       <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-black/5 to-transparent"></div>
 

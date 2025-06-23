@@ -418,55 +418,53 @@ export default function ItemDetailModal({ itemId, onClose }: ItemDetailModalProp
                   </TabsContent>
                 </div>
               </Tabs>
-            </div >
-
-            {/* Premium Footer with Actions */}
+            </div >            {/* Premium Footer with Actions */}
             < div className="border-t border-gray-700/50 bg-gradient-to-r from-gray-900/90 to-gray-800/90 backdrop-blur-sm p-6" >
-              <div className="flex items-center justify-between mb-6">
-                <div className="flex items-center space-x-6">
-                  <span className="text-lg font-bold text-gray-200">Quantity:</span>
+              <div className="flex items-center justify-between gap-4">
+                <div className="flex items-center space-x-4">
+                  <span className="text-lg font-bold text-gray-200">Qty:</span>
                   <div className="luxury-quantity-selector flex items-center bg-gray-800/60 border border-gray-700/60 rounded-xl overflow-hidden shadow-sm">
                     <Button
                       variant="ghost"
                       size="icon"
                       onClick={decreaseQuantity}
                       disabled={quantity <= 1}
-                      className="h-12 w-12 hover:bg-gray-700/80 rounded-none text-gray-200"
+                      className="h-11 w-11 hover:bg-gray-700/80 rounded-none text-gray-200"
                     >
                       <Minus className="h-4 w-4" />
                     </Button>
-                    <span className="px-6 py-3 text-lg font-bold min-w-[3rem] text-center bg-gray-800/40 text-gray-200">
+                    <span className="px-4 py-2.5 text-lg font-bold min-w-[2.5rem] text-center bg-gray-800/40 text-gray-200">
                       {quantity}
                     </span>
                     <Button
                       variant="ghost"
                       size="icon"
                       onClick={increaseQuantity}
-                      className="h-12 w-12 hover:bg-gray-700/80 rounded-none text-gray-200"
+                      className="h-11 w-11 hover:bg-gray-700/80 rounded-none text-gray-200"
                     >
                       <Plus className="h-4 w-4" />
                     </Button>
                   </div>
                 </div>
-              </div>
 
-              <Button
-                onClick={handleAddToCart}
-                disabled={addToCart.isPending}
-                className="w-full luxury-add-to-cart bg-gradient-to-r from-primary via-primary to-accent hover:from-primary/90 hover:via-primary/90 hover:to-accent/90 text-white font-bold px-10 py-4 rounded-2xl text-lg transition-all duration-300 hover:shadow-luxury-glow border-0"
-              >
-                {addToCart.isPending ? (
-                  <>
-                    <Sparkles className="h-5 w-5 mr-2 animate-spin" />
-                    Adding to Cart...
-                  </>
-                ) : (
-                  <>
-                    <Heart className="h-5 w-5 mr-2" />
-                    Add to Cart - ${totalPrice}
-                  </>
-                )}
-              </Button>
+                <Button
+                  onClick={handleAddToCart}
+                  disabled={addToCart.isPending}
+                  className="flex-1 luxury-add-to-cart bg-gradient-to-r from-primary via-primary to-accent hover:from-primary/90 hover:via-primary/90 hover:to-accent/90 text-white font-bold px-6 py-3 rounded-xl text-base transition-all duration-300 hover:shadow-luxury-glow border-0"
+                >
+                  {addToCart.isPending ? (
+                    <>
+                      <Sparkles className="h-5 w-5 mr-2 animate-spin" />
+                      Adding...
+                    </>
+                  ) : (
+                    <>
+                      <Heart className="h-5 w-5 mr-2" />
+                      Add to Cart - ${totalPrice}
+                    </>
+                  )}
+                </Button>
+              </div>
             </div >
           </>
         ) : (

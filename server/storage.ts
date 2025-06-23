@@ -249,9 +249,51 @@ export class MemStorage implements IStorage {
         price: 18.99,
         imageUrl: "https://images.unsplash.com/photo-1568901346375-23c9450c58cd?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&h=300",
         rating: 4.8,
-        votes: 203,
-        upvotes: 188,
+        votes: 203, upvotes: 188,
         downvotes: 15,
+      },
+      // Desserts
+      {
+        id: 7,
+        restaurantId: 1,
+        categoryId: 3,
+        name: "Tiramisu",
+        description: "Classic Italian dessert with coffee-soaked ladyfingers, mascarpone cream, and cocoa powder.",
+        fullDescription: "Traditional tiramisu made with espresso-soaked ladyfingers, rich mascarpone cream, and dusted with premium Belgian cocoa powder. A perfect end to your Italian dining experience.",
+        price: 8.99,
+        imageUrl: "https://images.unsplash.com/photo-1571877227200-a0d98ea607e9?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&h=300",
+        rating: 4.9,
+        votes: 156,
+        upvotes: 148,
+        downvotes: 8,
+      },
+      {
+        id: 8,
+        restaurantId: 1,
+        categoryId: 3,
+        name: "Panna Cotta",
+        description: "Silky vanilla panna cotta with fresh berry compote and candied orange zest.",
+        fullDescription: "Delicate vanilla bean panna cotta served with seasonal berry compote and garnished with candied orange zest and fresh mint. Light and refreshing.",
+        price: 7.99,
+        imageUrl: "https://images.unsplash.com/photo-1488477181946-6428a0291777?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&h=300",
+        rating: 4.7,
+        votes: 89,
+        upvotes: 82,
+        downvotes: 7,
+      },
+      {
+        id: 9,
+        restaurantId: 1,
+        categoryId: 3,
+        name: "Chocolate Lava Cake",
+        description: "Warm chocolate cake with molten center, served with vanilla gelato and raspberry coulis.",
+        fullDescription: "Decadent chocolate lava cake with a molten chocolate center, served warm with house-made vanilla gelato and fresh raspberry coulis. A chocolate lover's dream.",
+        price: 9.99,
+        imageUrl: "https://images.unsplash.com/photo-1606313564200-e75d5e30476c?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&h=300",
+        rating: 4.8,
+        votes: 234,
+        upvotes: 218,
+        downvotes: 16,
       },
     ];
     items.forEach(item => this.menuItems.set(item.id, item));
@@ -292,6 +334,22 @@ export class MemStorage implements IStorage {
       { id: 22, menuItemId: 6, name: "Cauliflower Purée", description: "Extra portion of silky cauliflower purée", price: 3.50, category: "side", isRequired: false, maxSelections: 1 },
       { id: 23, menuItemId: 6, name: "Brown Butter Sauce", description: "Additional brown butter sauce", price: 2.75, category: "sauce", isRequired: false, maxSelections: 2 },
       { id: 24, menuItemId: 6, name: "Microgreens", description: "Premium microgreens medley", price: 3.00, category: "topping", isRequired: false, maxSelections: 1 },
+
+      // Tiramisu add-ons
+      { id: 25, menuItemId: 7, name: "Extra Coffee Shot", description: "Additional espresso shot drizzle", price: 2.00, category: "sauce", isRequired: false, maxSelections: 2 },
+      { id: 26, menuItemId: 7, name: "Amaretto", description: "Amaretto liqueur enhancement", price: 3.50, category: "sauce", isRequired: false, maxSelections: 1 },
+      { id: 27, menuItemId: 7, name: "Dark Chocolate Shavings", description: "Premium dark chocolate shavings", price: 2.50, category: "topping", isRequired: false, maxSelections: 1 },
+
+      // Panna Cotta add-ons
+      { id: 28, menuItemId: 8, name: "Extra Berry Compote", description: "Additional seasonal berry compote", price: 2.75, category: "sauce", isRequired: false, maxSelections: 1 },
+      { id: 29, menuItemId: 8, name: "Honey Drizzle", description: "Local wildflower honey drizzle", price: 1.50, category: "sauce", isRequired: false, maxSelections: 1 },
+      { id: 30, menuItemId: 8, name: "Candied Nuts", description: "Toasted candied almonds", price: 3.00, category: "topping", isRequired: false, maxSelections: 1 },
+
+      // Chocolate Lava Cake add-ons
+      { id: 31, menuItemId: 9, name: "Extra Gelato", description: "Additional scoop of vanilla gelato", price: 3.50, category: "side", isRequired: false, maxSelections: 2 },
+      { id: 32, menuItemId: 9, name: "Salted Caramel Sauce", description: "House-made salted caramel sauce", price: 2.25, category: "sauce", isRequired: false, maxSelections: 1 },
+      { id: 33, menuItemId: 9, name: "Fresh Strawberries", description: "Fresh sliced strawberries", price: 2.50, category: "topping", isRequired: false, maxSelections: 1 },
+      { id: 34, menuItemId: 9, name: "Whipped Cream", description: "Fresh whipped cream", price: 1.75, category: "topping", isRequired: false, maxSelections: 1 },
     ];
     addons.forEach(addon => this.menuItemAddons.set(addon.id, addon));
 
@@ -333,7 +391,7 @@ export class MemStorage implements IStorage {
     ];
     dealsData.forEach(deal => this.deals.set(deal.id, deal));
 
-    this.currentId = 19;
+    this.currentId = 35;
   }
 
   // Menu Item Add-ons methods
