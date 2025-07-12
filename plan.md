@@ -1,146 +1,127 @@
-# MenuBosse - Digital Restaurant Menu Platform
+# Cart Functionality Enhancement Plan
 
-## 🚨 CRITICAL DEVELOPMENT RULES - MUST FOLLOW
+## Current State Analysis
 
-### 1. POWERSHELL SYNTAX ONLY (PRIMARY RULE)
-**⚠️ CRITICAL: This project ONLY uses PowerShell syntax - NEVER bash/Unix syntax**
+### Issues Identified:
+1. **Random Session ID**: Cart uses `Math.random()` for session generation, meaning each refresh creates a new cart
+2. **No Table-Based Sharing**: No concept of table sessions for multiple people at same table
+3. **No Order Tracking**: No distinction between items in cart vs items ordered/served
+4. **Limited Cart UI**: Cart functionality exists but may not be fully integrated in UI
 
-- **ALWAYS use PowerShell syntax** - This project is Windows PowerShell optimized
-- **NO BASH SYNTAX EVER** - Never use bash/Unix commands in documentation or scripts
-- **NO `&&` OPERATOR** - Use semicolon (`;`) for command chaining instead
-- **Environment Variables**: Use `$env:VARIABLE_NAME='value'` syntax ONLY
-- **Commands**: All terminal commands must be PowerShell compatible
-- **Documentation**: All code examples must use PowerShell syntax
+### Current Implementation:
+- Cart items stored with session ID
+- Basic CRUD operations (add, update, remove, clear)
+- Memory-based storage (resets on server restart)
+- Cart items include menu item details
 
-### ✅ CORRECT PowerShell Syntax Examples:
-```powershell
-# Navigate to project
-cd c:\Users\User\MenuBosse
+## Implementation Plan
 
-# Install dependencies
-npm install
+### Phase 1: Table-Based Session Management
+1. **URL-based Table Sessions**
+   - Extract table/session info from URL parameters (e.g., `/restaurant/1?table=5&session=abc123`)
+   - Generate stable session IDs based on table number
+   - Allow multiple devices to share same table session
 
-# Development server
-npm run dev
+2. **Session ID Strategy**
+   - Replace random session with secure hashed session ID
+   - Generate unique session tokens that obfuscate table information
+   - Use format: `session-{hashedToken}` where token = hash(restaurantId + tableNumber + salt + timestamp)
+   - Persist session in localStorage for device continuity
+   - Allow manual session override via QR code parameters
 
-# Environment variable setting
-$env:NODE_ENV='development'
+3. **Security Measures**
+   - Hash table numbers with restaurant-specific salt
+   - Include timestamp in hash to enable session expiration
+   - Store mapping between session tokens and actual table info on server
+   - Prevent guessing/enumeration of other table sessions
 
-# Command chaining (USE SEMICOLON)
-npm install; npm run dev
-npm run build; npm run start
+### Phase 2: Order Status Management
+1. **Cart vs Order States**
+   - Add `status` field to cart items: `cart`, `ordered`, `preparing`, `served`
+   - Separate cart (pending items) from order history
+   - Add timestamps for order progression
 
-# Multiple operations
-$env:NODE_ENV='development'; tsx server/index.ts
-cd c:\Users\User\MenuBosse; npm run dev
-```
+2. **Database Schema Updates**
+   - Extend CartItem with status and timestamps
+   - Add table information to cart items
+   - Create order tracking endpoints
 
-### ❌ FORBIDDEN Bash/Unix Syntax (NEVER USE):
-```bash
-# NEVER USE THESE - THEY ARE BASH SYNTAX
-cd ~/MenuBosse                          # ❌ Wrong
-export NODE_ENV=development             # ❌ Wrong  
-npm install && npm run dev              # ❌ Wrong - NO && operator
-NODE_ENV=development tsx server/index.ts # ❌ Wrong
-cd ~/MenuBosse && npm run dev           # ❌ Wrong
-```
+### Phase 3: Enhanced Cart UI
+1. **Cart Component**
+   - Create dedicated cart sidebar/drawer
+   - Show current cart items with quantities
+   - Display order history with statuses
+   - Add checkout/order placement functionality
 
-### 2. Code Quality
-- Follow TypeScript strict mode
-- Use proper error handling
+2. **Cart Integration**
+   - Add cart icon with item count in header
+   - Integrate with ItemDetailModal for seamless adding
+   - Show cart total and order summary
 
-## Project Overview
-MenuBosse is a modern, dark-themed digital restaurant menu platform that provides an elegant dining experience through technology.
+### Phase 4: Multi-Device Synchronization
+1. **Real-time Updates**
+   - Implement polling or WebSocket for cart sync
+   - Show when other people at table add items
+   - Display who ordered what items
 
-## Current Development Focus
-### UI/UX Improvements - Menu Cards Enhancement
+2. **User Identification**
+   - Add optional user names for table members
+   - Show who added each item to cart
+   - Allow individual vs shared ordering
 
-**Priority Items:**
-1. **Image Prominence** - Food images should be larger and more enticing (primary selling point)
-2. **Price Visibility** - Enhanced price badges with better contrast and prominence
-3. **Voting System Contrast** - Improved like/dislike buttons with better visual separation from cards
-4. **Bottom Panel Transparency** - More transparent bottom sections to showcase food images
-5. **Visual Hierarchy** - Clear distinction between interactive elements
+### Phase 5: Testing & QR Integration
+1. **QR Code Generation**
+   - Create QR codes with table and session parameters
+   - Test multi-device access to same table
+   - Verify cart sharing between devices
 
-### Development Environment
-- **Platform Compatibility**: Windows PowerShell optimized
-- **Environment Variables**: PowerShell syntax (`$env:NODE_ENV='development'`)
-- **Shell Commands**: All npm scripts use PowerShell-compatible syntax
-- **Development Server**: Uses tsx for TypeScript execution with hot reloading
+2. **End-to-End Testing**
+   - Test cart operations (add, remove, update)
+   - Verify order status progression
+   - Test table session sharing
 
-### PowerShell Syntax Rules
-**CRITICAL: Always use PowerShell syntax, never bash/Unix syntax**
+## Technical Implementation Steps
 
-**Command Chaining:**
-- ✅ CORRECT: Use semicolon (`;`) to chain commands
-- ❌ WRONG: Never use `&&` (bash syntax)
+### Step 1: Update Session Management
+- Create secure session token generation utility
+- Implement server-side session mapping (token → table info)
+- Modify `use-cart.ts` to use hashed session tokens
+- Add session validation and expiration logic
+- Update all cart hooks to use secure session strategy
 
-**Environment Variables:**
-- ✅ CORRECT: `$env:VARIABLE_NAME='value'`
-- ❌ WRONG: `VARIABLE_NAME=value` (bash syntax)
+### Step 2: Add Order Status
+- Update schema.ts with status fields
+- Modify storage.ts cart methods
+- Add new API endpoints for order status
 
-**Examples:**
-```powershell
-# Correct PowerShell syntax
-npm run build; npm run start
-$env:NODE_ENV='development'; tsx server/index.ts
-cd c:\Users\User\MenuBosse; npm run dev
+### Step 3: Build Cart UI
+- Create Cart component with sidebar
+- Add floating cart button to restaurant page
+- Integrate cart count display
 
-# NEVER use these (bash syntax)
-npm run build && npm run start  # ❌
-NODE_ENV=development tsx server/index.ts  # ❌
-cd c:\Users\User\MenuBosse && npm run dev  # ❌
-```
+### Step 4: Test Table Sharing & Security
+- Test with multiple browser tabs/devices
+- Verify cart synchronization
+- Test QR code parameter passing
+- Verify session tokens can't be guessed or enumerated
+- Test session expiration and token validation
 
-### Quick Start Commands (PowerShell)
-```powershell
-# Development server
-npm run dev
+### Step 5: Order Workflow
+- Add "Place Order" functionality
+- Implement status updates (ordered → preparing → served)
+- Add order history view
 
-# Production build
-npm run build
+## Success Criteria
+- ✅ Multiple devices can access same table cart via QR code
+- ✅ Cart items persist across browser refreshes
+- ✅ Users can add/remove items from shared cart
+- ✅ Order status tracking works (cart → ordered → served)
+- ✅ Cart UI shows current items and order history
+- ✅ Table members can see what others have ordered
 
-# Start production server
-npm run start
-
-# Type checking
-npm run check
-
-# Database operations
-npm run db:push
-```
-
-### Technical Architecture
-- **Frontend**: React + TypeScript + Vite
-- **Styling**: Tailwind CSS + Custom Dark Theme
-- **State Management**: React Query for server state
-- **UI Components**: Shadcn/ui component library
-- **Backend**: Express.js with TypeScript
-- **Database**: (To be determined based on drizzle.config.ts)
-
-### Design System
-- **Theme**: Elegant dark restaurant aesthetic
-- **Primary Color**: Orange (#FF6B35) for CTAs and highlights
-- **Typography**: Inter for body, Playfair Display for headings
-- **Layout**: Card-based grid system for menu items
-
-### Current Task: Menu Card Visual Enhancements
-1. Increase food image height from 64 (h-64) to 80 (h-80) for better visual impact
-2. Enhance price badge visibility with larger size and better shadows
-3. Improve voting container contrast with darker background and orange borders
-4. Reduce bottom panel opacity from 95% to 60% for better image visibility
-5. Add enhanced CSS classes for all new styling
-
-### Code Quality Standards
-- Follow TypeScript strict mode
-- Use Tailwind utility classes with custom CSS for complex styling
-- Maintain component modularity and reusability
-- Ensure responsive design across all viewports
-- Follow React best practices for hooks and state management
-
-### File Structure Guidelines
-- Components in `/client/src/components/`
-- Custom styles in `/client/src/global.css`
-- Hooks in `/client/src/hooks/`
-- Shared types in `/shared/schema.ts`
-- Server logic in `/server/`
+## Next Steps
+1. Start with Phase 1 (Table-based sessions)
+2. Test basic cart sharing between devices
+3. Add order status management
+4. Build comprehensive cart UI
+5. Implement real-time synchronization

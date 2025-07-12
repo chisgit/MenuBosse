@@ -1,12 +1,36 @@
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { apiRequest } from "@/lib/queryClient";
+import { getCurrentSession, isSessionActive, clearClosedSession } from "@/lib/session";
 import type { CartItem, MenuItem } from "@shared/schema";
 
-const SESSION_ID = "user-session-" + Math.random().toString(36).substr(2, 9);
+function getSessionId(): string | null {
+  const session = getCurrentSession();
+  
+  if (session && isSessionActive(session)) {
+    return session.sessionId;
+  }
+  
+  if (session && (session.status === 'paid' || session.status === 'closed')) {
+    // Session has ended - don't create random session
+    return null;
+  }
+  
+  // Fallback to a consistent session for development/testing
+  // Check if we have a stored fallback session
+  let fallbackSessionId = localStorage.getItem('fallback-session-id');
+  if (!fallbackSessionId) {
+    fallbackSessionId = "default-session-" + Math.random().toString(36).substr(2, 9);
+    localStorage.setItem('fallback-session-id', fallbackSessionId);
+  }
+  
+  return fallbackSessionId;
+}
 
 export function useCart() {
+  const sessionId = getSessionId();
   return useQuery<(CartItem & { menuItem: MenuItem })[]>({
-    queryKey: [`/api/cart/${SESSION_ID}`],
+    queryKey: [`/api/cart/${sessionId}`],
+    enabled: !!sessionId,
   });
 }
 
@@ -19,8 +43,9 @@ export function useAddToCart() {
       quantity?: number;
       specialInstructions?: string;
     }) => {
+      const sessionId = getSessionId();
       const response = await apiRequest("POST", "/api/cart", {
-        sessionId: SESSION_ID,
+        sessionId,
         menuItemId,
         quantity,
         specialInstructions,
@@ -28,7 +53,8 @@ export function useAddToCart() {
       return response.json();
     },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["/api/cart", SESSION_ID] });
+      const sessionId = getSessionId();
+      queryClient.invalidateQueries({ queryKey: [`/api/cart/${sessionId}`] });
     },
   });
 }
@@ -49,7 +75,8 @@ export function useUpdateCartItem() {
       return response.json();
     },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["/api/cart", SESSION_ID] });
+      const sessionId = getSessionId();
+      queryClient.invalidateQueries({ queryKey: [`/api/cart/${sessionId}`] });
     },
   });
 }
@@ -62,7 +89,8 @@ export function useRemoveFromCart() {
       await apiRequest("DELETE", `/api/cart/${id}`);
     },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["/api/cart", SESSION_ID] });
+      const sessionId = getSessionId();
+      queryClient.invalidateQueries({ queryKey: [`/api/cart/${sessionId}`] });
     },
   });
 }
@@ -72,10 +100,12 @@ export function useClearCart() {
   
   return useMutation({
     mutationFn: async () => {
-      await apiRequest("DELETE", `/api/cart/session/${SESSION_ID}`);
+      const sessionId = getSessionId();
+      await apiRequest("DELETE", `/api/cart/session/${sessionId}`);
     },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["/api/cart", SESSION_ID] });
+      const sessionId = getSessionId();
+      queryClient.invalidateQueries({ queryKey: [`/api/cart/${sessionId}`] });
     },
   });
 }
