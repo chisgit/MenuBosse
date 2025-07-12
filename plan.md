@@ -119,6 +119,24 @@
 - ✅ Cart UI shows current items and order history
 - ✅ Table members can see what others have ordered
 
+## Completed Features (Latest Commit: 5fc9649)
+- ✅ **Basic Cart Component**: Created dedicated Cart.tsx component with sidebar drawer
+- ✅ **Cart Integration**: Integrated cart with restaurant page and ItemDetailModal
+- ✅ **Session Management**: Implemented session.ts for stable session handling
+- ✅ **Cart Hooks**: Enhanced use-cart.ts with add/remove/update functionality
+- ✅ **Schema Updates**: Added CartItem and cart-related types to schema.ts
+- ✅ **UI Implementation**: Cart shows items, quantities, prices, and totals
+- ✅ **Persistence**: Cart data persists in memory storage during session
+- ✅ **Add/Remove Items**: Users can add items from menu and remove from cart
+- ✅ **Real-time Updates**: Cart updates immediately when items are modified
+
+## Still To Do
+- 🔄 **Table-Based Sessions**: URL parameters for table sharing
+- 🔄 **Order Status Management**: Cart vs ordered vs served states
+- 🔄 **Multi-Device Sync**: Real-time cart sharing between devices
+- 🔄 **QR Code Integration**: Generate QR codes with session parameters
+- 🔄 **Security Enhancements**: Secure session tokens and validation
+
 ## Next Steps
 1. Start with Phase 1 (Table-based sessions)
 2. Test basic cart sharing between devices
