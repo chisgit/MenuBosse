@@ -32,7 +32,7 @@ export function getSessionFromUrl(): TableSession | null {
   const sessionId = urlParams.get('session');
   const tableNumber = urlParams.get('table');
   const restaurantIdParam = urlParams.get('restaurant') || getRestaurantIdFromPath();
-  
+
   if (!sessionId || !tableNumber || !restaurantIdParam) {
     return null;
   }
@@ -75,7 +75,7 @@ export function getCurrentSession(): TableSession | null {
     storeSession(urlSession);
     return urlSession;
   }
-  
+
   return getStoredSession();
 }
 
@@ -84,7 +84,7 @@ export function isSessionValid(session: TableSession): boolean {
   const now = Date.now();
   const sessionAge = now - session.timestamp;
   const maxAge = 24 * 60 * 60 * 1000; // 24 hours
-  
+
   return sessionAge < maxAge;
 }
 

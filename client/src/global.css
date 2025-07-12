@@ -503,3 +503,51 @@ button:active {
     scrollbar-width: thick;
     scrollbar-color: var(--accent) rgba(0, 0, 0, 0.1);
 }
+
+/* Luxury Floating Button Styles */
+.luxury-floating-container {
+    position: relative;
+}
+
+.luxury-floating-btn {
+    position: relative;
+    z-index: 10;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.luxury-floating-btn:hover {
+    transform: translateY(-2px);
+}
+
+.shadow-luxury {
+    box-shadow:
+        0 8px 32px rgba(0, 0, 0, 0.4),
+        0 4px 16px rgba(255, 107, 53, 0.2),
+        inset 0 1px 0 rgba(255, 255, 255, 0.1);
+}
+
+.shadow-luxury-glow {
+    box-shadow:
+        0 12px 40px rgba(0, 0, 0, 0.5),
+        0 6px 20px rgba(255, 107, 53, 0.3),
+        0 0 30px rgba(255, 107, 53, 0.2),
+        inset 0 1px 0 rgba(255, 255, 255, 0.15);
+}
+
+.luxury-tooltip {
+    white-space: nowrap;
+    z-index: 20;
+}
+
+/* Glass card effect for floating elements */
+.glass-card {
+    background: rgba(45, 45, 45, 0.7);
+    backdrop-filter: blur(20px);
+    border: 1px solid rgba(255, 107, 53, 0.1);
+    transition: all 0.3s ease;
+}
+
+.glass-card:hover {
+    background: rgba(45, 45, 45, 0.8);
+    border-color: rgba(255, 107, 53, 0.2);
+}

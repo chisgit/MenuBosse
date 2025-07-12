@@ -7,6 +7,8 @@ import {
   deals,
   cartItems,
   serverCalls,
+  tableSessions,
+  orders,
   type Restaurant,
   type InsertRestaurant,
   type MenuCategory,
@@ -22,7 +24,11 @@ import {
   type CartItem,
   type InsertCartItem,
   type ServerCall,
-  type InsertServerCall
+  type InsertServerCall,
+  type TableSession,
+  type InsertTableSession,
+  type Order,
+  type InsertOrder
 } from "@shared/schema";
 
 export interface IStorage {
@@ -67,6 +73,17 @@ export interface IStorage {
   createServerCall(call: InsertServerCall): Promise<ServerCall>;
   getServerCalls(restaurantId: number): Promise<ServerCall[]>;
   updateServerCallStatus(id: number, status: string): Promise<ServerCall | undefined>;
+
+  // Table Sessions
+  createTableSession(session: InsertTableSession): Promise<TableSession>;
+  getTableSession(sessionId: string): Promise<TableSession | undefined>;
+  updateTableSessionStatus(sessionId: string, status: string, paymentMethod?: string): Promise<TableSession | undefined>;
+
+  // Orders
+  createOrder(order: InsertOrder): Promise<Order>;
+  getOrdersBySession(sessionId: string): Promise<Order[]>;
+  updateOrderStatus(id: number, status: string): Promise<Order | undefined>;
+  convertCartToOrder(sessionId: string): Promise<Order>;
 }
 
 export class MemStorage implements IStorage {
@@ -78,6 +95,8 @@ export class MemStorage implements IStorage {
   private deals: Map<number, Deal>;
   private cartItems: Map<number, CartItem>;
   private serverCalls: Map<number, ServerCall>;
+  private tableSessions: Map<number, TableSession>;
+  private orders: Map<number, Order>;
   private currentId: number;
 
   constructor() {
@@ -89,6 +108,8 @@ export class MemStorage implements IStorage {
     this.deals = new Map();
     this.cartItems = new Map();
     this.serverCalls = new Map();
+    this.tableSessions = new Map();
+    this.orders = new Map();
     this.currentId = 1;
 
     // Initialize with sample data
@@ -578,7 +599,10 @@ export class MemStorage implements IStorage {
       id,
       quantity: item.quantity ?? null,
       specialInstructions: item.specialInstructions ?? null,
-      addedAt: new Date()
+      status: "cart",
+      orderId: null,
+      addedAt: new Date(),
+      orderedAt: null,
     };
     this.cartItems.set(id, newItem);
     return newItem;
@@ -633,6 +657,100 @@ export class MemStorage implements IStorage {
     const updatedCall = { ...call, status };
     this.serverCalls.set(id, updatedCall);
     return updatedCall;
+  }
+
+  async createTableSession(session: InsertTableSession): Promise<TableSession> {
+    const id = this.currentId++;
+    const newSession: TableSession = {
+      ...session,
+      id,
+      status: session.status ?? "active",
+      createdAt: new Date(),
+      closedAt: null,
+      totalAmount: session.totalAmount ?? null,
+      paymentMethod: session.paymentMethod ?? null,
+    };
+    this.tableSessions.set(id, newSession);
+    return newSession;
+  }
+
+  async getTableSession(sessionId: string): Promise<TableSession | undefined> {
+    return Array.from(this.tableSessions.values())
+      .find(session => session.sessionId === sessionId);
+  }
+
+  async updateTableSessionStatus(sessionId: string, status: string, paymentMethod?: string): Promise<TableSession | undefined> {
+    const session = Array.from(this.tableSessions.values())
+      .find(session => session.sessionId === sessionId);
+
+    if (!session) return undefined;
+
+    const updatedSession: TableSession = {
+      ...session,
+      status,
+      paymentMethod: paymentMethod ?? null,
+      closedAt: status === 'paid' || status === 'closed' ? new Date() : session.closedAt,
+    };
+    this.tableSessions.set(updatedSession.id, updatedSession);
+    return updatedSession;
+  }
+
+  async getOrdersBySession(sessionId: string): Promise<Order[]> {
+    return Array.from(this.orders.values())
+      .filter(order => order.sessionId === sessionId);
+  }
+
+  async updateOrderStatus(id: number, status: string): Promise<Order | undefined> {
+    const order = this.orders.get(id);
+    if (!order) return undefined;
+
+    const updatedOrder = { ...order, status };
+    this.orders.set(id, updatedOrder);
+    return updatedOrder;
+  }
+
+  async createOrder(order: InsertOrder): Promise<Order> {
+    const id = this.currentId++;
+    const newOrder: Order = {
+      ...order,
+      id,
+      status: order.status ?? "pending",
+      createdAt: new Date(),
+      updatedAt: new Date(),
+    };
+    this.orders.set(id, newOrder);
+    return newOrder;
+  }
+
+  async convertCartToOrder(sessionId: string): Promise<Order> {
+    const cartItems = await this.getCartItems(sessionId);
+    const totalAmount = cartItems.reduce((sum, item) => sum + (item.menuItem.price * (item.quantity || 1)), 0);
+
+    const order: InsertOrder = {
+      sessionId,
+      status: "pending",
+      totalAmount,
+    };
+
+    const newOrder = await this.createOrder(order);
+
+    // Update cart items to reference the order and change status
+    for (const cartItem of cartItems) {
+      await this.updateCartItem(cartItem.id, cartItem.quantity || 1, cartItem.specialInstructions || undefined);
+      // Update the cart item to be part of the order
+      const existing = this.cartItems.get(cartItem.id);
+      if (existing) {
+        const updated: CartItem = {
+          ...existing,
+          status: "ordered",
+          orderId: newOrder.id,
+          orderedAt: new Date(),
+        };
+        this.cartItems.set(cartItem.id, updated);
+      }
+    }
+
+    return newOrder;
   }
 }
 

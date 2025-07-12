@@ -1,15 +1,15 @@
 import type { Express } from "express";
 import { createServer, type Server } from "http";
 import { storage } from "./storage";
-import { 
-  insertMenuItemSchema, 
-  insertCartItemSchema, 
+import {
+  insertMenuItemSchema,
+  insertCartItemSchema,
   insertServerCallSchema,
-  insertCartItemAddonSchema 
+  insertCartItemAddonSchema
 } from "@shared/schema";
 
 export async function registerRoutes(app: Express): Promise<Server> {
-  
+
   // Restaurant routes
   app.get("/api/restaurants", async (req, res) => {
     try {
@@ -72,7 +72,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
     try {
       const id = parseInt(req.params.id);
       const { type } = req.body; // 'up' or 'down'
-      
+
       const item = await storage.getMenuItem(id);
       if (!item) {
         return res.status(404).json({ message: "Menu item not found" });
@@ -80,7 +80,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
       const upvotes = type === 'up' ? item.upvotes + 1 : item.upvotes;
       const downvotes = type === 'down' ? item.downvotes + 1 : item.downvotes;
-      
+
       const updatedItem = await storage.updateMenuItemVotes(id, upvotes, downvotes);
       res.json(updatedItem);
     } catch (error) {
@@ -148,12 +148,12 @@ export async function registerRoutes(app: Express): Promise<Server> {
     try {
       const id = parseInt(req.params.id);
       const { quantity, specialInstructions } = req.body;
-      
+
       const updatedItem = await storage.updateCartItem(id, quantity, specialInstructions);
       if (!updatedItem) {
         return res.status(404).json({ message: "Cart item not found" });
       }
-      
+
       res.json(updatedItem);
     } catch (error) {
       res.status(500).json({ message: "Failed to update cart item" });
@@ -205,6 +205,78 @@ export async function registerRoutes(app: Express): Promise<Server> {
       res.json(calls);
     } catch (error) {
       res.status(500).json({ message: "Failed to fetch server calls" });
+    }
+  });
+
+  // Order management routes
+  app.post("/api/orders", async (req, res) => {
+    try {
+      const { sessionId } = req.body;
+      const order = await storage.convertCartToOrder(sessionId);
+      res.json(order);
+    } catch (error) {
+      res.status(500).json({ message: "Failed to place order" });
+    }
+  });
+
+  app.get("/api/orders/:sessionId", async (req, res) => {
+    try {
+      const { sessionId } = req.params;
+      const orders = await storage.getOrdersBySession(sessionId);
+      res.json(orders);
+    } catch (error) {
+      res.status(500).json({ message: "Failed to fetch orders" });
+    }
+  });
+
+  app.put("/api/orders/:id/status", async (req, res) => {
+    try {
+      const id = parseInt(req.params.id);
+      const { status } = req.body;
+      const order = await storage.updateOrderStatus(id, status);
+      if (!order) {
+        return res.status(404).json({ message: "Order not found" });
+      }
+      res.json(order);
+    } catch (error) {
+      res.status(500).json({ message: "Failed to update order status" });
+    }
+  });
+
+  // Table session management routes
+  app.post("/api/sessions", async (req, res) => {
+    try {
+      const session = await storage.createTableSession(req.body);
+      res.json(session);
+    } catch (error) {
+      res.status(500).json({ message: "Failed to create session" });
+    }
+  });
+
+  app.get("/api/sessions/:sessionId", async (req, res) => {
+    try {
+      const { sessionId } = req.params;
+      const session = await storage.getTableSession(sessionId);
+      if (!session) {
+        return res.status(404).json({ message: "Session not found" });
+      }
+      res.json(session);
+    } catch (error) {
+      res.status(500).json({ message: "Failed to fetch session" });
+    }
+  });
+
+  app.post("/api/sessions/:sessionId/close", async (req, res) => {
+    try {
+      const { sessionId } = req.params;
+      const { paymentMethod } = req.body;
+      const session = await storage.updateTableSessionStatus(sessionId, 'paid', paymentMethod);
+      if (!session) {
+        return res.status(404).json({ message: "Session not found" });
+      }
+      res.json({ success: true, session });
+    } catch (error) {
+      res.status(500).json({ message: "Failed to close session" });
     }
   });
 
