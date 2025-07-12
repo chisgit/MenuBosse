@@ -133,9 +133,10 @@ export default function ItemDetailModal({ itemId, onClose }: ItemDetailModalProp
   };
 
   const totalPrice = calculateTotalPrice();
+
   return (
     <Dialog open={true} onOpenChange={onClose}>
-      <DialogContent className="max-w-5xl h-[95vh] p-0 flex flex-col bg-gradient-to-br from-gray-900 via-gray-800/98 to-gray-900/95 backdrop-blur-xl border border-orange-500/20 rounded-3xl shadow-luxury-xl overflow-hidden">
+      <DialogContent className="max-w-6xl h-[90vh] p-0 flex flex-col bg-gradient-to-br from-gray-900 via-gray-800/98 to-gray-900/95 backdrop-blur-xl border border-orange-500/20 rounded-3xl shadow-luxury-xl overflow-hidden">
         {/* Close Button */}
         <button
           onClick={onClose}
@@ -158,57 +159,57 @@ export default function ItemDetailModal({ itemId, onClose }: ItemDetailModalProp
           </div>
         ) : item ? (
           <>
-            {/* Luxurious Header with Image */}
-            <div className="relative h-80 flex-shrink-0 overflow-hidden">
+            {/* Luxurious Header with Image - Reduced height for more content space */}
+            <div className="relative h-64 flex-shrink-0 overflow-hidden">
               <div className="absolute inset-0 bg-gradient-to-br from-black/20 via-transparent to-black/40 z-10"></div>
               <img
                 src={item.imageUrl || '/placeholder-food.jpg'}
                 alt={item.name}
                 className="w-full h-full object-cover scale-105 hover:scale-110 transition-transform duration-700"
               />
-              <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/80 via-black/40 to-transparent p-8 z-20">
+              <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/80 via-black/40 to-transparent p-6 z-20">
                 <div className="flex items-end justify-between">
                   {/* Title, Price/Rating Block */}
                   <div>
-                    <h2 className="text-4xl font-bold text-white mb-2 drop-shadow-lg">{item.name}</h2>
-                    <div className="flex items-center space-x-6">
-                      <span className="text-3xl font-bold text-white drop-shadow-lg">
+                    <h2 className="text-3xl font-bold text-white mb-2 drop-shadow-lg">{item.name}</h2>
+                    <div className="flex items-center space-x-4">
+                      <span className="text-2xl font-bold text-white drop-shadow-lg">
                         ${item.price.toFixed(2)}
                       </span>
-                      <div className="flex items-center bg-white/20 backdrop-blur-sm rounded-full px-4 py-2">
-                        <Star className="h-5 w-5 text-yellow-400 fill-current" />
-                        <span className="ml-2 font-bold text-white">{item.rating?.toFixed(1) || '0.0'}</span>
-                        <span className="text-white/80 ml-1">• {item.votes} votes</span>
+                      <div className="flex items-center bg-white/20 backdrop-blur-sm rounded-full px-3 py-1">
+                        <Star className="h-4 w-4 text-yellow-400 fill-current" />
+                        <span className="ml-1 font-bold text-white text-sm">{item.rating?.toFixed(1) || '0.0'}</span>
+                        <span className="text-white/80 ml-1 text-sm">• {item.votes} votes</span>
                       </div>
                     </div>
                   </div>
 
                   {/* Badges Block */}
                   <div className="flex space-x-2">
-                    <div className="luxury-badge bg-gradient-to-r from-accent/20 to-primary/20 backdrop-blur-sm rounded-full px-4 py-2 border border-white/30">
-                      <Award className="h-5 w-5 text-white" />
+                    <div className="luxury-badge bg-gradient-to-r from-accent/20 to-primary/20 backdrop-blur-sm rounded-full px-3 py-1 border border-white/30">
+                      <Award className="h-4 w-4 text-white" />
                     </div>
-                    <div className="luxury-badge bg-gradient-to-r from-red-500/20 to-pink-500/20 backdrop-blur-sm rounded-full px-4 py-2 border border-white/30">
-                      <Heart className="h-5 w-5 text-white" />
+                    <div className="luxury-badge bg-gradient-to-r from-red-500/20 to-pink-500/20 backdrop-blur-sm rounded-full px-3 py-1 border border-white/30">
+                      <Heart className="h-4 w-4 text-white" />
                     </div>
                   </div>
                 </div>
               </div>
             </div>
 
-            {/* Item Description - MOVED BACK HERE, BELOW HEADER, ABOVE TABS */}
-            <div className="px-6 pt-2 pb-2"> {/* Added pb-2 for minimal bottom padding */}
-              <div className="glass-card bg-gradient-to-br from-gray-800/40 to-gray-900/20 backdrop-blur-sm px-6 py-3 rounded-2xl border border-gray-700/30">
-                <p className="text-gray-300 text-lg leading-relaxed font-medium">
+            {/* Item Description - Compact */}
+            <div className="px-6 py-3">
+              <div className="glass-card bg-gradient-to-br from-gray-800/40 to-gray-900/20 backdrop-blur-sm px-4 py-2 rounded-xl border border-gray-700/30">
+                <p className="text-gray-300 text-base leading-relaxed">
                   {item.fullDescription || item.description}
                 </p>
               </div>
             </div>
 
-            {/* Premium Content with Tabs */}
-            <div className="flex-1 overflow-hidden px-6">
+            {/* Premium Content with Tabs - Expanded scrollable area */}
+            <div className="flex-1 overflow-hidden px-6 pb-2">
               <Tabs value={activeTab} onValueChange={setActiveTab} className="h-full flex flex-col">
-                <TabsList className="grid w-full grid-cols-2 mt-2 bg-gray-800/50 backdrop-blur-sm rounded-xl p-2 gap-2"> {/* Reduced top margin from mt-6 to mt-2 */}
+                <TabsList className="grid w-full grid-cols-2 bg-gray-800/50 backdrop-blur-sm rounded-xl p-2 gap-2">
                   <TabsTrigger
                     value="customize"
                     className="flex items-center gap-2 rounded-lg border-0 data-[state=active]:bg-gray-700 data-[state=active]:text-white data-[state=active]:shadow-lg transition-all duration-300 text-gray-300"
@@ -224,8 +225,10 @@ export default function ItemDetailModal({ itemId, onClose }: ItemDetailModalProp
                     Ask Our Chef
                   </TabsTrigger>
                 </TabsList>
-                <div className="flex-1 overflow-y-auto pb-12">
-                  <TabsContent value="customize" className="space-y-8 mt-6">                    {/* Premium Add-ons */}
+
+                {/* Expanded scrollable content area */}
+                <div className="flex-1 overflow-y-auto mt-4 pr-2" style={{ maxHeight: 'calc(100% - 3rem)' }}>
+                  <TabsContent value="customize" className="space-y-6 m-0 h-full">{/* Premium Add-ons */}
                     {addons && addons.length > 0 && (
                       <div className="space-y-6">
                         <h3 className="text-2xl font-bold bg-gradient-to-r from-gray-300 to-orange-400 bg-clip-text text-transparent flex items-center gap-3">
@@ -367,7 +370,7 @@ export default function ItemDetailModal({ itemId, onClose }: ItemDetailModalProp
                     </div>
                   </TabsContent>
 
-                  <TabsContent value="questions" className="space-y-6 mt-6">
+                  <TabsContent value="questions" className="space-y-6 m-0 h-full">
                     <div className="glass-card bg-gradient-to-br from-gray-800/80 to-gray-900/60 backdrop-blur-sm border border-gray-700/50 rounded-2xl p-6 shadow-lg">
                       <h3 className="text-xl font-bold text-orange-400 mb-3 flex items-center gap-2">
                         <ChefHat className="h-6 w-6" />
@@ -383,10 +386,11 @@ export default function ItemDetailModal({ itemId, onClose }: ItemDetailModalProp
                           onChange={(e) => setQuestion(e.target.value)}
                           rows={4}
                           className="text-base bg-gray-800/70 border-gray-700/60 text-gray-200 rounded-xl resize-none"
-                        />                        <Button
+                        />
+                        <Button
                           onClick={handleAskQuestion}
                           disabled={!question.trim()}
-                          className="w-full bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white font-semibold py-3 rounded-xl transition-all duration-300 hover:shadow-lg mb-8"
+                          className="w-full bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white font-semibold py-3 rounded-xl transition-all duration-300 hover:shadow-lg"
                         >
                           <MessageCircle className="h-5 w-5 mr-2" />
                           Ask Our Chef
@@ -418,29 +422,29 @@ export default function ItemDetailModal({ itemId, onClose }: ItemDetailModalProp
                   </TabsContent>
                 </div>
               </Tabs>
-            </div >            {/* Premium Footer with Actions */}
-            < div className="border-t border-gray-700/50 bg-gradient-to-r from-gray-900/90 to-gray-800/90 backdrop-blur-sm p-6" >
+            </div>            {/* Premium Footer with Actions - More compact */}
+            <div className="border-t border-gray-700/50 bg-gradient-to-r from-gray-900/90 to-gray-800/90 backdrop-blur-sm p-4">
               <div className="flex items-center justify-between gap-4">
                 <div className="flex items-center space-x-4">
-                  <span className="text-lg font-bold text-gray-200">Qty:</span>
+                  <span className="text-base font-bold text-gray-200">Qty:</span>
                   <div className="luxury-quantity-selector flex items-center bg-gray-800/60 border border-gray-700/60 rounded-xl overflow-hidden shadow-sm">
                     <Button
                       variant="ghost"
                       size="icon"
                       onClick={decreaseQuantity}
                       disabled={quantity <= 1}
-                      className="h-11 w-11 hover:bg-gray-700/80 rounded-none text-gray-200"
+                      className="h-10 w-10 hover:bg-gray-700/80 rounded-none text-gray-200"
                     >
                       <Minus className="h-4 w-4" />
                     </Button>
-                    <span className="px-4 py-2.5 text-lg font-bold min-w-[2.5rem] text-center bg-gray-800/40 text-gray-200">
+                    <span className="px-4 py-2 text-base font-bold min-w-[2.5rem] text-center bg-gray-800/40 text-gray-200">
                       {quantity}
                     </span>
                     <Button
                       variant="ghost"
                       size="icon"
                       onClick={increaseQuantity}
-                      className="h-11 w-11 hover:bg-gray-700/80 rounded-none text-gray-200"
+                      className="h-10 w-10 hover:bg-gray-700/80 rounded-none text-gray-200"
                     >
                       <Plus className="h-4 w-4" />
                     </Button>
@@ -450,22 +454,22 @@ export default function ItemDetailModal({ itemId, onClose }: ItemDetailModalProp
                 <Button
                   onClick={handleAddToCart}
                   disabled={addToCart.isPending}
-                  className="flex-1 luxury-add-to-cart bg-gradient-to-r from-primary via-primary to-accent hover:from-primary/90 hover:via-primary/90 hover:to-accent/90 text-white font-bold px-6 py-3 rounded-xl text-base transition-all duration-300 hover:shadow-luxury-glow border-0"
+                  className="flex-1 luxury-add-to-cart bg-gradient-to-r from-primary via-primary to-accent hover:from-primary/90 hover:via-primary/90 hover:to-accent/90 text-white font-bold px-6 py-2.5 rounded-xl text-sm transition-all duration-300 hover:shadow-luxury-glow border-0"
                 >
                   {addToCart.isPending ? (
                     <>
-                      <Sparkles className="h-5 w-5 mr-2 animate-spin" />
+                      <Sparkles className="h-4 w-4 mr-2 animate-spin" />
                       Adding...
                     </>
                   ) : (
                     <>
-                      <Heart className="h-5 w-5 mr-2" />
+                      <Heart className="h-4 w-4 mr-2" />
                       Add to Cart - ${totalPrice}
                     </>
                   )}
                 </Button>
               </div>
-            </div >
+            </div>
           </>
         ) : (
           <div className="p-8 text-center glass-card bg-gradient-to-br from-gray-800/60 to-gray-900/40 backdrop-blur-sm rounded-2xl m-6 border border-gray-700/40">

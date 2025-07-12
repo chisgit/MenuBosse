@@ -19,11 +19,9 @@ interface MenuSectionProps {
 export default function MenuSection({ restaurantId, onItemClick, restaurantName, tableNumber }: MenuSectionProps) {
   const [searchTerm, setSearchTerm] = useState("");
   const [activeFilter, setActiveFilter] = useState("all");
-
   const { data: menuItems, isLoading: itemsLoading } = useMenuItems(restaurantId);
   const { data: categories, isLoading: categoriesLoading } = useMenuCategories(restaurantId);
-  const addToCart = useAddToCart();
-  const voteMenuItem = useVoteMenuItem();
+  const addToCart = useAddToCart(); const voteMenuItem = useVoteMenuItem();
   const { toast } = useToast();
 
   const filters = [
@@ -56,10 +54,12 @@ export default function MenuSection({ restaurantId, onItemClick, restaurantName,
         default:
           matchesFilter = false;
       }
-    }
-
-    return matchesSearch && matchesFilter;
+    } return matchesSearch && matchesFilter;
   });
+
+  // Debug filtered items
+  console.log("Filtered Items:", filteredItems);
+  console.log("Filtered Items Count:", filteredItems?.length || 0);
 
   const handleAddToCart = async (item: MenuItem, e: React.MouseEvent) => {
     e.stopPropagation();
@@ -159,8 +159,8 @@ export default function MenuSection({ restaurantId, onItemClick, restaurantName,
                   variant={activeFilter === filter.key ? "default" : "outline"}
                   onClick={() => setActiveFilter(filter.key)}
                   className={`luxury-filter-btn h-14 px-6 rounded-xl font-medium transition-all duration-300 ${activeFilter === filter.key
-                      ? "bg-gradient-to-r from-orange-500 to-orange-600 text-white shadow-luxury-glow border-0"
-                      : "bg-black/20 hover:bg-black/30 border-white/20 text-gray-300 hover:text-orange-400"
+                    ? "bg-gradient-to-r from-orange-500 to-orange-600 text-white shadow-luxury-glow border-0"
+                    : "bg-black/20 hover:bg-black/30 border-white/20 text-gray-300 hover:text-orange-400"
                     }`}
                 >
                   <IconComponent className="h-4 w-4 mr-2" />
