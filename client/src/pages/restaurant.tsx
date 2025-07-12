@@ -1,14 +1,15 @@
 import { useState } from "react";
 import { useRestaurant } from "@/hooks/use-restaurant";
-import { useCart } from "@/hooks/use-cart";
 import { Skeleton } from "@/components/ui/skeleton";
-import { ShoppingCart, MicOff } from "lucide-react";
+import { MicOff } from "lucide-react";
 import MenuSection from "@/components/MenuSection";
 import DiscoverySection from "@/components/DiscoverySection";
 import DealsSection from "@/components/DealsSection";
 import ItemDetailModal from "@/components/ItemDetailModal";
 import FloatingButtons from "@/components/FloatingButtons";
 import ServerCallToast from "@/components/ServerCallToast";
+import Cart from "@/components/Cart";
+import { getCurrentSession } from "@/lib/session";
 
 interface RestaurantPageProps {
   restaurantId: number;
@@ -20,9 +21,7 @@ export default function RestaurantPage({ restaurantId }: RestaurantPageProps) {
   const [showServerToast, setShowServerToast] = useState(false);
 
   const { data: restaurant, isLoading: restaurantLoading } = useRestaurant(restaurantId);
-  const { data: cartItems } = useCart();
-
-  const cartItemCount = cartItems?.reduce((sum, item) => sum + (item.quantity || 0), 0) || 0;
+  const session = getCurrentSession();
 
   if (restaurantLoading) {
     return (
@@ -73,7 +72,9 @@ export default function RestaurantPage({ restaurantId }: RestaurantPageProps) {
                 <div className="text-sm md:text-base text-gray-300 bg-black/60 backdrop-blur-sm rounded-full px-6 py-3 border border-white/10">
                   <span className="font-semibold text-white">{restaurant.name}</span>
                   <span className="mx-2 text-orange-400">•</span>
-                  <span className="text-gray-400">Table 12</span>
+                  <span className="text-gray-400">
+                    {session ? `Table ${session.tableNumber}` : 'Table 12'}
+                  </span>
                 </div>
               </div>
               {/* Navigation Tabs Under Logo */}
@@ -97,15 +98,7 @@ export default function RestaurantPage({ restaurantId }: RestaurantPageProps) {
               <button className="p-4 text-gray-400 hover:text-orange-400 transition-all duration-300 hover:bg-white/5 rounded-full">
                 <MicOff className="h-5 w-5" />
               </button>
-              <button className="relative p-4 text-gray-400 hover:text-orange-400 transition-all duration-300 hover:bg-white/5 rounded-full group">
-                <ShoppingCart className="h-5 w-5" />
-                {cartItemCount > 0 && (
-                  <span className="absolute -top-1 -right-1 bg-gradient-to-r from-orange-500 to-orange-600 text-white text-xs rounded-full h-6 w-6 flex items-center justify-center text-[10px] font-bold shadow-lg pulse-glow">
-                    {cartItemCount}
-                  </span>
-                )}
-                <div className="absolute inset-0 rounded-full bg-gradient-to-r from-orange-500/20 to-orange-600/20 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
-              </button>
+              <Cart />
             </div>
           </div>
         </div>

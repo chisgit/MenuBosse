@@ -57,7 +57,10 @@ export const cartItems = pgTable("cart_items", {
   menuItemId: integer("menu_item_id").notNull(),
   quantity: integer("quantity").default(1),
   specialInstructions: text("special_instructions"),
+  status: text("status").default("cart"), // cart, ordered, preparing, ready, served
+  orderId: integer("order_id"), // Reference to order when status changes from cart
   addedAt: timestamp("added_at").defaultNow(),
+  orderedAt: timestamp("ordered_at"),
 });
 
 export const menuItemAddons = pgTable("menu_item_addons", {
@@ -84,6 +87,27 @@ export const serverCalls = pgTable("server_calls", {
   tableNumber: text("table_number").notNull(),
   status: text("status").default("pending"), // pending, acknowledged, completed
   createdAt: timestamp("created_at").defaultNow(),
+});
+
+export const tableSessions = pgTable("table_sessions", {
+  id: serial("id").primaryKey(),
+  sessionId: text("session_id").notNull().unique(),
+  restaurantId: integer("restaurant_id").notNull(),
+  tableNumber: text("table_number").notNull(),
+  status: text("status").default("active"), // active, ordered, paid, closed
+  createdAt: timestamp("created_at").defaultNow(),
+  closedAt: timestamp("closed_at"),
+  totalAmount: real("total_amount"),
+  paymentMethod: text("payment_method"), // app, cash, card
+});
+
+export const orders = pgTable("orders", {
+  id: serial("id").primaryKey(),
+  sessionId: text("session_id").notNull(),
+  status: text("status").default("pending"), // pending, confirmed, preparing, ready, served
+  totalAmount: real("total_amount").notNull(),
+  createdAt: timestamp("created_at").defaultNow(),
+  updatedAt: timestamp("updated_at").defaultNow(),
 });
 
 export const insertRestaurantSchema = createInsertSchema(restaurants).omit({
@@ -126,6 +150,18 @@ export const insertServerCallSchema = createInsertSchema(serverCalls).omit({
   createdAt: true,
 });
 
+export const insertTableSessionSchema = createInsertSchema(tableSessions).omit({
+  id: true,
+  createdAt: true,
+  closedAt: true,
+});
+
+export const insertOrderSchema = createInsertSchema(orders).omit({
+  id: true,
+  createdAt: true,
+  updatedAt: true,
+});
+
 export type Restaurant = typeof restaurants.$inferSelect;
 export type InsertRestaurant = z.infer<typeof insertRestaurantSchema>;
 
@@ -149,3 +185,9 @@ export type InsertCartItem = z.infer<typeof insertCartItemSchema>;
 
 export type ServerCall = typeof serverCalls.$inferSelect;
 export type InsertServerCall = z.infer<typeof insertServerCallSchema>;
+
+export type TableSession = typeof tableSessions.$inferSelect;
+export type InsertTableSession = z.infer<typeof insertTableSessionSchema>;
+
+export type Order = typeof orders.$inferSelect;
+export type InsertOrder = z.infer<typeof insertOrderSchema>;
