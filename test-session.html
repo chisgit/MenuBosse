@@ -1,36 +1,60 @@
 <!DOCTYPE html>
 <html>
+
 <head>
     <title>MenuBosse Table Session Test</title>
     <style>
-        body { font-family: Arial, sans-serif; padding: 20px; }
-        .test-link { display: block; margin: 10px 0; padding: 10px; background: #f0f0f0; border-radius: 5px; text-decoration: none; color: #333; }
-        .test-link:hover { background: #e0e0e0; }
-        .info { background: #e7f3ff; padding: 15px; border-radius: 5px; margin: 20px 0; }
+        body {
+            font-family: Arial, sans-serif;
+            padding: 20px;
+        }
+
+        .test-link {
+            display: block;
+            margin: 10px 0;
+            padding: 10px;
+            background: #f0f0f0;
+            border-radius: 5px;
+            text-decoration: none;
+            color: #333;
+        }
+
+        .test-link:hover {
+            background: #e0e0e0;
+        }
+
+        .info {
+            background: #e7f3ff;
+            padding: 15px;
+            border-radius: 5px;
+            margin: 20px 0;
+        }
     </style>
 </head>
+
 <body>
     <h1>MenuBosse Table Session Test</h1>
-    
+
     <div class="info">
         <h3>Test the secure table session functionality:</h3>
-        <p>Click these links to simulate scanning QR codes from different tables. Each link will have a unique, obfuscated session token.</p>
+        <p>Click these links to simulate scanning QR codes from different tables. Each link will have a unique,
+            obfuscated session token.</p>
         <p>Open multiple tabs or devices with the same link to test cart sharing!</p>
     </div>
 
     <h2>Test Table Links:</h2>
-    
-    <a href="http://localhost:5173/restaurant/1?table=5&session=session-a1b2c3d4e5f6" class="test-link">
+
+    <a href="http://localhost:5000/restaurant/1?table=5&session=session-a1b2c3d4e5f6" class="test-link">
         <strong>Table 5</strong> - Bella Vista Italian<br>
         <small>Session: session-a1b2c3d4e5f6</small>
     </a>
-    
-    <a href="http://localhost:5173/restaurant/1?table=12&session=session-9x8y7z6w5v4u" class="test-link">
+
+    <a href="http://localhost:5000/restaurant/1?table=12&session=session-9x8y7z6w5v4u" class="test-link">
         <strong>Table 12</strong> - Bella Vista Italian<br>
         <small>Session: session-9x8y7z6w5v4u</small>
     </a>
-    
-    <a href="http://localhost:5173/restaurant/1?table=8&session=session-m5n6o7p8q9r0" class="test-link">
+
+    <a href="http://localhost:5000/restaurant/1?table=8&session=session-m5n6o7p8q9r0" class="test-link">
         <strong>Table 8</strong> - Bella Vista Italian<br>
         <small>Session: session-m5n6o7p8q9r0</small>
     </a>
@@ -38,8 +62,10 @@
     <h2>Test Instructions:</h2>
     <ol>
         <li><strong>Single Device Test:</strong> Click any table link above to access that table's session</li>
-        <li><strong>Multi-Device Test:</strong> Copy the same URL and open it in multiple browser tabs or on different devices</li>
-        <li><strong>Cart Sharing Test:</strong> Add items to cart in one tab, then check if they appear in other tabs with the same session</li>
+        <li><strong>Multi-Device Test:</strong> Copy the same URL and open it in multiple browser tabs or on different
+            devices</li>
+        <li><strong>Cart Sharing Test:</strong> Add items to cart in one tab, then check if they appear in other tabs
+            with the same session</li>
         <li><strong>Table Isolation Test:</strong> Verify that different table sessions don't share cart items</li>
     </ol>
 
@@ -53,11 +79,39 @@
         <li>✅ Remove items from cart</li>
         <li>✅ Table number should display correctly in header and cart</li>
         <li>✅ Session persistence across browser refreshes</li>
+        <li>🆕 <strong>Click "Place Order" to convert cart to order</strong></li>
+        <li>🆕 <strong>Test payment options: App, Cash, Card</strong></li>
+        <li>🆕 <strong>Verify session ends after payment completion</strong></li>
+        <li>🆕 <strong>Cart becomes disabled after session ends</strong></li>
+        <li>🆕 <strong>Session end message displays properly</strong></li>
+    </ul>
+
+    <h2>🆕 Complete Checkout Flow Test:</h2>
+    <ol>
+        <li><strong>Step 1 - Add Items:</strong> Add some items to your cart from the menu</li>
+        <li><strong>Step 2 - Place Order:</strong> Click "Place Order" button in cart</li>
+        <li><strong>Step 3 - Order Confirmation:</strong> See "✅ Order Placed Successfully!" message</li>
+        <li><strong>Step 4 - Proceed to Checkout:</strong> Click "Proceed to Checkout" button</li>
+        <li><strong>Step 5 - Payment Selection:</strong> Choose payment method (App/Cash/Card)</li>
+        <li><strong>Step 6 - Session Ends:</strong> Cart becomes disabled with "Session Ended" message</li>
+        <li><strong>Step 7 - New Session:</strong> Click a table link again to start fresh</li>
+    </ol>
+
+    <h2>🎯 New Features to Test:</h2>
+    <ul>
+        <li>🆕 <strong>Three-Stage Checkout:</strong> Cart → Order Placed → Payment</li>
+        <li>🆕 <strong>Order Confirmation:</strong> Clear feedback when order is placed</li>
+        <li>🆕 <strong>Checkout Flow:</strong> Separate step before payment</li>
+        <li>🆕 <strong>Order Summary:</strong> Condensed view during checkout/payment</li>
+        <li>🆕 <strong>Back Navigation:</strong> Can navigate between checkout states</li>
+        <li>🆕 <strong>Visual Feedback:</strong> Icons and status messages throughout flow</li>
     </ul>
 
     <div class="info">
         <h3>Security Note:</h3>
-        <p>The session tokens are hashed and obfuscated, making it impossible for customers to guess other table sessions. In production, these would be generated by the server and embedded in QR codes.</p>
+        <p>The session tokens are hashed and obfuscated, making it impossible for customers to guess other table
+            sessions. In production, these would be generated by the server and embedded in QR codes.</p>
     </div>
 </body>
+
 </html>

@@ -5,16 +5,16 @@ import type { CartItem, MenuItem } from "@shared/schema";
 
 function getSessionId(): string | null {
   const session = getCurrentSession();
-  
+
   if (session && isSessionActive(session)) {
     return session.sessionId;
   }
-  
+
   if (session && (session.status === 'paid' || session.status === 'closed')) {
     // Session has ended - don't create random session
     return null;
   }
-  
+
   // Fallback to a consistent session for development/testing
   // Check if we have a stored fallback session
   let fallbackSessionId = localStorage.getItem('fallback-session-id');
@@ -22,7 +22,7 @@ function getSessionId(): string | null {
     fallbackSessionId = "default-session-" + Math.random().toString(36).substr(2, 9);
     localStorage.setItem('fallback-session-id', fallbackSessionId);
   }
-  
+
   return fallbackSessionId;
 }
 
@@ -36,7 +36,7 @@ export function useCart() {
 
 export function useAddToCart() {
   const queryClient = useQueryClient();
-  
+
   return useMutation({
     mutationFn: async ({ menuItemId, quantity = 1, specialInstructions }: {
       menuItemId: number;
@@ -61,7 +61,7 @@ export function useAddToCart() {
 
 export function useUpdateCartItem() {
   const queryClient = useQueryClient();
-  
+
   return useMutation({
     mutationFn: async ({ id, quantity, specialInstructions }: {
       id: number;
@@ -83,7 +83,7 @@ export function useUpdateCartItem() {
 
 export function useRemoveFromCart() {
   const queryClient = useQueryClient();
-  
+
   return useMutation({
     mutationFn: async (id: number) => {
       await apiRequest("DELETE", `/api/cart/${id}`);
@@ -97,7 +97,7 @@ export function useRemoveFromCart() {
 
 export function useClearCart() {
   const queryClient = useQueryClient();
-  
+
   return useMutation({
     mutationFn: async () => {
       const sessionId = getSessionId();
@@ -124,4 +124,64 @@ export function useServerCall() {
       return response.json();
     },
   });
+}
+
+// New hooks for order management and payment-based session lifecycle
+export function usePlaceOrder() {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: async () => {
+      const sessionId = getSessionId();
+      if (!sessionId) {
+        throw new Error("No active session");
+      }
+      const response = await apiRequest("POST", "/api/orders", {
+        sessionId,
+      });
+      return response.json();
+    },
+    onSuccess: () => {
+      const sessionId = getSessionId();
+      queryClient.invalidateQueries({ queryKey: [`/api/cart/${sessionId}`] });
+      queryClient.invalidateQueries({ queryKey: [`/api/orders/${sessionId}`] });
+    },
+  });
+}
+
+export function useCompletePayment() {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: async ({ paymentMethod }: {
+      paymentMethod: 'app' | 'cash' | 'card';
+    }) => {
+      const sessionId = getSessionId();
+      if (!sessionId) {
+        throw new Error("No active session");
+      }
+      const response = await apiRequest("POST", `/api/sessions/${sessionId}/close`, {
+        paymentMethod,
+      });
+
+      // Clear session from localStorage
+      clearClosedSession();
+
+      return response.json();
+    },
+    onSuccess: () => {
+      // Invalidate all queries since session is ended
+      queryClient.clear();
+    },
+  });
+}
+
+export function useSessionStatus() {
+  const session = getCurrentSession();
+  return {
+    session,
+    isActive: session ? isSessionActive(session) : false,
+    isPaid: session?.status === 'paid',
+    isClosed: session?.status === 'closed',
+  };
 }

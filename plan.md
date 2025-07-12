@@ -115,19 +115,55 @@
 - ✅ Multiple devices can access same table cart via QR code
 - ✅ Cart items persist across browser refreshes
 - ✅ Users can add/remove items from shared cart
-- ✅ Order status tracking works (cart → ordered → served)
-- ✅ Cart UI shows current items and order history
-- ✅ Table members can see what others have ordered
+- ✅ **Payment-based session lifecycle implemented**
+- ✅ **Order placement and payment flow completed**
+- ✅ Cart UI shows current items and payment options
+- ✅ Session ends when bill is paid (app/cash/card)
 
-## Completed Features (Latest Commit: 5fc9649)
-- ✅ **Basic Cart Component**: Created dedicated Cart.tsx component with sidebar drawer
-- ✅ **Cart Integration**: Integrated cart with restaurant page and ItemDetailModal
-- ✅ **Session Management**: Implemented session.ts for stable session handling
-- ✅ **Cart Hooks**: Enhanced use-cart.ts with add/remove/update functionality
-- ✅ **Schema Updates**: Added CartItem and cart-related types to schema.ts
-- ✅ **UI Implementation**: Cart shows items, quantities, prices, and totals
-- ✅ **Persistence**: Cart data persists in memory storage during session
-- ✅ **Add/Remove Items**: Users can add items from menu and remove from cart
+## **COMPLETED: Payment-Based Session Lifecycle Implementation**
+
+### ✅ **Phase 1: Table-Based Session Management - COMPLETE**
+- ✅ Secure session token generation
+- ✅ Multi-device cart sharing via QR codes
+- ✅ Session persistence in localStorage
+- ✅ Session validation and security
+
+### ✅ **Phase 2: Payment-Based Session Lifecycle - COMPLETE**
+- ✅ **Extended Schema**: Added `tableSessions`, `orders`, and cart status fields
+- ✅ **Session Status Management**: Active → Ordered → Paid → Closed
+- ✅ **Payment Integration**: In-app, cash, and card payment options
+- ✅ **Order Conversion**: Cart items convert to orders on "Place Order"
+- ✅ **Session Termination**: Sessions end when payment is completed
+
+### ✅ **Phase 3: Enhanced Cart UI - COMPLETE**
+- ✅ **Place Order Button**: Converts cart to order
+- ✅ **Payment Options**: App payment, cash, card with waiter
+- ✅ **Session Status**: Shows when session is ended
+- ✅ **Graceful Handling**: Disabled cart when session is paid/closed
+- ✅ **Cart Badge Design**: Improved visual hierarchy and positioning for better UX
+
+### ✅ **Backend Implementation - COMPLETE**
+- ✅ **Storage Layer**: Table sessions and orders in memory storage
+- ✅ **API Endpoints**: Order creation, payment processing, session management
+- ✅ **Session Lifecycle**: Server-side session status tracking
+
+### ✅ **Frontend Implementation - COMPLETE**
+- ✅ **New Hooks**: `usePlaceOrder`, `useCompletePayment`, `useSessionStatus`
+- ✅ **Session Management**: Enhanced session.ts with status tracking
+- ✅ **Cart Component**: Payment flow and session-end handling
+- ✅ **User Experience**: Clear feedback when session ends
+
+## **Final Implementation Summary**
+The cart experience is now complete with a **payment-based session lifecycle** that:
+
+1. **Sessions are active** until payment is completed
+2. **Multiple payment methods** supported (app, cash, card)
+3. **Graceful session end** - no random timeouts
+4. **Clear user feedback** when session ends
+5. **Multi-device synchronization** maintained throughout
+6. **Security preserved** with session tokens
+
+**No more 24-hour arbitrary timeouts!** Sessions end naturally when customers pay their bill, providing a much better user experience aligned with real restaurant workflows.
 - ✅ **Real-time Updates**: Cart updates immediately when items are modified
 
 ## Still To Do
