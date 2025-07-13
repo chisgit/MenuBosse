@@ -1,11 +1,1 @@
-module.exports = {
-  preset: "ts-jest",
-  testEnvironment: "jsdom",
-  transform: {
-    "^.+\\.(ts|tsx)$": "ts-jest",
-  },
-  moduleNameMapper: {
-    "^@/(.*)$": "<rootDir>/client/src/$1",
-  },
-  setupFilesAfterEnv: ["@testing-library/jest-dom/extend-expect"],
-};
+// intentionally left blank to avoid config conflicts

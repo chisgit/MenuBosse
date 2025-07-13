@@ -12,6 +12,7 @@ import { CartItem, MenuItem, CartItemAddon, MenuItemAddon } from "@shared/schema
 
 type CartItemWithDetails = CartItem & { menuItem: MenuItem; addons: (CartItemAddon & { addon: MenuItemAddon })[] };
 
+
 const groupItemsByStatus = (items: CartItemWithDetails[]) => {
     return items.reduce((acc, item) => {
         const status = item.status || 'cart';
