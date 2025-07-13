@@ -49,8 +49,15 @@ export default function ItemDetailModal({ itemId, cartItemId, cartItemDetails, c
   const handleAddOrUpdateCart = async () => {
     if (!item) return;
 
+<<<<<<< HEAD
     // Only use user-entered notes for specialInstructions
     const combinedInstructions = specialInstructions;
+=======
+    const combinedInstructions = [
+      specialInstructions,
+      spiceLevel ? `Spice Level: ${spiceLevel.charAt(0).toUpperCase() + spiceLevel.slice(1)}` : '',
+    ].filter(Boolean).join(', ');
+>>>>>>> 7691dca (Added Sections to cart for addons and special notes, need to work on qty, and update if items removed, need to be reflected properly)
 
     // Helper to compare addons and instructions
     const isExactMatch = (cartItem: any) => {
