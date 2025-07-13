@@ -2,7 +2,7 @@ import { useState } from "react";
 import { Bell, ChefHat, Sparkles, Star, Award, Heart, MessageCircle, Plus, Minus, X } from "lucide-react";
 import { useMenuItem } from "@/hooks/use-menu";
 import { useMenuItemAddons } from "@/hooks/use-addons";
-import { useAddToCart } from "@/hooks/use-cart";
+import { useAddToCart, useUpdateCartItem } from "@/hooks/use-cart";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
@@ -17,13 +17,25 @@ import type { MenuItemAddon } from "@shared/schema";
 
 interface ItemDetailModalProps {
   itemId: number;
+  cartItemId?: number;
+  cartItemDetails?: any;
+  cartItems?: any[];
   onClose: () => void;
 }
 
-export default function ItemDetailModal({ itemId, onClose }: ItemDetailModalProps) {
-  const [quantity, setQuantity] = useState(1);
-  const [specialInstructions, setSpecialInstructions] = useState("");
-  const [selectedAddons, setSelectedAddons] = useState<Record<number, number>>({});
+export default function ItemDetailModal({ itemId, cartItemId, cartItemDetails, cartItems = [], onClose }: ItemDetailModalProps) {
+  const [quantity, setQuantity] = useState(cartItemDetails?.quantity || 1);
+  const [specialInstructions, setSpecialInstructions] = useState(cartItemDetails?.specialInstructions || "");
+  const [selectedAddons, setSelectedAddons] = useState<Record<number, number>>(() => {
+    if (cartItemDetails?.addons) {
+      const obj: Record<number, number> = {};
+      cartItemDetails.addons.forEach((addon: any) => {
+        obj[addon.addon.id] = addon.quantity ?? 1;
+      });
+      return obj;
+    }
+    return {};
+  });
   const [spiceLevel, setSpiceLevel] = useState("");
   const [activeTab, setActiveTab] = useState("customize");
   const [question, setQuestion] = useState("");
@@ -33,7 +45,8 @@ export default function ItemDetailModal({ itemId, onClose }: ItemDetailModalProp
   const addToCart = useAddToCart();
   const { toast } = useToast();
 
-  const handleAddToCart = async () => {
+  const updateCartItem = useUpdateCartItem();
+  const handleAddOrUpdateCart = async () => {
     if (!item) return;
 
     const addonNames = addons
@@ -51,25 +64,58 @@ export default function ItemDetailModal({ itemId, onClose }: ItemDetailModalProp
       ...addonNames,
     ].filter(Boolean).join(', ');
 
+    // Helper to compare addons and instructions
+    const isExactMatch = (cartItem: any) => {
+      if (cartItem.menuItem.id !== item.id) return false;
+      if ((cartItem.specialInstructions || "") !== (combinedInstructions || "")) return false;
+      const currentAddons = Object.keys(selectedAddons).map(id => parseInt(id)).sort();
+      const cartAddons = cartItem.addons.map((a: any) => a.addon.id).sort();
+      return JSON.stringify(currentAddons) === JSON.stringify(cartAddons);
+    };
 
     try {
-      await addToCart.mutateAsync({
-        menuItemId: item.id,
-        quantity,
-        specialInstructions: combinedInstructions || undefined,
-        addons: Object.keys(selectedAddons).map(id => parseInt(id)),
-      });
-
-      toast({
-        title: "Added to cart",
-        description: `${quantity} x ${item.name} has been added to your cart.`,
-      });
-
+      if (cartItemId) {
+        // Modify flow
+        await updateCartItem.mutateAsync({
+          id: cartItemId,
+          quantity,
+          specialInstructions: combinedInstructions || undefined,
+        });
+        toast({
+          title: "Cart updated",
+          description: `Your ${item.name} has been updated.`,
+        });
+      } else {
+        // Add flow
+        const match = cartItems.find(isExactMatch);
+        if (match) {
+          await updateCartItem.mutateAsync({
+            id: match.id,
+            quantity: (match.quantity || 1) + quantity,
+            specialInstructions: combinedInstructions || undefined,
+          });
+          toast({
+            title: "Cart updated",
+            description: `Quantity increased for ${item.name}.`,
+          });
+        } else {
+          await addToCart.mutateAsync({
+            menuItemId: item.id,
+            quantity,
+            specialInstructions: combinedInstructions || undefined,
+            addons: Object.keys(selectedAddons).map(id => parseInt(id)),
+          });
+          toast({
+            title: "Added to cart",
+            description: `${quantity} x ${item.name} has been added to your cart.`,
+          });
+        }
+      }
       onClose();
     } catch (error) {
       toast({
         title: "Error",
-        description: "Failed to add item to cart. Please try again.",
+        description: "Failed to update cart. Please try again.",
         variant: "destructive",
       });
     }
@@ -469,19 +515,19 @@ export default function ItemDetailModal({ itemId, onClose }: ItemDetailModalProp
                 </div>
 
                 <Button
-                  onClick={handleAddToCart}
-                  disabled={addToCart.isPending}
+                  onClick={handleAddOrUpdateCart}
+                  disabled={addToCart.isPending || updateCartItem.isPending}
                   className="flex-1 luxury-add-to-cart bg-gradient-to-r from-primary via-primary to-accent hover:from-primary/90 hover:via-primary/90 hover:to-accent/90 text-white font-bold px-6 py-2.5 rounded-xl text-sm transition-all duration-300 hover:shadow-luxury-glow border-0"
                 >
-                  {addToCart.isPending ? (
+                  {(addToCart.isPending || updateCartItem.isPending) ? (
                     <>
                       <Sparkles className="h-4 w-4 mr-2 animate-spin" />
-                      Adding...
+                      {cartItemId ? "Updating..." : "Adding..."}
                     </>
                   ) : (
                     <>
                       <Heart className="h-4 w-4 mr-2" />
-                      Add to Cart - ${totalPrice}
+                      {cartItemId ? `Update Cart - $${totalPrice}` : `Add to Cart - $${totalPrice}`}
                     </>
                   )}
                 </Button>
