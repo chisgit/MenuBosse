@@ -33,7 +33,7 @@ export default function Cart() {
     const completePayment = useCompletePayment();
     const { session, isActive, isPaid } = useSessionStatus();
     const [selectedImageItem, setSelectedImageItem] = useState<number | null>(null);
-    const [selectedDetailItem, setSelectedDetailItem] = useState<number | null>(null);
+    const [selectedDetailItem, setSelectedDetailItem] = useState<{ itemId: number, cartItemId?: number, details?: CartItemWithDetails } | null>(null);
     const [checkoutState, setCheckoutState] = useState<'cart' | 'checkout' | 'payment'>('cart');
 
     const groupedItems = groupItemsByStatus(cartItems);
@@ -182,89 +182,89 @@ export default function Cart() {
                                                 <CardContent className="p-4">
                                                     <div className="flex gap-3">
                                                         {/* Item Image */}
-                                                <div
-                                                    className="w-16 h-16 rounded-lg overflow-hidden flex-shrink-0 cursor-pointer hover:opacity-75 transition-opacity"
-                                                    onClick={() => setSelectedImageItem(item.id)}
-                                                >
-                                                    <img
-                                                        src={item.menuItem.imageUrl || "/placeholder-food.jpg"}
-                                                        alt={item.menuItem.name}
-                                                        className="w-full h-full object-cover"
-                                                    />
-                                                    <div className="absolute inset-0 flex items-center justify-center opacity-0 hover:opacity-100 transition-opacity bg-black/20 rounded-lg">
-                                                        <Eye className="h-4 w-4 text-white" />
-                                                    </div>
-                                                </div>
-
-                                                {/* Item Details */}
-                                                <div className="flex-1 min-w-0">
-                                                    <div className="flex items-start justify-between">
-                                                        <div className="flex-1">
-                                                            <h4 className="font-medium text-sm leading-tight">{item.menuItem.name}</h4>
-                                                            <p className="text-xs text-muted-foreground mt-1 line-clamp-2">
-                                                                {item.menuItem.description}
-                                                            </p>
-                                                            {item.specialInstructions && (
-                                                                <>
-                                                                    <div className="border-t border-dashed border-gray-700 my-2" />
-                                                                    <p className="text-xs text-orange-500 font-medium">
-                                                                        {item.specialInstructions}
-                                                                    </p>
-                                                                </>
-                                                            )}
-                                                        </div>
-                                                        <Button
-                                                            variant="ghost"
-                                                            size="icon"
-                                                            className="h-6 w-6 text-muted-foreground hover:text-destructive"
-                                                            onClick={() => handleRemoveItem(item.id)}
+                                                        <div
+                                                            className="w-16 h-16 rounded-lg overflow-hidden flex-shrink-0 cursor-pointer hover:opacity-75 transition-opacity"
+                                                            onClick={() => setSelectedImageItem(item.id)}
                                                         >
-                                                            <Trash2 className="h-3 w-3" />
-                                                        </Button>
-                                                    </div>
+                                                            <img
+                                                                src={item.menuItem.imageUrl || "/placeholder-food.jpg"}
+                                                                alt={item.menuItem.name}
+                                                                className="w-full h-full object-cover"
+                                                            />
+                                                            <div className="absolute inset-0 flex items-center justify-center opacity-0 hover:opacity-100 transition-opacity bg-black/20 rounded-lg">
+                                                                <Eye className="h-4 w-4 text-white" />
+                                                            </div>
+                                                        </div>
 
-                                                    {/* Quantity and Price */}
-                                                    <div className="flex items-center justify-between mt-3">
-                                                        <div className="flex items-center gap-2">
-                                                            <Button
-                                                                variant="outline"
-                                                                size="icon"
-                                                                className="h-6 w-6"
-                                                                onClick={() => handleQuantityChange(item.id, (item.quantity || 1) - 1)}
-                                                            >
-                                                                <Minus className="h-3 w-3" />
-                                                            </Button>
-                                                            <span className="text-sm font-medium w-8 text-center">
-                                                                {item.quantity || 1}
-                                                            </span>
-                                                            <Button
-                                                                variant="outline"
-                                                                size="icon"
-                                                                className="h-6 w-6"
-                                                                onClick={() => handleQuantityChange(item.id, (item.quantity || 1) + 1)}
-                                                            >
-                                                                <Plus className="h-3 w-3" />
-                                                            </Button>
-                                                        </div>
-                                                        <div className="text-right">
-                                                            <p className="text-sm font-medium">
-                                                                ${(item.menuItem.price * (item.quantity || 1) + item.addons.reduce((acc, addon) => acc + addon.addon.price * (addon.quantity ?? 1), 0)).toFixed(2)}
-                                                            </p>
-                                                            <Button
-                                                                variant="ghost"
-                                                                size="sm"
-                                                                className="h-auto p-0 text-xs text-muted-foreground hover:text-primary"
-                                                                onClick={() => setSelectedDetailItem(item.menuItem.id)}
-                                                            >
-                                                                Modify
-                                                            </Button>
+                                                        {/* Item Details */}
+                                                        <div className="flex-1 min-w-0">
+                                                            <div className="flex items-start justify-between">
+                                                                <div className="flex-1">
+                                                                    <h4 className="font-medium text-sm leading-tight">{item.menuItem.name}</h4>
+                                                                    <p className="text-xs text-muted-foreground mt-1 line-clamp-2">
+                                                                        {item.menuItem.description}
+                                                                    </p>
+                                                                    {item.specialInstructions && (
+                                                                        <>
+                                                                            <div className="border-t border-dashed border-gray-700 my-2" />
+                                                                            <p className="text-xs text-orange-500 font-medium">
+                                                                                {item.specialInstructions}
+                                                                            </p>
+                                                                        </>
+                                                                    )}
+                                                                </div>
+                                                                <Button
+                                                                    variant="ghost"
+                                                                    size="icon"
+                                                                    className="h-6 w-6 text-muted-foreground hover:text-destructive"
+                                                                    onClick={() => handleRemoveItem(item.id)}
+                                                                >
+                                                                    <Trash2 className="h-3 w-3" />
+                                                                </Button>
+                                                            </div>
+
+                                                            {/* Quantity and Price */}
+                                                            <div className="flex items-center justify-between mt-3">
+                                                                <div className="flex items-center gap-2">
+                                                                    <Button
+                                                                        variant="outline"
+                                                                        size="icon"
+                                                                        className="h-6 w-6"
+                                                                        onClick={() => handleQuantityChange(item.id, (item.quantity || 1) - 1)}
+                                                                    >
+                                                                        <Minus className="h-3 w-3" />
+                                                                    </Button>
+                                                                    <span className="text-sm font-medium w-8 text-center">
+                                                                        {item.quantity || 1}
+                                                                    </span>
+                                                                    <Button
+                                                                        variant="outline"
+                                                                        size="icon"
+                                                                        className="h-6 w-6"
+                                                                        onClick={() => handleQuantityChange(item.id, (item.quantity || 1) + 1)}
+                                                                    >
+                                                                        <Plus className="h-3 w-3" />
+                                                                    </Button>
+                                                                </div>
+                                                                <div className="text-right">
+                                                                    <p className="text-sm font-medium">
+                                                                        ${(item.menuItem.price * (item.quantity || 1) + item.addons.reduce((acc, addon) => acc + addon.addon.price * (addon.quantity ?? 1), 0)).toFixed(2)}
+                                                                    </p>
+                                                                    <Button
+                                                                        variant="ghost"
+                                                                        size="sm"
+                                                                        className="h-auto p-0 text-xs text-muted-foreground hover:text-primary"
+                                                                        onClick={() => setSelectedDetailItem({ itemId: item.menuItem.id, cartItemId: item.id, details: item })}
+                                                                    >
+                                                                        Modify
+                                                                    </Button>
+                                                                </div>
+                                                            </div>
                                                         </div>
                                                     </div>
-                                                </div>
-                                            </div>
-                                        </CardContent>
-                                    </Card>
-                                ))}
+                                                </CardContent>
+                                            </Card>
+                                        ))}
                                     </div>
                                 ))}
 
@@ -409,7 +409,10 @@ export default function Cart() {
 
             {selectedDetailItem && (
                 <ItemDetailModal
-                    itemId={selectedDetailItem}
+                    itemId={selectedDetailItem.itemId}
+                    cartItemId={selectedDetailItem.cartItemId}
+                    cartItemDetails={selectedDetailItem.details}
+                    cartItems={cartItems}
                     onClose={() => setSelectedDetailItem(null)}
                 />
             )}
