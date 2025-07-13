@@ -1,13 +1,12 @@
 import { useState } from "react";
-import { ShoppingCart, Plus, Minus, X, Eye, Trash2 } from "lucide-react";
+import { ShoppingCart, Plus, Minus, Eye, Trash2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardContent } from "@/components/ui/card";
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
 import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { useCart, useUpdateCartItem, useRemoveFromCart, useClearCart, usePlaceOrder, useCompletePayment, useSessionStatus } from "@/hooks/use-cart";
-import { getCurrentSession } from "@/lib/session";
 import ItemDetailModal from "./ItemDetailModal";
 import { CartItem, MenuItem, CartItemAddon, MenuItemAddon } from "@shared/schema";
 
@@ -79,7 +78,6 @@ export default function Cart() {
         completePayment.mutate({ paymentMethod }, {
             onSuccess: () => {
                 setCheckoutState('cart');
-                // Optionally show success message or redirect
             },
         });
     };
@@ -88,7 +86,6 @@ export default function Cart() {
         setCheckoutState('cart');
     };
 
-    // Don't show cart if session is paid/closed
     if (isPaid || !isActive) {
         return (
             <Sheet>
@@ -204,14 +201,24 @@ export default function Cart() {
                                                                     <p className="text-xs text-muted-foreground mt-1 line-clamp-2">
                                                                         {item.menuItem.description}
                                                                     </p>
-                                                                    {item.specialInstructions && (
-                                                                        <>
-                                                                            <div className="border-t border-dashed border-gray-700 my-2" />
-                                                                            <p className="text-xs text-orange-500 font-medium">
-                                                                                {item.specialInstructions}
-                                                                            </p>
-                                                                        </>
-                                                                    )}
+{item.addons.length > 0 && (
+    <>
+        <div className="border-t border-dashed border-gray-700 my-2" />
+        <ul className="list-disc list-inside ml-2 text-xs text-orange-500 font-medium">
+            {item.addons.map(addon => (
+                <li key={addon.addon.id}>
+                    {addon.addon.name}
+                </li>
+            ))}
+        </ul>
+    </>
+)}
+{item.specialInstructions && (
+    <div className="mt-2 p-2 rounded bg-slate-700">
+        <span className="block text-xs text-orange-400 font-semibold mb-1">Special Notes:</span>
+        <span className="text-xs text-orange-300">{item.specialInstructions}</span>
+    </div>
+)}
                                                                 </div>
                                                                 <Button
                                                                     variant="ghost"
@@ -268,7 +275,6 @@ export default function Cart() {
                                     </div>
                                 ))}
 
-                                {/* Show summary for checkout/payment states */}
                                 {(checkoutState === 'checkout' || checkoutState === 'payment') && (
                                     <div className="space-y-4">
                                         <Card className="bg-slate-800 border-slate-700">
@@ -289,7 +295,6 @@ export default function Cart() {
 
                                 {cartItems.length > 0 && <Separator className="bg-slate-700" />}
 
-                                {/* Cart Summary - Show in all states */}
                                 {cartItems.length > 0 && (
                                     <Card className="bg-slate-800 border-slate-700">
                                         <CardContent className="p-4">
@@ -312,7 +317,6 @@ export default function Cart() {
                                     </Card>
                                 )}
 
-                                {/* Action Buttons */}
                                 <div className="space-y-2">
                                     {checkoutState === 'cart' && (
                                         <>

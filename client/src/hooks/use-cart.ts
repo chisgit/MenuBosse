@@ -66,14 +66,16 @@ export function useUpdateCartItem() {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: async ({ id, quantity, specialInstructions }: {
+    mutationFn: async ({ id, quantity, specialInstructions, addons }: {
       id: number;
       quantity: number;
       specialInstructions?: string;
+      addons?: number[];
     }) => {
       const response = await apiRequest("PUT", `/api/cart/${id}`, {
         quantity,
         specialInstructions,
+        addons,
       });
       return response.json();
     },
