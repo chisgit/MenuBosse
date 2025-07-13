@@ -31,6 +31,7 @@ export function useCart() {
   return useQuery<(CartItem & { menuItem: MenuItem; addons: (CartItemAddon & { addon: MenuItemAddon })[] })[]>({
     queryKey: [`/api/cart/${sessionId}`],
     enabled: !!sessionId,
+    refetchInterval: 5000, // Refetch every 5 seconds
   });
 }
 
