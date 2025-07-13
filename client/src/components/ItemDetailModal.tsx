@@ -49,20 +49,8 @@ export default function ItemDetailModal({ itemId, cartItemId, cartItemDetails, c
   const handleAddOrUpdateCart = async () => {
     if (!item) return;
 
-    const addonNames = addons
-      ? Object.keys(selectedAddons)
-        .map(addonId => {
-          const addon = addons.find(a => a.id === parseInt(addonId));
-          return addon ? addon.name : null;
-        })
-        .filter(Boolean)
-      : [];
-
-    const combinedInstructions = [
-      specialInstructions,
-      spiceLevel ? `Spice Level: ${spiceLevel.charAt(0).toUpperCase() + spiceLevel.slice(1)}` : '',
-      ...addonNames,
-    ].filter(Boolean).join(', ');
+    // Only use user-entered notes for specialInstructions
+    const combinedInstructions = specialInstructions;
 
     // Helper to compare addons and instructions
     const isExactMatch = (cartItem: any) => {
@@ -80,10 +68,11 @@ export default function ItemDetailModal({ itemId, cartItemId, cartItemDetails, c
           id: cartItemId,
           quantity,
           specialInstructions: combinedInstructions || undefined,
+          addons: Object.keys(selectedAddons).map(id => parseInt(id)),
         });
         toast({
           title: "Cart updated",
-          description: `Your ${item.name} has been updated.`,
+          description: `Your ${item.name} has been updated.`
         });
       } else {
         // Add flow
