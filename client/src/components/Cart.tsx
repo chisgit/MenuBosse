@@ -30,8 +30,8 @@ export default function Cart() {
 
     const handleQuantityChange = (id: number, newQuantity: number) => {
         if (newQuantity < 1) {
-    const [selectedImageItem, setSelectedImageItem] = useState<number | null>(null);
-    const [selectedItem, setSelectedItem] = useState<ItemType | null>(null);
+            const [selectedImageItem, setSelectedImageItem] = useState<number | null>(null);
+            const [selectedItem, setSelectedItem] = useState<ItemType | null>(null);
         } else {
             updateCartItem.mutate({
                 id,
