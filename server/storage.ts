@@ -54,8 +54,8 @@ export interface IStorage {
   createDeal(deal: InsertDeal): Promise<Deal>;
 
   // Cart
-  getCartItems(sessionId: string): Promise<(CartItem & { menuItem: MenuItem })[]>;
-  addToCart(item: InsertCartItem): Promise<CartItem>;
+  getCartItems(sessionId: string): Promise<(CartItem & { menuItem: MenuItem; addons: (CartItemAddon & { addon: MenuItemAddon })[] })[]>;
+  addToCart(item: InsertCartItem, addons?: number[]): Promise<CartItem>;
   updateCartItem(id: number, quantity: number, specialInstructions?: string): Promise<CartItem | undefined>;
   removeFromCart(id: number): Promise<boolean>;
   clearCart(sessionId: string): Promise<boolean>;
@@ -577,7 +577,7 @@ export class MemStorage implements IStorage {
     return newDeal;
   }
 
-  async getCartItems(sessionId: string): Promise<(CartItem & { menuItem: MenuItem })[]> {
+  async getCartItems(sessionId: string): Promise<(CartItem & { menuItem: MenuItem; addons: (CartItemAddon & { addon: MenuItemAddon })[] })[]> {
     const items = Array.from(this.cartItems.values())
       .filter(item => item.sessionId === sessionId);
 
@@ -585,14 +585,15 @@ export class MemStorage implements IStorage {
     for (const item of items) {
       const menuItem = this.menuItems.get(item.menuItemId);
       if (menuItem) {
-        itemsWithMenuData.push({ ...item, menuItem });
+        const addons = await this.getCartItemAddons(item.id);
+        itemsWithMenuData.push({ ...item, menuItem, addons });
       }
     }
 
     return itemsWithMenuData;
   }
 
-  async addToCart(item: InsertCartItem): Promise<CartItem> {
+  async addToCart(item: InsertCartItem, addons: number[] = []): Promise<CartItem> {
     const id = this.currentId++;
     const newItem: CartItem = {
       ...item,
@@ -605,6 +606,15 @@ export class MemStorage implements IStorage {
       orderedAt: null,
     };
     this.cartItems.set(id, newItem);
+
+    for (const addonId of addons) {
+      await this.addCartItemAddon({
+        cartItemId: id,
+        addonId,
+        quantity: 1,
+      });
+    }
+
     return newItem;
   }
 
@@ -724,7 +734,10 @@ export class MemStorage implements IStorage {
 
   async convertCartToOrder(sessionId: string): Promise<Order> {
     const cartItems = await this.getCartItems(sessionId);
-    const totalAmount = cartItems.reduce((sum, item) => sum + (item.menuItem.price * (item.quantity || 1)), 0);
+    const totalAmount = cartItems.reduce((sum, item) => {
+      const addonsPrice = item.addons.reduce((addonSum, addon) => addonSum + addon.addon.price * (addon.quantity ?? 1), 0);
+      return sum + (item.menuItem.price * (item.quantity || 1)) + addonsPrice;
+    }, 0);
 
     const order: InsertOrder = {
       sessionId,
