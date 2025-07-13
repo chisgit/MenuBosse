@@ -23,11 +23,15 @@ export default function Cart() {
     const [checkoutState, setCheckoutState] = useState<'cart' | 'checkout' | 'payment'>('cart');
 
     const totalItems = cartItems.reduce((sum, item) => sum + (item.quantity || 1), 0);
-    const totalPrice = cartItems.reduce((sum, item) => sum + (item.menuItem.price * (item.quantity || 1)), 0);
+    const totalPrice = cartItems.reduce((sum, item) => {
+        const addonsPrice = item.addons.reduce((addonSum, addon) => addonSum + addon.addon.price * (addon.quantity ?? 1), 0);
+        return sum + (item.menuItem.price * (item.quantity || 1)) + addonsPrice;
+    }, 0);
 
     const handleQuantityChange = (id: number, newQuantity: number) => {
         if (newQuantity < 1) {
-            removeFromCart.mutate(id);
+    const [selectedImageItem, setSelectedImageItem] = useState<number | null>(null);
+    const [selectedItem, setSelectedItem] = useState<ItemType | null>(null);
         } else {
             updateCartItem.mutate({
                 id,
@@ -185,9 +189,12 @@ export default function Cart() {
                                                                 {item.menuItem.description}
                                                             </p>
                                                             {item.specialInstructions && (
-                                                                <p className="text-xs text-orange-600 mt-1">
-                                                                    Note: {item.specialInstructions}
-                                                                </p>
+                                                                <>
+                                                                    <div className="border-t border-dashed border-gray-700 my-2" />
+                                                                    <p className="text-xs text-orange-500 font-medium">
+                                                                        {item.specialInstructions}
+                                                                    </p>
+                                                                </>
                                                             )}
                                                         </div>
                                                         <Button
@@ -225,7 +232,7 @@ export default function Cart() {
                                                         </div>
                                                         <div className="text-right">
                                                             <p className="text-sm font-medium">
-                                                                ${(item.menuItem.price * (item.quantity || 1)).toFixed(2)}
+                                                                ${(item.menuItem.price * (item.quantity || 1) + item.addons.reduce((acc, addon) => acc + addon.addon.price * (addon.quantity ?? 1), 0)).toFixed(2)}
                                                             </p>
                                                             <Button
                                                                 variant="ghost"
@@ -253,7 +260,7 @@ export default function Cart() {
                                                     {cartItems.map((item) => (
                                                         <div key={item.id} className="flex justify-between text-sm">
                                                             <span>{item.quantity}x {item.menuItem.name}</span>
-                                                            <span>${(item.menuItem.price * (item.quantity || 1)).toFixed(2)}</span>
+                                                            <span>${(item.menuItem.price * (item.quantity || 1) + item.addons.reduce((acc, addon) => acc + addon.addon.price * (addon.quantity ?? 1), 0)).toFixed(2)}</span>
                                                         </div>
                                                     ))}
                                                 </div>
