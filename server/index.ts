@@ -60,4 +60,7 @@ app.use((req, res, next) => {
   server.listen(port, '0.0.0.0', () => {
     log(`serving on port ${port}`);
   });
+  // Set timeouts to prevent Render 502 errors
+  server.keepAliveTimeout = 120000; // 120 seconds
+  server.headersTimeout = 120000;   // 120 seconds
 })();
