@@ -9,6 +9,20 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/u
 import { useCart, useUpdateCartItem, useRemoveFromCart, useClearCart, usePlaceOrder, useCompletePayment, useSessionStatus } from "@/hooks/use-cart";
 import { getCurrentSession } from "@/lib/session";
 import ItemDetailModal from "./ItemDetailModal";
+import { CartItem, MenuItem, CartItemAddon, MenuItemAddon } from "@shared/schema";
+
+type CartItemWithDetails = CartItem & { menuItem: MenuItem; addons: (CartItemAddon & { addon: MenuItemAddon })[] };
+
+const groupItemsByStatus = (items: CartItemWithDetails[]) => {
+    return items.reduce((acc, item) => {
+        const status = item.status || 'cart';
+        if (!acc[status]) {
+            acc[status] = [];
+        }
+        acc[status].push(item);
+        return acc;
+    }, {} as Record<string, CartItemWithDetails[]>);
+};
 
 export default function Cart() {
     const { data: cartItems = [], isLoading } = useCart();
@@ -22,8 +36,9 @@ export default function Cart() {
     const [selectedDetailItem, setSelectedDetailItem] = useState<number | null>(null);
     const [checkoutState, setCheckoutState] = useState<'cart' | 'checkout' | 'payment'>('cart');
 
+    const groupedItems = groupItemsByStatus(cartItems);
     const totalItems = cartItems.reduce((sum, item) => sum + (item.quantity || 1), 0);
-    const totalPrice = cartItems.reduce((sum, item) => {
+    const totalPrice = cartItems.reduce((sum, item: CartItemWithDetails) => {
         const addonsPrice = item.addons.reduce((addonSum, addon) => addonSum + addon.addon.price * (addon.quantity ?? 1), 0);
         return sum + (item.menuItem.price * (item.quantity || 1)) + addonsPrice;
     }, 0);
@@ -96,7 +111,7 @@ export default function Cart() {
     }
 
     const ImageModal = () => {
-        const item = cartItems.find(item => item.id === selectedImageItem);
+        const item = cartItems.find((item: CartItemWithDetails) => item.id === selectedImageItem);
         if (!item) return null;
 
         return (
@@ -131,9 +146,9 @@ export default function Cart() {
                         )}
                     </button>
                 </SheetTrigger>
-                <SheetContent className="w-full sm:max-w-lg flex flex-col">
+                <SheetContent className="w-full sm:max-w-lg flex flex-col bg-slate-900 text-white border-l border-slate-700">
                     <SheetHeader>
-                        <SheetTitle className="flex items-center gap-2">
+                        <SheetTitle className="flex items-center gap-2 text-orange-400">
                             <ShoppingCart className="h-5 w-5" />
                             {checkoutState === 'cart' && 'Your Cart'}
                             {checkoutState === 'checkout' && '✅ Order Placed'}
@@ -146,25 +161,27 @@ export default function Cart() {
                         </SheetTitle>
                     </SheetHeader>
 
-                    <div className="flex-1 overflow-auto space-y-4">
+                    <div className="flex-1 overflow-auto space-y-4 p-4">
                         {isLoading ? (
                             <div className="flex items-center justify-center h-32">
-                                <p className="text-muted-foreground">Loading cart...</p>
+                                <p className="text-slate-400">Loading cart...</p>
                             </div>
                         ) : cartItems.length === 0 && checkoutState === 'cart' ? (
                             <div className="flex flex-col items-center justify-center h-32 text-center">
-                                <ShoppingCart className="h-12 w-12 text-muted-foreground mb-2" />
-                                <p className="text-muted-foreground">Your cart is empty</p>
-                                <p className="text-sm text-muted-foreground">Add some delicious items to get started!</p>
+                                <ShoppingCart className="h-12 w-12 text-slate-500 mb-2" />
+                                <p className="text-slate-400">Your cart is empty</p>
+                                <p className="text-sm text-slate-500">Add some delicious items to get started!</p>
                             </div>
                         ) : (
                             <>
-                                {/* Show cart items only in 'cart' state */}
-                                {checkoutState === 'cart' && cartItems.map((item) => (
-                                    <Card key={item.id} className="relative">
-                                        <CardContent className="p-4">
-                                            <div className="flex gap-3">
-                                                {/* Item Image */}
+                                {Object.entries(groupedItems).map(([status, items]) => (
+                                    <div key={status}>
+                                        <h3 className="text-lg font-semibold mb-2 capitalize text-orange-400 border-b border-slate-700 pb-2">{status}</h3>
+                                        {items.map((item) => (
+                                            <Card key={item.id} className="relative mb-4 bg-slate-800 border-slate-700">
+                                                <CardContent className="p-4">
+                                                    <div className="flex gap-3">
+                                                        {/* Item Image */}
                                                 <div
                                                     className="w-16 h-16 rounded-lg overflow-hidden flex-shrink-0 cursor-pointer hover:opacity-75 transition-opacity"
                                                     onClick={() => setSelectedImageItem(item.id)}
@@ -248,15 +265,17 @@ export default function Cart() {
                                         </CardContent>
                                     </Card>
                                 ))}
+                                    </div>
+                                ))}
 
                                 {/* Show summary for checkout/payment states */}
                                 {(checkoutState === 'checkout' || checkoutState === 'payment') && (
                                     <div className="space-y-4">
-                                        <Card className="bg-gray-50">
+                                        <Card className="bg-slate-800 border-slate-700">
                                             <CardContent className="p-4">
-                                                <h3 className="font-medium mb-3">Order Summary</h3>
-                                                <div className="space-y-2">
-                                                    {cartItems.map((item) => (
+                                                <h3 className="font-medium mb-3 text-orange-400">Order Summary</h3>
+                                                <div className="space-y-2 text-slate-300">
+                                                    {cartItems.map((item: CartItemWithDetails) => (
                                                         <div key={item.id} className="flex justify-between text-sm">
                                                             <span>{item.quantity}x {item.menuItem.name}</span>
                                                             <span>${(item.menuItem.price * (item.quantity || 1) + item.addons.reduce((acc, addon) => acc + addon.addon.price * (addon.quantity ?? 1), 0)).toFixed(2)}</span>
@@ -268,13 +287,13 @@ export default function Cart() {
                                     </div>
                                 )}
 
-                                {cartItems.length > 0 && <Separator />}
+                                {cartItems.length > 0 && <Separator className="bg-slate-700" />}
 
                                 {/* Cart Summary - Show in all states */}
                                 {cartItems.length > 0 && (
-                                    <Card>
+                                    <Card className="bg-slate-800 border-slate-700">
                                         <CardContent className="p-4">
-                                            <div className="space-y-2">
+                                            <div className="space-y-2 text-slate-300">
                                                 <div className="flex justify-between text-sm">
                                                     <span>Items ({totalItems})</span>
                                                     <span>${totalPrice.toFixed(2)}</span>
@@ -283,8 +302,8 @@ export default function Cart() {
                                                     <span>Tax</span>
                                                     <span>${(totalPrice * 0.1).toFixed(2)}</span>
                                                 </div>
-                                                <Separator />
-                                                <div className="flex justify-between font-medium">
+                                                <Separator className="bg-slate-700" />
+                                                <div className="flex justify-between font-medium text-white">
                                                     <span>Total</span>
                                                     <span>${(totalPrice * 1.1).toFixed(2)}</span>
                                                 </div>
