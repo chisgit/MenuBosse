@@ -36,11 +36,28 @@ export default function ItemDetailModal({ itemId, onClose }: ItemDetailModalProp
   const handleAddToCart = async () => {
     if (!item) return;
 
+    const addonNames = addons
+      ? Object.keys(selectedAddons)
+        .map(addonId => {
+          const addon = addons.find(a => a.id === parseInt(addonId));
+          return addon ? addon.name : null;
+        })
+        .filter(Boolean)
+      : [];
+
+    const combinedInstructions = [
+      specialInstructions,
+      spiceLevel ? `Spice Level: ${spiceLevel.charAt(0).toUpperCase() + spiceLevel.slice(1)}` : '',
+      ...addonNames,
+    ].filter(Boolean).join(', ');
+
+
     try {
       await addToCart.mutateAsync({
         menuItemId: item.id,
         quantity,
-        specialInstructions: specialInstructions || undefined,
+        specialInstructions: combinedInstructions || undefined,
+        addons: Object.keys(selectedAddons).map(id => parseInt(id)),
       });
 
       toast({
@@ -73,9 +90,9 @@ export default function ItemDetailModal({ itemId, onClose }: ItemDetailModalProp
       setSelectedAddons(prev => ({ ...prev, [addonId]: 1 }));
     } else {
       setSelectedAddons(prev => {
-        const updated = { ...prev };
-        delete updated[addonId];
-        return updated;
+        const newAddons = { ...prev };
+        delete newAddons[addonId];
+        return newAddons;
       });
     }
   };

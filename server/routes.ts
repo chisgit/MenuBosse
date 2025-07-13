@@ -132,8 +132,8 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
   app.post("/api/cart", async (req, res) => {
     try {
-      const validatedData = insertCartItemSchema.parse(req.body);
-      const cartItem = await storage.addToCart(validatedData);
+      const { addons, ...cartData } = insertCartItemSchema.parse(req.body);
+      const cartItem = await storage.addToCart(cartData, addons);
       res.status(201).json(cartItem);
     } catch (error) {
       if (error instanceof Error) {

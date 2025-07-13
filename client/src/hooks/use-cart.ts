@@ -1,7 +1,7 @@
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { apiRequest } from "@/lib/queryClient";
 import { getCurrentSession, isSessionActive, clearClosedSession } from "@/lib/session";
-import type { CartItem, MenuItem } from "@shared/schema";
+import type { CartItem, MenuItem, CartItemAddon, MenuItemAddon } from "@shared/schema";
 
 function getSessionId(): string | null {
   const session = getCurrentSession();
@@ -28,7 +28,7 @@ function getSessionId(): string | null {
 
 export function useCart() {
   const sessionId = getSessionId();
-  return useQuery<(CartItem & { menuItem: MenuItem })[]>({
+  return useQuery<(CartItem & { menuItem: MenuItem; addons: (CartItemAddon & { addon: MenuItemAddon })[] })[]>({
     queryKey: [`/api/cart/${sessionId}`],
     enabled: !!sessionId,
   });
@@ -38,10 +38,11 @@ export function useAddToCart() {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: async ({ menuItemId, quantity = 1, specialInstructions }: {
+    mutationFn: async ({ menuItemId, quantity = 1, specialInstructions, addons }: {
       menuItemId: number;
       quantity?: number;
       specialInstructions?: string;
+      addons?: number[];
     }) => {
       const sessionId = getSessionId();
       const response = await apiRequest("POST", "/api/cart", {
@@ -49,6 +50,7 @@ export function useAddToCart() {
         menuItemId,
         quantity,
         specialInstructions,
+        addons,
       });
       return response.json();
     },

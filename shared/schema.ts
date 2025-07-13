@@ -132,7 +132,9 @@ export const insertDealSchema = createInsertSchema(deals).omit({
   id: true,
 });
 
-export const insertCartItemSchema = createInsertSchema(cartItems).omit({
+export const insertCartItemSchema = createInsertSchema(cartItems).extend({
+  addons: z.array(z.number()).optional(),
+}).omit({
   id: true,
   addedAt: true,
 });
