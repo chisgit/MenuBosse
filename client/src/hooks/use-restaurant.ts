@@ -2,12 +2,14 @@ import { useQuery } from "@tanstack/react-query";
 import type { Restaurant, Deal } from "@shared/schema";
 
 export function useRestaurants() {
+  console.debug("[DEBUG] useRestaurants: fetching /api/restaurants");
   return useQuery<Restaurant[]>({
     queryKey: ["/api/restaurants"],
   });
 }
 
 export function useRestaurant(id: number) {
+  console.debug(`[DEBUG] useRestaurant: fetching /api/restaurants/${id}.json`);
   return useQuery<Restaurant>({
     queryKey: [`/api/restaurants/${id}.json`],
   });
