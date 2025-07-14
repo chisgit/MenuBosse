@@ -1,4 +1,4 @@
-import { useState } from "react";
+import React, { useState } from "react";
 import { Bell, ChefHat, Sparkles, Star, Award, Heart, MessageCircle, Plus, Minus, X } from "lucide-react";
 import { useMenuItem } from "@/hooks/use-menu";
 import { useMenuItemAddons } from "@/hooks/use-addons";
