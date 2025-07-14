@@ -9,7 +9,7 @@ export function useRestaurants() {
 
 export function useRestaurant(id: number) {
   return useQuery<Restaurant>({
-    queryKey: [`/api/restaurants/${id}`],
+    queryKey: [`/api/restaurants/${id}.json`],
   });
 }
 

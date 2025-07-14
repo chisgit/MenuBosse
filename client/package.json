@@ -1,4 +1,7 @@
 {
+  "scripts": {
+    "build": "vite build"
+  },
   "devDependencies": {
     "@babel/core": "^7.28.0",
     "@babel/preset-env": "^7.28.0",

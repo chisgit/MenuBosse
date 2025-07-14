@@ -12,7 +12,7 @@ function App() {
         <Switch>
           <Route path="/" component={() => <RestaurantPage restaurantId={1} />} />
           <Route path="/restaurant/:id">
-            {(params) => <RestaurantPage restaurantId={parseInt(params.id)} />}
+{(params) => <RestaurantPage restaurantId={parseInt(params.id.split(":")[0])} />}
           </Route>
           <Route component={NotFound} />
         </Switch>

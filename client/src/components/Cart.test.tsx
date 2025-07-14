@@ -1,6 +1,7 @@
 import '@testing-library/jest-dom';
 // Cart.test.tsx
 import { render, screen } from "@testing-library/react";
+import React from "react";
 import Cart from "./Cart";
 
 jest.mock("@/hooks/use-cart", () => ({
