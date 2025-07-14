@@ -1,8 +1,30 @@
-import { expect, it, describe, afterEach, vi } from 'vitest';
+import { afterEach, vi } from 'vitest';
 import { cleanup } from '@testing-library/react';
-import '@testing-library/jest-dom';
+import '@testing-library/jest-dom/vitest';
 
-// expect, it, describe, afterEach are now globally available
-// vi is also available for mocking
+const mockRestaurant = {
+  id: 1,
+  name: 'Menu Bosse',
+  logoUrl: 'https://example.com/logo.png',
+  primaryColor: '#ff0000',
+  menu: {
+    categories: [],
+  },
+};
+
+vi.spyOn(global, 'fetch').mockImplementation((url) => {
+  const urlString = url.toString();
+  if (urlString.endsWith('/api/restaurants/1.json')) {
+    return Promise.resolve(
+      new Response(JSON.stringify(mockRestaurant), {
+        headers: { 'Content-Type': 'application/json' },
+      }),
+    );
+  }
+  return Promise.resolve(new Response('Not Found', { status: 404 }));
+});
 
 afterEach(() => {
+  cleanup();
+  vi.clearAllMocks();
+});

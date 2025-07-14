@@ -78,8 +78,8 @@ export async function registerRoutes(app: Express): Promise<Server> {
         return res.status(404).json({ message: "Menu item not found" });
       }
 
-      const upvotes = type === 'up' ? item.upvotes + 1 : item.upvotes;
-      const downvotes = type === 'down' ? item.downvotes + 1 : item.downvotes;
+      const upvotes = type === 'up' ? (item.upvotes ?? 0) + 1 : (item.upvotes ?? 0);
+      const downvotes = type === 'down' ? (item.downvotes ?? 0) + 1 : (item.downvotes ?? 0);
 
       const updatedItem = await storage.updateMenuItemVotes(id, upvotes, downvotes);
       res.json(updatedItem);
