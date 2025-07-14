@@ -30,8 +30,12 @@ export const getQueryFn: <T>(options: {
   ({ on401: unauthorizedBehavior }) =>
   async ({ queryKey }) => {
     const url = queryKey[0] as string;
+    // DEBUG: Show which endpoint is called in production
+    if (typeof window !== "undefined") {
+      console.debug("[DEBUG] Fetching:", url.startsWith("http") ? url : url);
+    }
     const res = await fetch(
-      url.startsWith("http") ? url : `http://localhost:5000${url}`,
+      url.startsWith("http") ? url : url,
       {
         credentials: "include",
       },
