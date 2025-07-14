@@ -1,9 +1,17 @@
+
 [build]
   command = "npm run build"
-  publish = "dist"
+  publish = "dist/public"
+
 
 [[redirects]]
   from = "/api/*"
-  to = "https://menubosse-api.onrender.com/:splat"
+  to = "https://menubosse.onrender.com/:splat"
   status = 200
   force = true
+
+
+[[redirects]]
+  from = "/*"
+  to = "/index.html"
+  status = 200
