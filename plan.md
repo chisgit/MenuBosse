@@ -38,3 +38,13 @@ Current cart synchronization uses 5-second polling, which will not scale for tho
 - On checkout, prompt each customer to provide a star rating for each dish for a 5% discount.
 - If the customer leaves more than 1 comment, apply a 10% discount.
 - Allow customers to post their rating on other platforms (Google, Yelp, etc.) via SSO in the app.
+
+---
+
+## **Build & Deployment Status**
+
+- Fixed Vite alias for `@` imports in vite.config.ts
+- Corrected Tailwind theme extension for custom colors (border, background, foreground)
+- Fixed CSS syntax errors in index.css
+- Verified successful local build
+- Deployed frontend to Netlify: [https://menubosse.netlify.app](https://menubosse.netlify.app)
