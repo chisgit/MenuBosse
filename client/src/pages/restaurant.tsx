@@ -20,8 +20,15 @@ export default function RestaurantPage({ restaurantId }: RestaurantPageProps) {
   const [selectedItemId, setSelectedItemId] = useState<number | null>(null);
   const [showServerToast, setShowServerToast] = useState(false);
 
-  const { data: restaurant, isLoading: restaurantLoading } = useRestaurant(restaurantId);
+  const { data: restaurant, isLoading: restaurantLoading, error } = useRestaurant(restaurantId);
   const session = getCurrentSession();
+
+  console.log('[RestaurantPage] restaurantId:', restaurantId);
+  console.log('[RestaurantPage] restaurantLoading:', restaurantLoading);
+  console.log('[RestaurantPage] restaurant:', restaurant);
+  if (error) {
+    console.error('[RestaurantPage] Error loading restaurant:', error);
+  }
 
   if (restaurantLoading) {
     return (
@@ -40,6 +47,7 @@ export default function RestaurantPage({ restaurantId }: RestaurantPageProps) {
   }
 
   if (!restaurant) {
+    console.warn('[RestaurantPage] No restaurant found for id:', restaurantId);
     return (
       <div className="min-h-screen bg-gray-50 flex items-center justify-center">
         <div className="text-center">
@@ -83,11 +91,10 @@ export default function RestaurantPage({ restaurantId }: RestaurantPageProps) {
                   <button
                     key={tab.key}
                     onClick={() => setActiveTab(tab.key)}
-                    className={`py-1 px-4 border-b-2 font-medium text-sm whitespace-nowrap transition-colors ${
-                      activeTab === tab.key
+                    className={`py-1 px-4 border-b-2 font-medium text-sm whitespace-nowrap transition-colors ${activeTab === tab.key
                         ? 'border-orange-500 text-orange-400'
                         : 'border-transparent text-gray-400 hover:text-gray-300'
-                    }`}
+                      }`}
                   >
                     {tab.label}
                   </button>
@@ -103,7 +110,7 @@ export default function RestaurantPage({ restaurantId }: RestaurantPageProps) {
           </div>
         </div>
       </header>
-      
+
       {/* Enhanced Main Content */}
       <main className="max-w-7xl mx-auto container-spacing padding-section">
         {activeTab === 'menu' && (
