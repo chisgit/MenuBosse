@@ -1,0 +1,5 @@
+[
+  { "id": 1, "restaurantId": 1, "name": "Appetizers", "order": 1 },
+  { "id": 2, "restaurantId": 1, "name": "Main Dishes", "order": 2 },
+  { "id": 3, "restaurantId": 1, "name": "Desserts", "order": 3 }
+]
