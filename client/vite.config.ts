@@ -10,8 +10,8 @@ export default defineConfig({
     viteStaticCopy({
       targets: [
         {
-          src: 'public/api',
-          dest: ''
+          src: 'public/api/restaurants',
+          dest: 'api'
         }
       ]
     })

@@ -4,13 +4,13 @@ import type { MenuItem, MenuCategory } from "@shared/schema";
 
 export function useMenuItems(restaurantId: number) {
   return useQuery<MenuItem[]>({
-    queryKey: [`/api/restaurants/${restaurantId}/menu`],
+    queryKey: [`/api/restaurants/${restaurantId}/menu.json`],
   });
 }
 
 export function useMenuCategories(restaurantId: number) {
   return useQuery<MenuCategory[]>({
-    queryKey: [`/api/restaurants/${restaurantId}/categories`],
+    queryKey: [`/api/restaurants/${restaurantId}/categories.json`],
   });
 }
 
@@ -34,7 +34,7 @@ export function useVoteMenuItem() {
       
       // Update the menu items list cache
       queryClient.setQueryData(
-        [`/api/restaurants/${updatedItem.restaurantId}/menu`],
+        [`/api/restaurants/${updatedItem.restaurantId}/menu.json`],
         (oldData: MenuItem[] | undefined) => {
           if (!oldData) return oldData;
           return oldData.map(item => item.id === updatedItem.id ? updatedItem : item);
