@@ -48,3 +48,9 @@ Current cart synchronization uses 5-second polling, which will not scale for tho
 - Fixed CSS syntax errors in index.css
 - Verified successful local build
 - Deployed frontend to Netlify: [https://menubosse.netlify.app](https://menubosse.netlify.app)
+
+---
+
+## **Tooling**
+
+- Netlify CLI Path: `c:/Users/User/MenuBosse/client/node_modules/.bin/netlify.cmd`

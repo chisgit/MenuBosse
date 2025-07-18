@@ -2,9 +2,20 @@
 import { defineConfig } from 'vite';
 import react from '@vitejs/plugin-react';
 import { resolve } from 'path';
+import { viteStaticCopy } from 'vite-plugin-static-copy';
 
 export default defineConfig({
-  plugins: [react()],
+  plugins: [
+    react(),
+    viteStaticCopy({
+      targets: [
+        {
+          src: 'public/api',
+          dest: ''
+        }
+      ]
+    })
+  ],
   resolve: {
     alias: {
       '@': resolve(__dirname, 'src'),
@@ -12,6 +23,8 @@ export default defineConfig({
   },
   build: {
     outDir: 'dist',
+    sourcemap: true,
+    emptyOutDir: true
   },
   server: {
     proxy: {
@@ -22,10 +35,5 @@ export default defineConfig({
         rewrite: (path) => path.replace(/^\/api/, '/api'),
       },
     },
-  },
-  test: {
-    globals: true,
-    environment: 'jsdom',
-    setupFiles: ['./src/components/__test__/setupTests.ts'],
   },
 });
