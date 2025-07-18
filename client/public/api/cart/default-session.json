@@ -1,0 +1,18 @@
+[
+  {
+    "id": 1,
+    "menuItemId": 1,
+    "quantity": 2,
+    "specialInstructions": "Extra cheese",
+    "menuItem": {
+      "id": 1,
+      "name": "Margherita Pizza",
+      "description": "Classic pizza with tomato, mozzarella, and basil",
+      "price": 12.99,
+      "imageUrl": "/assets/images/food/margherita-pizza.png",
+      "categoryId": 1,
+      "restaurantId": 1
+    },
+    "addons": []
+  }
+]

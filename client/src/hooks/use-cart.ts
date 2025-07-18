@@ -19,7 +19,7 @@ function getSessionId(): string | null {
   // Check if we have a stored fallback session
   let fallbackSessionId = localStorage.getItem('fallback-session-id');
   if (!fallbackSessionId) {
-    fallbackSessionId = "default-session-" + Math.random().toString(36).substr(2, 9);
+    fallbackSessionId = "default-session";
     localStorage.setItem('fallback-session-id', fallbackSessionId);
   }
 
@@ -29,9 +29,8 @@ function getSessionId(): string | null {
 export function useCart() {
   const sessionId = getSessionId();
   return useQuery<(CartItem & { menuItem: MenuItem; addons: (CartItemAddon & { addon: MenuItemAddon })[] })[]>({
-    queryKey: [`/api/cart/${sessionId}`],
+    queryKey: [`/api/cart/${sessionId}.json`],
     enabled: !!sessionId,
-    refetchInterval: 5000, // Refetch every 5 seconds
   });
 }
 
