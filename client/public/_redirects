@@ -1,2 +1,5 @@
-/api/*    /api/:splat   200
-/*    /index.html   200
+# Internal API routing
+/api/* /api/:splat 200
+
+# Catch-all redirect for client-side routing
+/* /index.html 200
