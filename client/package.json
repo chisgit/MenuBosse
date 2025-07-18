@@ -1,7 +1,7 @@
 {
   "scripts": {
     "build": "vite build",
-    "postbuild": "powershell New-Item -ItemType Directory -Path ./dist/api/restaurants -Force; Copy-Item -Path ./public/api/restaurants/1.json -Destination ./dist/api/restaurants/1.json -Force"
+    "postbuild": "powershell Copy-Item -Path ./public/api -Destination ./dist/public/api -Recurse -Force"
   },
   "devDependencies": {
     "@babel/core": "^7.28.0",
