@@ -1,6 +1,7 @@
 {
   "scripts": {
-    "build": "vite build"
+    "build": "vite build",
+    "postbuild": "powershell Copy-Item -Path ./public/api/restaurants/1.json -Destination ./dist/api/restaurants/1.json -Force"
   },
   "devDependencies": {
     "@babel/core": "^7.28.0",
