@@ -40,6 +40,7 @@ export default function MenuSection({ restaurantId, onItemClick, restaurantName,
     let matchesFilter = false;
 
     if (category) {
+      console.log("Filtering item:", item.name, "with category:", category);
       const categoryName = category.name.toLowerCase();
       switch (activeFilter) {
         case "appetizers":
@@ -118,8 +119,11 @@ export default function MenuSection({ restaurantId, onItemClick, restaurantName,
     if (categoryItems.length > 0) {
       acc[category.name] = categoryItems;
     }
-    return acc;
-  }, {} as Record<string, MenuItem[]>) || {};
+  return acc;
+}, {} as Record<string, MenuItem[]>) || {};
+
+  // Debug grouped items
+  console.log("Grouped Items:", groupedItems);
 
   return (
     <section className="fade-in space-y-8">

@@ -1,8 +1,11 @@
 // Debug wrapper for fetch API requests
+const BASE_URL = 'http://localhost:5000';
+
 export async function debugFetch(input: RequestInfo, init?: RequestInit) {
-    console.debug('[DEBUG] Fetching:', input, init);
+    const url = typeof input === 'string' ? `${BASE_URL}${input}` : input;
+    console.debug('[DEBUG] Fetching:', url, init);
     try {
-        const response = await fetch(input, init);
+        const response = await fetch(url, init);
         console.debug('[DEBUG] Response:', response.status, response.statusText);
         return response;
     } catch (error) {

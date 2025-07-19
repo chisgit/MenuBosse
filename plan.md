@@ -43,12 +43,16 @@ Current cart synchronization uses 5-second polling, which will not scale for tho
 
 ## **Build & Deployment Status**
 
-- Fixed Vite alias for `@` imports in vite.config.ts
-- Corrected Tailwind theme extension for custom colors (border, background, foreground)
-- Fixed CSS syntax errors in index.css
-- Verified successful local build
-- Deployed frontend to Netlify: [https://menubosse.netlify.app](https://menubosse.netlify.app)
 
+---
+
+## **Agent & Instruction System**
+
+- The GitHub Copilot agent now references `.github/copilot-instructions.md` for all coding standards and rules.
+- `.clinerules` is checked for additional agent instructions and must be re-read if updated.
+- All documentation and plan updates performed by this agent are tagged with `github copilot` for traceability.
+
+**Update by: github copilot (2025-07-18)**
 ---
 
 ## **Tooling**

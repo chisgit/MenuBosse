@@ -9,6 +9,11 @@
 2. Continue to build and update this instructions file.
    - Extend and refine instructions as new requirements arise.
    - Ensure all changes are modular and decoupled for reuse by other agents.
+   - Always perform a web search to confirm official conventions for filenames, locations, or standards when asked.
+   - Always use PowerShell for Windows syntax for terminal commands unless a web search finds that services (e.g., Netlify, Render) require otherwise.
+   - Do not use '&' in PowerShell commands; ensure all file manipulations use PowerShell syntax.
+   - If needed, create a local MCP server and tool to handle all file and PowerShell terminal tasks, allowing focus on higher-level logic.
+   - Use the MCP server and terminal tool for all terminal and file management operations to ensure correct PowerShell syntax (no '&') and proper command execution.
 
 3. Cater responses to user needs.
    - Follow all instructions in `plan.md` and this file.
