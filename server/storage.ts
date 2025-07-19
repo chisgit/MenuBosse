@@ -578,9 +578,10 @@ export class MemStorage implements IStorage {
   }
 
   async getCartItems(sessionId: string): Promise<(CartItem & { menuItem: MenuItem; addons: (CartItemAddon & { addon: MenuItemAddon })[] })[]> {
+    console.log(`[DEBUG] getCartItems called for sessionId: ${sessionId}`);
     const items = Array.from(this.cartItems.values())
       .filter(item => item.sessionId === sessionId);
-
+    console.log(`[DEBUG] Found cart items:`, items);
     const itemsWithMenuData = [];
     for (const item of items) {
       const menuItem = this.menuItems.get(item.menuItemId);
@@ -589,11 +590,12 @@ export class MemStorage implements IStorage {
         itemsWithMenuData.push({ ...item, menuItem, addons });
       }
     }
-
+    console.log(`[DEBUG] Returning cart items with menu data:`, itemsWithMenuData);
     return itemsWithMenuData;
   }
 
   async addToCart(item: InsertCartItem, addons: number[] = []): Promise<CartItem> {
+    console.log(`[DEBUG] addToCart called with item:`, item, `addons:`, addons);
     const id = this.currentId++;
     const newItem: CartItem = {
       ...item,
@@ -606,40 +608,51 @@ export class MemStorage implements IStorage {
       orderedAt: null,
     };
     this.cartItems.set(id, newItem);
-
+    console.log(`[DEBUG] New cart item added:`, newItem);
     for (const addonId of addons) {
       await this.addCartItemAddon({
         cartItemId: id,
         addonId,
         quantity: 1,
       });
+      console.log(`[DEBUG] Added addon to cart item:`, addonId);
     }
-
     return newItem;
   }
 
   async updateCartItem(id: number, quantity: number, specialInstructions?: string): Promise<CartItem | undefined> {
+    console.log(`[DEBUG] updateCartItem called for id: ${id}, quantity: ${quantity}, specialInstructions: ${specialInstructions}`);
     const item = this.cartItems.get(id);
-    if (!item) return undefined;
-
+    if (!item) {
+      console.log(`[DEBUG] updateCartItem: item not found for id: ${id}`);
+      return undefined;
+    }
     const updatedItem: CartItem = { // Ensure updatedItem conforms to CartItem
       ...item,
       quantity,
       specialInstructions: specialInstructions ?? null
     };
     this.cartItems.set(id, updatedItem);
+    console.log(`[DEBUG] Cart item updated:`, updatedItem);
     return updatedItem;
   }
 
   async removeFromCart(id: number): Promise<boolean> {
-    return this.cartItems.delete(id);
+    console.log(`[DEBUG] removeFromCart called for id: ${id}`);
+    const result = this.cartItems.delete(id);
+    console.log(`[DEBUG] removeFromCart result for id ${id}:`, result);
+    return result;
   }
 
   async clearCart(sessionId: string): Promise<boolean> {
+    console.log(`[DEBUG] clearCart called for sessionId: ${sessionId}`);
     const items = Array.from(this.cartItems.entries())
       .filter(([_, item]) => item.sessionId === sessionId);
-
-    items.forEach(([id]) => this.cartItems.delete(id));
+    console.log(`[DEBUG] Items to clear:`, items);
+    items.forEach(([id]) => {
+      this.cartItems.delete(id);
+      console.log(`[DEBUG] Cleared cart item: ${id}`);
+    });
     return true;
   }
 
