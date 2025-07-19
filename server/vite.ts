@@ -21,12 +21,6 @@ export function log(message: string, source = "express") {
 }
 
 export async function setupVite(app: Express, server: Server) {
-  // Configure CORS
-  const corsOptions = {
-    origin: "http://localhost:5000",
-    credentials: true
-  };
-  app.use(cors(corsOptions));
   const serverOptions = {
     middlewareMode: true,
     hmr: { server },
