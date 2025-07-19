@@ -31,9 +31,10 @@ export default defineConfig({
     emptyOutDir: true
   },
   server: {
+    cors: true,
     proxy: {
       '/api': {
-        target: 'https://menubosse-api.onrender.com',
+        target: 'http://localhost:5000',
         changeOrigin: true,
         secure: true,
         rewrite: (path) => path.replace(/^\/api/, '/api'),

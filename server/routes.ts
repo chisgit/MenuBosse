@@ -123,19 +123,26 @@ export async function registerRoutes(app: Express): Promise<Server> {
   app.get("/api/cart/:sessionId", async (req, res) => {
     try {
       const { sessionId } = req.params;
+      console.log(`[DEBUG] GET /api/cart/:sessionId called with sessionId: ${sessionId}`);
       const items = await storage.getCartItems(sessionId);
+      console.log(`[DEBUG] GET /api/cart/:sessionId returning items:`, items);
       res.json(items);
     } catch (error) {
+      console.log(`[DEBUG] GET /api/cart/:sessionId error:`, error);
       res.status(500).json({ message: "Failed to fetch cart items" });
     }
   });
 
   app.post("/api/cart", async (req, res) => {
     try {
+      console.log(`[DEBUG] POST /api/cart called with body:`, req.body);
       const { addons, ...cartData } = insertCartItemSchema.parse(req.body);
+      console.log(`[DEBUG] POST /api/cart parsed cartData:`, cartData, `addons:`, addons);
       const cartItem = await storage.addToCart(cartData, addons);
+      console.log(`[DEBUG] POST /api/cart added cartItem:`, cartItem);
       res.status(201).json(cartItem);
     } catch (error) {
+      console.log(`[DEBUG] POST /api/cart error:`, error);
       if (error instanceof Error) {
         res.status(400).json({ message: error.message });
       } else {
@@ -148,14 +155,16 @@ export async function registerRoutes(app: Express): Promise<Server> {
     try {
       const id = parseInt(req.params.id);
       const { quantity, specialInstructions } = req.body;
-
+      console.log(`[DEBUG] PUT /api/cart/:id called for id: ${id}, quantity: ${quantity}, specialInstructions: ${specialInstructions}`);
       const updatedItem = await storage.updateCartItem(id, quantity, specialInstructions);
       if (!updatedItem) {
+        console.log(`[DEBUG] PUT /api/cart/:id: Cart item not found for id: ${id}`);
         return res.status(404).json({ message: "Cart item not found" });
       }
-
+      console.log(`[DEBUG] PUT /api/cart/:id updatedItem:`, updatedItem);
       res.json(updatedItem);
     } catch (error) {
+      console.log(`[DEBUG] PUT /api/cart/:id error:`, error);
       res.status(500).json({ message: "Failed to update cart item" });
     }
   });
@@ -163,12 +172,16 @@ export async function registerRoutes(app: Express): Promise<Server> {
   app.delete("/api/cart/:id", async (req, res) => {
     try {
       const id = parseInt(req.params.id);
+      console.log(`[DEBUG] DELETE /api/cart/:id called for id: ${id}`);
       const deleted = await storage.removeFromCart(id);
       if (!deleted) {
+        console.log(`[DEBUG] DELETE /api/cart/:id: Cart item not found for id: ${id}`);
         return res.status(404).json({ message: "Cart item not found" });
       }
+      console.log(`[DEBUG] DELETE /api/cart/:id deleted:`, deleted);
       res.status(204).send();
     } catch (error) {
+      console.log(`[DEBUG] DELETE /api/cart/:id error:`, error);
       res.status(500).json({ message: "Failed to remove cart item" });
     }
   });
@@ -176,9 +189,12 @@ export async function registerRoutes(app: Express): Promise<Server> {
   app.delete("/api/cart/session/:sessionId", async (req, res) => {
     try {
       const { sessionId } = req.params;
+      console.log(`[DEBUG] DELETE /api/cart/session/:sessionId called for sessionId: ${sessionId}`);
       await storage.clearCart(sessionId);
+      console.log(`[DEBUG] DELETE /api/cart/session/:sessionId cleared cart for sessionId: ${sessionId}`);
       res.status(204).send();
     } catch (error) {
+      console.log(`[DEBUG] DELETE /api/cart/session/:sessionId error:`, error);
       res.status(500).json({ message: "Failed to clear cart" });
     }
   });

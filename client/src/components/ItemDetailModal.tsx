@@ -190,7 +190,7 @@ export default function ItemDetailModal({ itemId, cartItemId, cartItemDetails, c
 
   return (
     <Dialog open={true} onOpenChange={onClose}>
-      <DialogContent className="max-w-6xl h-[90vh] p-0 flex flex-col bg-gradient-to-br from-gray-900 via-gray-800/98 to-gray-900/95 backdrop-blur-xl border border-orange-500/20 rounded-3xl shadow-luxury-xl overflow-hidden">
+<DialogContent aria-describedby="item-detail-description" className="max-w-6xl h-[90vh] p-0 flex flex-col bg-gradient-to-br from-gray-900 via-gray-800/98 to-gray-900/95 backdrop-blur-xl border border-orange-500/20 rounded-3xl shadow-luxury-xl overflow-hidden">
         {/* Close Button */}
         <button
           onClick={onClose}
@@ -199,9 +199,12 @@ export default function ItemDetailModal({ itemId, cartItemId, cartItemDetails, c
           <X className="h-5 w-5" />
         </button>
 
-        <VisuallyHidden>
-          <DialogTitle>Menu Item Details</DialogTitle>
-        </VisuallyHidden>
+<VisuallyHidden>
+  <DialogTitle>Menu Item Details</DialogTitle>
+</VisuallyHidden>
+<div id="item-detail-description" className="sr-only">
+  Detailed information about the selected menu item, including customization options and special instructions.
+</div>
         {isLoading || addonsLoading ? (
           <div className="space-y-6 p-8">
             <Skeleton className="w-full h-80 rounded-2xl" />
