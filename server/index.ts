@@ -68,7 +68,7 @@ const setupPromise = registerRoutes(app).then(server => {
     const status = err.status || err.statusCode || 500;
     const message = err.message || "Internal Server Error";
     res.status(status).json({ message });
-    console.error(err); // Also log the error
+    log(err); // Also log the error
   });
 
   if (app.get("env") === "development") {
