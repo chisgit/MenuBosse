@@ -114,6 +114,6 @@ export function clearClosedSession(): void {
 // Generate QR code URL with session parameters
 export function generateQRCodeUrl(restaurantId: number, tableNumber: string): string {
   const sessionToken = generateSessionToken(restaurantId, tableNumber);
-const baseUrl = import.meta.env.VITE_API_URL || window.location.origin;
+  const baseUrl = (process.env.VITE_API_URL) || (window.location.origin);
   return `${baseUrl}/restaurant/${restaurantId}?table=${tableNumber}&session=${sessionToken}`;
 }
