@@ -4,9 +4,8 @@
   "type": "module",
   "license": "MIT",
   "scripts": {
-    "dev": "tsx server/index.ts",
-  "build": "cd client && npm install && vite build && cd .. && esbuild server/index.ts --platform=node --packages=external --bundle --format=esm --outdir=dist",
-    "start": "node dist/index.js",
+    "dev": "netlify dev",
+    "build": "npm install && cd client && npm install && vite build",
     "check": "tsc",
     "db:push": "drizzle-kit push",
     "test": "jest"
@@ -71,6 +70,7 @@
     "react-icons": "^5.4.0",
     "react-resizable-panels": "^2.1.7",
     "recharts": "^2.15.2",
+    "serverless-http": "^3.2.0",
     "tailwind-merge": "^2.6.0",
     "tailwindcss-animate": "^1.0.7",
     "tw-animate-css": "^1.2.5",
@@ -104,6 +104,8 @@
     "@types/ws": "^8.5.13",
     "@vitejs/plugin-react": "^4.3.2",
     "autoprefixer": "^10.4.20",
+    "babel-plugin-transform-import-meta": "^2.3.3",
+    "babel-plugin-transform-vite-meta-env": "^1.0.3",
     "drizzle-kit": "^0.30.4",
     "esbuild": "^0.25.0",
     "jest": "^30.0.4",
@@ -113,7 +115,8 @@
     "ts-jest": "^29.4.0",
     "tsx": "^4.19.4",
     "typescript": "5.6.3",
-    "vite": "^5.4.14"
+    "vite": "^5.4.14",
+    "whatwg-fetch": "^3.6.20"
   },
   "optionalDependencies": {
     "bufferutil": "^4.0.8"

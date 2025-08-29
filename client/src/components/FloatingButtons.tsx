@@ -1,3 +1,4 @@
+import React from "react";
 import { Bell, HelpCircle, Sparkles, Zap } from "lucide-react";
 import { useServerCall } from "@/hooks/use-cart";
 import { Button } from "@/components/ui/button";

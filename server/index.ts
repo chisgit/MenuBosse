@@ -63,36 +63,40 @@ app.use((req, res, next) => {
   next();
 });
 
-(async () => {
-  const server = await registerRoutes(app);
-
+const setupPromise = registerRoutes(app).then(server => {
   app.use((err: any, _req: Request, res: Response, _next: NextFunction) => {
     const status = err.status || err.statusCode || 500;
     const message = err.message || "Internal Server Error";
-
     res.status(status).json({ message });
-    throw err;
+    console.error(err); // Also log the error
   });
 
-  // importantly only setup vite in development and after
-  // setting up all the other routes so the catch-all route
-  // doesn't interfere with the other routes
   if (app.get("env") === "development") {
-    await setupVite(app, server);
+    setupVite(app, server);
   } else {
     serveStatic(app);
   }
-  // Debug: Catch-all for 404s
+
   app.use((req, res) => {
     console.error(`[DEBUG] 404 Not Found: ${req.method} ${req.originalUrl}`);
     res.status(404).json({ error: "Not Found", path: req.originalUrl });
   });
-  // Use PORT env variable for Render, default to 5000
-  const port = Number(process.env.PORT) || 5000;
-  server.listen(port, '0.0.0.0', () => {
-    log(`serving on port ${port}`);
+
+  return server;
+});
+
+app.set("setupPromise", setupPromise);
+
+if (process.env.NODE_ENV !== 'test') {
+  setupPromise.then(server => {
+    const port = Number(process.env.PORT) || 5000;
+    server.listen(port, '0.0.0.0', () => {
+      log(`serving on port ${port}`);
+    });
+    server.keepAliveTimeout = 120000;
+    server.headersTimeout = 120000;
+  }).catch(err => {
+    console.error("Failed to start server:", err);
+    process.exit(1);
   });
-  // Set timeouts to prevent Render 502 errors
-  server.keepAliveTimeout = 120000; // 120 seconds
-  server.headersTimeout = 120000;   // 120 seconds
-})();
+}
