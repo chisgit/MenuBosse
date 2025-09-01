@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import { useRestaurant } from "@/hooks/use-restaurant";
 import { Skeleton } from "@/components/ui/skeleton";
 import { MicOff } from "lucide-react";

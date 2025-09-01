@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import { Search, Star, ThumbsUp, ThumbsDown, Sparkles, Heart, Clock } from "lucide-react";
 import { useMenuItems, useMenuCategories, useVoteMenuItem } from "@/hooks/use-menu";
 import { useAddToCart } from "@/hooks/use-cart";
@@ -9,7 +9,7 @@ import { Input } from "@/components/ui/input";
 import { Card, CardContent } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
 import { useToast } from "@/hooks/use-toast";
-import type { MenuItem, MenuCategory } from "@shared/schema";
+import type { MenuItem } from "@shared/schema";
 
 interface MenuSectionProps {
   restaurantId: number;
@@ -18,21 +18,13 @@ interface MenuSectionProps {
   tableNumber?: string;
 }
 
-interface MenuSectionContentProps {
-  menuItems: MenuItem[];
-  categories: MenuCategory[];
-  onItemClick: (itemId: number) => void;
-  restaurantName?: string;
-  tableNumber?: string;
-}
-
-function MenuSectionContent({ menuItems, categories, onItemClick, restaurantName, tableNumber }: MenuSectionContentProps) {
+export default function MenuSection({ restaurantId, onItemClick, restaurantName, tableNumber }: MenuSectionProps) {
   const [searchTerm, setSearchTerm] = useState("");
   const [activeFilter, setActiveFilter] = useState("all");
-  const addToCart = useAddToCart();
-  const voteMenuItem = useVoteMenuItem();
+  const { data: menuItems, isLoading: itemsLoading } = useMenuItems(restaurantId);
+  const { data: categories, isLoading: categoriesLoading } = useMenuCategories(restaurantId);
+  const addToCart = useAddToCart(); const voteMenuItem = useVoteMenuItem();
   const { toast } = useToast();
-  const menuAddons = useAllMenuItemAddons(menuItems);
 
   const filters = [
     { key: "all", label: "All", icon: Sparkles },
@@ -40,7 +32,6 @@ function MenuSectionContent({ menuItems, categories, onItemClick, restaurantName
     { key: "mains", label: "Mains", icon: Star },
     { key: "desserts", label: "Desserts", icon: Clock },
   ];
-
   const filteredItems = menuItems?.filter(item => {
     const matchesSearch = item.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
       item.description?.toLowerCase().includes(searchTerm.toLowerCase());
@@ -51,6 +42,7 @@ function MenuSectionContent({ menuItems, categories, onItemClick, restaurantName
     let matchesFilter = false;
 
     if (category) {
+      console.log("Filtering item:", item.name, "with category:", category);
       const categoryName = category.name.toLowerCase();
       switch (activeFilter) {
         case "appetizers":
@@ -68,8 +60,13 @@ function MenuSectionContent({ menuItems, categories, onItemClick, restaurantName
     } return matchesSearch && matchesFilter;
   });
 
+  // Debug filtered items
+  console.log("Filtered Items:", filteredItems);
+  console.log("Filtered Items Count:", filteredItems?.length || 0);
+
   const handleAddToCart = async (item: MenuItem, e: React.MouseEvent) => {
     e.stopPropagation();
+
     try {
       await addToCart.mutateAsync({ menuItemId: item.id });
       toast({
@@ -87,6 +84,7 @@ function MenuSectionContent({ menuItems, categories, onItemClick, restaurantName
 
   const handleVote = async (itemId: number, type: 'up' | 'down', e: React.MouseEvent) => {
     e.stopPropagation();
+
     try {
       await voteMenuItem.mutateAsync({ id: itemId, type });
     } catch (error) {
@@ -98,6 +96,26 @@ function MenuSectionContent({ menuItems, categories, onItemClick, restaurantName
     }
   };
 
+  if (itemsLoading || categoriesLoading) {
+    return (
+      <div className="space-y-8">
+        <div className="flex flex-col sm:flex-row gap-4">
+          <Skeleton className="flex-1 h-12" />
+          <div className="flex gap-2">
+            {[...Array(4)].map((_, i) => (
+              <Skeleton key={i} className="h-12 w-20" />
+            ))}
+          </div>
+        </div>
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          {[...Array(6)].map((_, i) => (
+            <Skeleton key={i} className="h-80 w-full" />
+          ))}
+        </div>
+      </div>
+    );
+  }
+
   const groupedItems = categories?.reduce((acc, category) => {
     const categoryItems = filteredItems?.filter(item => item.categoryId === category.id) || [];
     if (categoryItems.length > 0) {
@@ -105,6 +123,12 @@ function MenuSectionContent({ menuItems, categories, onItemClick, restaurantName
     }
     return acc;
   }, {} as Record<string, MenuItem[]>) || {};
+
+  // Debug grouped items
+  console.log("Grouped Items:", groupedItems);
+
+  // Build menuAddons mapping using the custom hook
+  const menuAddons = useAllMenuItemAddons(menuItems || []);
 
   return (
     <>
@@ -266,31 +290,4 @@ function MenuSectionContent({ menuItems, categories, onItemClick, restaurantName
       </section>
     </>
   );
-}
-
-export default function MenuSection({ restaurantId, onItemClick, restaurantName, tableNumber }: MenuSectionProps) {
-  const { data: menuItems, isLoading: itemsLoading } = useMenuItems(restaurantId);
-  const { data: categories, isLoading: categoriesLoading } = useMenuCategories(restaurantId);
-
-  if (itemsLoading || categoriesLoading) {
-    return (
-      <div className="space-y-8">
-        <div className="flex flex-col sm:flex-row gap-4">
-          <Skeleton className="flex-1 h-12" />
-          <div className="flex gap-2">
-            {[...Array(4)].map((_, i) => (
-              <Skeleton key={i} className="h-12 w-20" />
-            ))}
-          </div>
-        </div>
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {[...Array(6)].map((_, i) => (
-            <Skeleton key={i} className="h-80 w-full" />
-          ))}
-        </div>
-      </div>
-    );
-  }
-
-  return <MenuSectionContent menuItems={menuItems || []} categories={categories || []} onItemClick={onItemClick} restaurantName={restaurantName} tableNumber={tableNumber} />;
 }
