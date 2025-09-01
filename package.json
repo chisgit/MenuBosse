@@ -4,8 +4,10 @@
   "type": "module",
   "license": "MIT",
   "scripts": {
-    "dev": "netlify dev",
-    "build": "npm install && cd client && npm install && vite build",
+    "dev": "tsx server/index.ts",
+    "build": "npm-run-all build:client build:server",
+    "build:client": "cd client && vite build",
+    "build:server": "esbuild server/index.ts --platform=node --packages=external --bundle --format=esm --outdir=netlify/functions",
     "check": "tsc",
     "db:push": "drizzle-kit push",
     "test": "jest"
@@ -58,7 +60,6 @@
     "express-session": "^1.18.1",
     "framer-motion": "^11.13.1",
     "input-otp": "^1.4.2",
-    "lightningcss": "^1.23.0",
     "lucide-react": "^0.453.0",
     "memorystore": "^1.6.7",
     "next-themes": "^0.4.6",
@@ -105,19 +106,17 @@
     "@types/ws": "^8.5.13",
     "@vitejs/plugin-react": "^4.3.2",
     "autoprefixer": "^10.4.20",
-    "babel-plugin-transform-import-meta": "^2.3.3",
-    "babel-plugin-transform-vite-meta-env": "^1.0.3",
     "drizzle-kit": "^0.30.4",
     "esbuild": "^0.25.0",
     "jest": "^30.0.4",
     "jest-environment-jsdom": "^30.0.4",
+    "npm-run-all": "^4.1.5",
     "postcss": "^8.4.47",
     "tailwindcss": "^3.4.17",
     "ts-jest": "^29.4.0",
     "tsx": "^4.19.4",
     "typescript": "5.6.3",
-    "vite": "^4.5.3",
-    "whatwg-fetch": "^3.6.20"
+    "vite": "^5.4.14"
   },
   "optionalDependencies": {
     "bufferutil": "^4.0.8"

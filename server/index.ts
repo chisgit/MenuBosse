@@ -63,16 +63,22 @@ app.use((req, res, next) => {
   next();
 });
 
-const setupPromise = registerRoutes(app).then(server => {
+export const app = express();
+const serverPromise = registerRoutes(app);
+
+async function startServer() {
+  const server = await serverPromise;
+
   app.use((err: any, _req: Request, res: Response, _next: NextFunction) => {
     const status = err.status || err.statusCode || 500;
     const message = err.message || "Internal Server Error";
+
     res.status(status).json({ message });
-    log(err); // Also log the error
+    console.error(err);
   });
 
   if (app.get("env") === "development") {
-    setupVite(app, server);
+    await setupVite(app, server);
   } else {
     serveStatic(app);
   }
@@ -82,21 +88,17 @@ const setupPromise = registerRoutes(app).then(server => {
     res.status(404).json({ error: "Not Found", path: req.originalUrl });
   });
 
-  return server;
-});
-
-app.set("setupPromise", setupPromise);
-
-if (process.env.NODE_ENV !== 'test') {
-  setupPromise.then(server => {
-    const port = Number(process.env.PORT) || 5000;
-    server.listen(port, '0.0.0.0', () => {
-      log(`serving on port ${port}`);
-    });
-    server.keepAliveTimeout = 120000;
-    server.headersTimeout = 120000;
-  }).catch(err => {
-    console.error("Failed to start server:", err);
-    process.exit(1);
+  const port = Number(process.env.PORT) || 5000;
+  server.listen(port, '0.0.0.0', () => {
+    log(`serving on port ${port}`);
   });
+
+  server.keepAliveTimeout = 120000;
+  server.headersTimeout = 120000;
+}
+
+import { fileURLToPath } from 'url';
+
+if (process.argv[1] === fileURLToPath(import.meta.url)) {
+  startServer();
 }
