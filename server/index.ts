@@ -63,6 +63,7 @@ app.use((req, res, next) => {
   next();
 });
 
+export const app = express();
 const serverPromise = registerRoutes(app);
 
 async function startServer() {
