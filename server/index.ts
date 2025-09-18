@@ -63,7 +63,6 @@ app.use((req, res, next) => {
   next();
 });
 
-export const app = express();
 const serverPromise = registerRoutes(app);
 
 async function startServer() {
@@ -77,7 +76,7 @@ async function startServer() {
     console.error(err);
   });
 
-  if (app.get("env") === "development") {
+  if (process.env.NODE_ENV === "development") {
     await setupVite(app, server);
   } else {
     serveStatic(app);
