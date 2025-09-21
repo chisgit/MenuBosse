@@ -3,6 +3,14 @@
   publish = "client/dist"
   functions = "netlify/functions"
 
+[build.environment]
+  NODE_VERSION = "18"
+  NPM_FLAGS = "--legacy-peer-deps"
+
+[functions]
+  external_node_modules = ["lightningcss"]
+  node_bundler = "esbuild"
+
 [dev]
   command = "npm run dev"
   targetPort = 5173
