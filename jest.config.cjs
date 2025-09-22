@@ -5,8 +5,9 @@ module.exports = {
     "^.+\\.(ts|tsx|js|jsx)$": "babel-jest"
   },
   moduleFileExtensions: ["ts", "tsx", "js", "jsx", "json", "node"],
-  transformIgnorePatterns: ["/node_modules/"],
+  transformIgnorePatterns: ["/node_modules/(?!wouter)"],
   moduleNameMapper: {
-    "^@/(.*)$": "<rootDir>/client/src/$1"
+    "^@/(.*)$": "<rootDir>/client/src/$1",
+    "^@shared/(.*)$": "<rootDir>/shared/$1"
   },
 };
