@@ -17,9 +17,10 @@ const corsOptions = {
       return callback(null, true);
     }
 
+    // Only allow localhost/127.0.0.1 on specific development ports (e.g., 3000, 5000, 5173)
     const allowedOriginPatterns = [
-      /localhost:\d+$/,
-      /127\.0\.0\.1:\d+$/,
+      /localhost:(3000|5000|5173)$/,
+      /127\.0\.0\.1:(3000|5000|5173)$/,
       /\.netlify\.app$/,
     ];
 
