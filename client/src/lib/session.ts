@@ -109,6 +109,23 @@ export function closeSession(sessionId: string, paymentMethod: 'app' | 'cash' | 
 // Clear closed session from localStorage
 export function clearClosedSession(): void {
   localStorage.removeItem('table-session');
+  // Also clear the fallback session if it exists, as the "real" session is over.
+  localStorage.removeItem('fallback-session-id');
+}
+
+// This function should be called once when the app loads.
+export function initializeFallbackSession(): void {
+  const session = getCurrentSession();
+  // Don't create a fallback if a real session is active
+  if (session && isSessionActive(session)) {
+    return;
+  }
+
+  // Only create if one doesn't exist
+  if (!localStorage.getItem('fallback-session-id')) {
+    // Use a more unique ID for the fallback session
+    localStorage.setItem('fallback-session-id', `fallback-session-${Date.now()}`);
+  }
 }
 
 // Generate QR code URL with session parameters

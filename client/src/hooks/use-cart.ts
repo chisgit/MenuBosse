@@ -11,19 +11,13 @@ function getSessionId(): string | null {
   }
 
   if (session && (session.status === 'paid' || session.status === 'closed')) {
-    // Session has ended - don't create random session
+    // Session has ended, so we shouldn't be using any cart.
+    // Clearing the closed session should have removed any fallback id anyway.
     return null;
   }
 
-  // Fallback to a consistent session for development/testing
-  // Check if we have a stored fallback session
-  let fallbackSessionId = localStorage.getItem('fallback-session-id');
-  if (!fallbackSessionId) {
-    fallbackSessionId = "default-session";
-    localStorage.setItem('fallback-session-id', fallbackSessionId);
-  }
-
-  return fallbackSessionId;
+  // Fallback to a session that is initialized on app load.
+  return localStorage.getItem('fallback-session-id');
 }
 
 export function useCart(menuItems: any[], menuAddons: Record<number, any[]> = {}) {

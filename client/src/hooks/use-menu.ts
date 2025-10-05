@@ -4,13 +4,13 @@ import type { MenuItem, MenuCategory } from "@shared/schema";
 
 export function useMenuItems(restaurantId: number) {
   return useQuery<MenuItem[]>({
-    queryKey: [`/api/restaurants/${restaurantId}/menu.json`],
+    queryKey: [`/api/restaurants/${restaurantId}/menu`],
   });
 }
 
 export function useMenuCategories(restaurantId: number) {
   return useQuery<MenuCategory[]>({
-    queryKey: [`/api/restaurants/${restaurantId}/categories.json`],
+    queryKey: [`/api/restaurants/${restaurantId}/categories`],
   });
 }
 
