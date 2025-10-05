@@ -206,8 +206,8 @@ export class DbStorage implements IStorage {
   }
 
   async convertCartToOrder(sessionId: string): Promise<Order> {
-    const cartItems = await this.getCartItems(sessionId);
-    const totalAmount = cartItems.reduce((sum, item) => {
+    const itemsInCart = await this.getCartItems(sessionId);
+    const totalAmount = itemsInCart.reduce((sum, item) => {
       const addonsPrice = item.addons.reduce((addonSum, addon) => addonSum + addon.addon.price * (addon.quantity ?? 1), 0);
       return sum + (item.menuItem.price * (item.quantity || 1)) + addonsPrice;
     }, 0);
@@ -221,7 +221,7 @@ export class DbStorage implements IStorage {
     const newOrder = await this.createOrder(order);
 
     // Update cart items to reference the order and change status
-    for (const cartItem of cartItems) {
+    for (const cartItem of itemsInCart) {
         await this.updateCartItem(cartItem.id, cartItem.quantity || 1, cartItem.specialInstructions || undefined);
         const result = await db.update(cartItems).set({ status: 'ordered', orderId: newOrder.id, orderedAt: new Date() }).where(eq(cartItems.id, cartItem.id)).returning();
     }
