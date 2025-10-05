@@ -1,5 +1,7 @@
 import { useState } from "react";
 import { useRestaurant } from "@/hooks/use-restaurant";
+import { useMenuItems } from "@/hooks/use-menu";
+import { useAllMenuItemAddons } from "@/hooks/use-all-menu-addons";
 import { Skeleton } from "@/components/ui/skeleton";
 import { MicOff } from "lucide-react";
 import MenuSection from "@/components/MenuSection";
@@ -21,6 +23,9 @@ export default function RestaurantPage({ restaurantId }: RestaurantPageProps) {
   const [showServerToast, setShowServerToast] = useState(false);
 
   const { data: restaurant, isLoading: restaurantLoading, error } = useRestaurant(restaurantId);
+  const { data: menuItems, isLoading: menuLoading } = useMenuItems(restaurantId);
+  const { data: menuAddons, isLoading: addonsLoading } = useAllMenuItemAddons(menuItems || []);
+
   const session = getCurrentSession();
 
   console.log('[RestaurantPage] restaurantId:', restaurantId);
@@ -30,7 +35,7 @@ export default function RestaurantPage({ restaurantId }: RestaurantPageProps) {
     console.error('[RestaurantPage] Error loading restaurant:', error);
   }
 
-  if (restaurantLoading) {
+  if (restaurantLoading || menuLoading || addonsLoading) {
     return (
       <div className="min-h-screen bg-gray-50">
         <div className="max-w-7xl mx-auto px-4 py-8">
@@ -105,7 +110,7 @@ export default function RestaurantPage({ restaurantId }: RestaurantPageProps) {
               <button className="p-4 text-gray-400 hover:text-orange-400 transition-all duration-300 hover:bg-white/5 rounded-full">
                 <MicOff className="h-5 w-5" />
               </button>
-              <Cart />
+              <Cart menuItems={menuItems || []} menuAddons={menuAddons || {}} />
             </div>
           </div>
         </div>

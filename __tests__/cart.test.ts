@@ -1,3 +1,4 @@
+jest.mock('../server/db.ts');
 const { storage } = require("../server/storage");
 
 describe("Cart functionality", () => {
