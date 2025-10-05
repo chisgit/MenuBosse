@@ -86,6 +86,6 @@ export interface IStorage {
   convertCartToOrder(sessionId: string): Promise<Order>;
 }
 
-import { DbStorage } from "./db-storage";
+import { MemStorage } from "./mem-storage";
 
-export const storage = new DbStorage();
+export const storage = new MemStorage();
