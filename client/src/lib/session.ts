@@ -124,7 +124,10 @@ export function initializeFallbackSession(): void {
   // Only create if one doesn't exist
   if (!localStorage.getItem('fallback-session-id')) {
     // Use a more unique ID for the fallback session
-    localStorage.setItem('fallback-session-id', `fallback-session-${Date.now()}`);
+    const uniqueId = (window.crypto && typeof window.crypto.randomUUID === 'function')
+      ? window.crypto.randomUUID()
+      : `fallback-session-${Math.random().toString(36).substr(2, 9)}-${Date.now()}`;
+    localStorage.setItem('fallback-session-id', `fallback-session-${uniqueId}`);
   }
 }
 
