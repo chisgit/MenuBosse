@@ -10,20 +10,24 @@ app.use((req, res, next) => {
   next();
 });
 
-const whitelist = [
-  "https://menubosse.netlify.app",
-  "http://localhost:5173",
-  "http://127.0.0.1:5173",
-  "http://localhost:5000",
-];
-
 const corsOptions = {
   origin: function (origin: string | undefined, callback: (err: Error | null, allow?: boolean) => void) {
-    if (!origin || whitelist.indexOf(origin) !== -1) {
+    // Allow requests with no origin (like mobile apps or curl requests)
+    if (!origin) {
+      return callback(null, true);
+    }
+
+    const allowedOriginPatterns = [
+      /localhost:\d+$/,
+      /127\.0\.0\.1:\d+$/,
+      /\.netlify\.app$/,
+    ];
+
+    if (allowedOriginPatterns.some(pattern => pattern.test(origin))) {
       callback(null, true);
     } else {
       console.error(`[CORS] Blocked origin: ${origin}`);
-      callback(null, false); // Do not throw, just block
+      callback(null, false); // Block the request
     }
   },
   credentials: true,

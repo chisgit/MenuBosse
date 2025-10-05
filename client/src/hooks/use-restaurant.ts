@@ -9,9 +9,9 @@ export function useRestaurants() {
 }
 
 export function useRestaurant(id: number) {
-  console.debug(`[DEBUG] useRestaurant: fetching /api/restaurants/${id}.json`);
+  console.debug(`[DEBUG] useRestaurant: fetching /api/restaurants/${id}`);
   return useQuery<Restaurant>({
-    queryKey: [`/api/restaurants/${id}.json`],
+    queryKey: [`/api/restaurants/${id}`],
   });
 }
 

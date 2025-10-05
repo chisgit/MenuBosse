@@ -1,11 +1,17 @@
+import { useEffect } from "react";
 import { QueryClientProvider } from "@tanstack/react-query";
 import { Route, Switch } from "wouter";
 import { Toaster } from "@/components/ui/toaster";
 import RestaurantPage from "@/pages/restaurant";
 import NotFound from "@/pages/not-found";
 import { queryClient } from "@/lib/queryClient";
+import { initializeFallbackSession } from "@/lib/session";
 
 function App() {
+  useEffect(() => {
+    initializeFallbackSession();
+  }, []);
+
   return (
     <QueryClientProvider client={queryClient}>
       <div className="min-h-screen bg-gradient-to-br from-slate-900 via-black to-slate-800">
