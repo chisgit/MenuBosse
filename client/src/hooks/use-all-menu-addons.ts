@@ -15,10 +15,12 @@ export function useAllMenuItemAddons(menuItems: any[]) {
         }))
     });
 
-    // Build mapping: menuItemId -> array of addon objects
-    const menuAddons: Record<number, any[]> = {};
+    const isLoading = queries.some(query => query.isLoading);
+
+    const data: Record<number, any[]> = {};
     menuItems.forEach((item, idx) => {
-        menuAddons[item.id] = queries[idx].data || [];
+        data[item.id] = queries[idx].data || [];
     });
-    return menuAddons;
+
+    return { data, isLoading };
 }
