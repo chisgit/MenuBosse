@@ -28,6 +28,8 @@ export function generateSessionToken(restaurantId: number, tableNumber: string):
 
 // Extract session info from URL parameters
 export function getSessionFromUrl(): TableSession | null {
+  if (typeof window === 'undefined') return null;
+  
   const urlParams = new URLSearchParams(window.location.search);
   const sessionId = urlParams.get('session');
   const tableNumber = urlParams.get('table');
@@ -48,6 +50,7 @@ export function getSessionFromUrl(): TableSession | null {
 
 // Get restaurant ID from current path
 function getRestaurantIdFromPath(): string | null {
+  if (typeof window === 'undefined') return '1';
   const path = window.location.pathname;
   const match = path.match(/\/restaurant\/(\d+)/);
   return match ? match[1] : '1'; // Default to restaurant 1
@@ -55,11 +58,13 @@ function getRestaurantIdFromPath(): string | null {
 
 // Store session in localStorage for persistence
 export function storeSession(session: TableSession): void {
+  if (typeof window === 'undefined') return;
   localStorage.setItem('table-session', JSON.stringify(session));
 }
 
 // Retrieve session from localStorage
 export function getStoredSession(): TableSession | null {
+  if (typeof window === 'undefined') return null;
   try {
     const stored = localStorage.getItem('table-session');
     return stored ? JSON.parse(stored) : null;
@@ -108,12 +113,13 @@ export function closeSession(sessionId: string, paymentMethod: 'app' | 'cash' | 
 
 // Clear closed session from localStorage
 export function clearClosedSession(): void {
+  if (typeof window === 'undefined') return;
   localStorage.removeItem('table-session');
 }
 
 // Generate QR code URL with session parameters
 export function generateQRCodeUrl(restaurantId: number, tableNumber: string): string {
   const sessionToken = generateSessionToken(restaurantId, tableNumber);
-const baseUrl = import.meta.env.VITE_API_URL || window.location.origin;
+  const baseUrl = import.meta.env.VITE_API_URL || (typeof window !== 'undefined' ? window.location.origin : '');
   return `${baseUrl}/restaurant/${restaurantId}?table=${tableNumber}&session=${sessionToken}`;
 }

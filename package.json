@@ -5,7 +5,7 @@
   "license": "MIT",
   "scripts": {
     "dev": "tsx server/index.ts",
-    "build": "npm-run-all build:client build:server",
+    "build": "npm run build:client && npm run build:server",
     "build:client": "cd client && vite build",
     "build:server": "esbuild server/index.ts --platform=node --packages=external --bundle --format=esm --outdir=netlify/functions",
     "check": "tsc",
@@ -15,6 +15,7 @@
   "dependencies": {
     "@fontsource/open-sans": "^5.2.5",
     "@fontsource/playfair-display": "^5.2.5",
+    "@genkit-ai/mcp": "^1.21.0",
     "@hookform/resolvers": "^3.10.0",
     "@jridgewell/trace-mapping": "^0.3.25",
     "@neondatabase/serverless": "^0.10.4",

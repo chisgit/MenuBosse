@@ -31,6 +31,7 @@ export default defineConfig({
     emptyOutDir: true
   },
   server: {
+    host: true,
     cors: true,
     proxy: {
       '/api': {

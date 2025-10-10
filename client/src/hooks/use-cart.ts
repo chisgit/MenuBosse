@@ -4,6 +4,8 @@ import { getCurrentSession, isSessionActive, clearClosedSession } from "@/lib/se
 import type { CartItem, MenuItem, CartItemAddon, MenuItemAddon } from "@shared/schema";
 
 function getSessionId(): string | null {
+  if (typeof window === 'undefined') return null;
+  
   const session = getCurrentSession();
 
   if (session && isSessionActive(session)) {
@@ -32,6 +34,7 @@ export function useCart(menuItems: any[], menuAddons: Record<number, any[]> = {}
   return useQuery({
     queryKey: ["localCart", sessionId],
     queryFn: () => {
+      if (typeof window === 'undefined') return [];
       const cartRaw = localStorage.getItem(`cart-${sessionId}`);
       let cart: any[] = [];
       try {

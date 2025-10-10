@@ -1,59 +1,32 @@
 :root {
-    /* Dark Elegant Food Menu Palette - Inspired by Premium Restaurant Design */
-    --primary: #1a1a1a;
-    /* Deep charcoal - sophisticated dark base */
-    --secondary: #2d2d2d;
-    /* Medium charcoal - elevated surfaces */
-    --accent: #FF6B35;
-    /* Vibrant orange - pricing and call-to-action */
-    --accent-dark: #E55A2B;
-    /* Darker orange for hover states */
-    --tertiary: #3a3a3a;
-    /* Light charcoal - subtle elevation */
+    /* HSL component tokens to work with Tailwind hsl(var(--...)) pattern */
+    --primary: 0 0% 6%;
+    --secondary: 0 0% 18%;
+    --accent: 16 100% 66%;
+    --accent-dark: 16 80% 53%;
+    --tertiary: 0 0% 23%;
 
-    /* Functional Colors */
-    --success: #4CAF50;
-    /* Green - fresh, natural */
-    --warning: #FF9800;
-    /* Amber - attention */
-    --error: #F44336;
-    /* Red - alerts */
+    --success: 122 39% 49%;
+    --warning: 36 100% 50%;
+    --error: 0 84% 60%;
 
-    /* Dark Theme Backgrounds */
-    --background: #0f0f0f;
-    /* Almost black - main background */
-    --background-secondary: #1a1a1a;
-    /* Dark charcoal - sections */
-    --background-tertiary: #2d2d2d;
-    /* Medium charcoal - cards */
-    --surface: #2d2d2d;
-    /* Card surfaces */
-    --surface-elevated: #3a3a3a;
-    /* Elevated cards */
-    --surface-muted: #262626;
-    /* Subtle sections */
+    --background: 0 0% 6%;
+    --background-secondary: 0 0% 10%;
+    --background-tertiary: 0 0% 18%;
+    --surface: 0 0% 18%;
+    --surface-elevated: 0 0% 23%;
+    --surface-muted: 0 0% 15%;
     --overlay: rgba(255, 107, 53, 0.05);
-    /* Orange overlay */
 
-    /* Dark Theme Typography */
-    --text-primary: #FFFFFF;
-    /* Pure white - primary text */
-    --text-secondary: #E0E0E0;
-    /* Light gray - secondary text */
-    --text-muted: #9E9E9E;
-    /* Medium gray - muted text */
-    --text-accent: #FF6B35;
-    /* Orange text for highlights */
-    --primary-text: #FFFFFF;
-    /* White text on dark backgrounds */
+    --text-primary: 0 0% 100%;
+    --text-secondary: 0 0% 87%;
+    --text-muted: 0 0% 62%;
+    --text-accent: 16 100% 66%;
+    --primary-text: 0 0% 100%;
 
-    /* Typography */
     --font-family-base: 'Inter', 'Segoe UI', system-ui, sans-serif;
-    /* Modern, clean */
     --font-family-heading: 'Playfair Display', serif;
-    /* Elegant headings */
     --font-family-accent: 'Dancing Script', cursive;
-    /* Special script font */
 }
 
 /* Dark elegant restaurant theme styling */
@@ -63,8 +36,8 @@ body {
         radial-gradient(circle at 20% 50%, rgba(255, 107, 53, 0.03) 0%, transparent 50%),
         radial-gradient(circle at 80% 20%, rgba(255, 107, 53, 0.02) 0%, transparent 50%),
         radial-gradient(circle at 40% 80%, rgba(255, 107, 53, 0.01) 0%, transparent 50%),
-        linear-gradient(135deg, var(--background) 0%, var(--background-secondary) 100%);
-    color: var(--text-primary);
+        linear-gradient(135deg, hsl(var(--background)) 0%, hsl(var(--background-secondary)) 100%);
+    color: hsl(var(--text-primary));
     line-height: 1.6;
     min-height: 100vh;
     position: relative;
@@ -89,7 +62,7 @@ h1,
 h2,
 h3 {
     font-family: var(--font-family-heading);
-    color: var(--text-primary);
+    color: hsl(var(--text-primary));
     font-weight: 700;
 }
 
@@ -128,15 +101,15 @@ p,
 span,
 div {
     font-family: var(--font-family-base);
-    color: var(--text-secondary);
+    color: hsl(var(--text-secondary));
     font-size: 1rem;
     line-height: 1.7;
 }
 
 /* Dark theme sophisticated button styling */
 button {
-    background: linear-gradient(135deg, var(--accent) 0%, var(--accent-dark) 100%);
-    color: var(--primary-text);
+    background: linear-gradient(135deg, hsl(var(--accent)) 0%, hsl(var(--accent-dark)) 100%);
+    color: hsl(var(--primary-text));
     padding: 0.875rem 2rem;
     border: none;
     border-radius: 0.75rem;
@@ -168,7 +141,7 @@ button:hover {
     box-shadow:
         0 8px 25px rgba(255, 107, 53, 0.4),
         0 4px 15px rgba(0, 0, 0, 0.3);
-    background: linear-gradient(135deg, var(--accent-dark) 0%, var(--accent) 100%);
+    background: linear-gradient(135deg, hsl(var(--accent-dark)) 0%, hsl(var(--accent)) 100%);
 }
 
 button:hover::before {
@@ -239,7 +212,7 @@ button:active {
 /* Dark theme card styling for restaurant/food context */
 .card {
     background:
-        linear-gradient(135deg, var(--surface-elevated) 0%, var(--surface) 100%);
+        linear-gradient(135deg, hsl(var(--surface-elevated)) 0%, hsl(var(--surface)) 100%);
     border-radius: 1.25rem;
     box-shadow:
         0 10px 40px rgba(0, 0, 0, 0.3),
@@ -259,7 +232,7 @@ button:active {
     left: 0;
     right: 0;
     height: 3px;
-    background: linear-gradient(90deg, var(--accent), var(--accent-dark), var(--accent));
+    background: linear-gradient(90deg, hsl(var(--accent)), hsl(var(--accent-dark)), hsl(var(--accent)));
     opacity: 0;
     transition: opacity 0.3s ease;
 }
@@ -290,8 +263,8 @@ button:active {
 
 /* Price badge styling - orange circular badges like in the reference image */
 .price-badge {
-    background: linear-gradient(135deg, var(--accent) 0%, var(--accent-dark) 100%);
-    color: var(--primary-text);
+    background: linear-gradient(135deg, hsl(var(--accent)) 0%, hsl(var(--accent-dark)) 100%);
+    color: hsl(var(--primary-text));
     font-weight: 700;
     font-size: 1.1rem;
     padding: 0.75rem 1rem;
@@ -321,8 +294,8 @@ button:active {
 
 /* Enhanced price badge - More prominent and eye-catching */
 .enhanced-price-badge {
-    background: linear-gradient(135deg, var(--accent) 0%, var(--accent-dark) 100%);
-    color: var(--primary-text);
+    background: linear-gradient(135deg, hsl(var(--accent)) 0%, hsl(var(--accent-dark)) 100%);
+    color: hsl(var(--primary-text));
     font-weight: 900;
     font-size: 1.25rem;
     padding: 1rem 1.25rem;

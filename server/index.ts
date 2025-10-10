@@ -63,7 +63,7 @@ app.use((req, res, next) => {
   next();
 });
 
-export const app = express();
+ // app already initialized above
 const serverPromise = registerRoutes(app);
 
 async function startServer() {

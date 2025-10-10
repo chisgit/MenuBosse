@@ -10,6 +10,8 @@ import FloatingButtons from "@/components/FloatingButtons";
 import ServerCallToast from "@/components/ServerCallToast";
 import Cart from "@/components/Cart";
 import { getCurrentSession } from "@/lib/session";
+import { useMenuItems } from "@/hooks/use-menu"; // Import useMenuItems
+import { useAllMenuItemAddons } from "@/hooks/use-all-menu-addons"; // Import useAllMenuItemAddons
 
 interface RestaurantPageProps {
   restaurantId: number;
@@ -23,14 +25,20 @@ export default function RestaurantPage({ restaurantId }: RestaurantPageProps) {
   const { data: restaurant, isLoading: restaurantLoading, error } = useRestaurant(restaurantId);
   const session = getCurrentSession();
 
+  // Fetch menu items and their addons
+  const { data: menuItemsData, isLoading: menuItemsLoading } = useMenuItems(restaurantId);
+  const menuAddonsData = useAllMenuItemAddons(menuItemsData || []); // Pass empty array if menuItemsData is not yet available
+
   console.log('[RestaurantPage] restaurantId:', restaurantId);
   console.log('[RestaurantPage] restaurantLoading:', restaurantLoading);
   console.log('[RestaurantPage] restaurant:', restaurant);
+  console.log('[RestaurantPage] menuItemsData:', menuItemsData);
+  console.log('[RestaurantPage] menuAddonsData:', menuAddonsData);
   if (error) {
     console.error('[RestaurantPage] Error loading restaurant:', error);
   }
 
-  if (restaurantLoading) {
+  if (restaurantLoading || menuItemsLoading) { // Also check for menuItemsLoading
     return (
       <div className="min-h-screen bg-gray-50">
         <div className="max-w-7xl mx-auto px-4 py-8">
@@ -105,7 +113,8 @@ export default function RestaurantPage({ restaurantId }: RestaurantPageProps) {
               <button className="p-4 text-gray-400 hover:text-orange-400 transition-all duration-300 hover:bg-white/5 rounded-full">
                 <MicOff className="h-5 w-5" />
               </button>
-              <Cart />
+              {/* Pass menuItemsData and menuAddonsData to Cart */}
+              <Cart menuItems={menuItemsData || []} menuAddons={menuAddonsData} />
             </div>
           </div>
         </div>

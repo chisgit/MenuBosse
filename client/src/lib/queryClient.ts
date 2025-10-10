@@ -34,19 +34,30 @@ export const getQueryFn: <T>(options: {
     if (typeof window !== "undefined") {
       console.debug("[DEBUG] Fetching:", url.startsWith("http") ? url : url);
     }
-    const res = await fetch(
-      url.startsWith("http") ? url : url,
-      {
-        credentials: "include",
-      },
-    );
+    
+    try {
+      const res = await fetch(
+        url.startsWith("http") ? url : url,
+        {
+          credentials: "include",
+        },
+      );
 
-    if (unauthorizedBehavior === "returnNull" && res.status === 401) {
+      if (unauthorizedBehavior === "returnNull" && res.status === 401) {
+        return null;
+      }
+
+      // For Netlify: gracefully handle failed function calls
+      if (!res.ok) {
+        console.warn(`[DEBUG] Fetch failed for ${url}: ${res.status} ${res.statusText}`);
+        return null;
+      }
+      
+      return await res.json();
+    } catch (error) {
+      console.error(`[DEBUG] Network error fetching ${url}:`, error);
       return null;
     }
-
-    await throwIfResNotOk(res);
-    return await res.json();
   };
 
 export const queryClient = new QueryClient({

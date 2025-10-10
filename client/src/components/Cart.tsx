@@ -26,7 +26,7 @@ export default function Cart({ menuItems, menuAddons }: { menuItems: any[], menu
 
     const totalItems = cartItems.reduce((sum: number, item: any) => sum + (item.quantity || 1), 0);
     const totalPrice = cartItems.reduce((sum: number, item: any) => {
-        const addonsPrice = item.addons.reduce((addonSum: number, addon: any) => addonSum + (addon.addon.price ?? 0) * (addon.quantity ?? 1), 0);
+        const addonsPrice = (item.addons || []).reduce((addonSum: number, addon: any) => addonSum + (addon.addon?.price ?? 0) * (addon.quantity ?? 1), 0);
         return sum + ((item.menuItem?.price ?? 0) * (item.quantity || 1)) + addonsPrice;
     }, 0);
 
@@ -134,7 +134,7 @@ export default function Cart({ menuItems, menuAddons }: { menuItems: any[], menu
         <>
             <Sheet>
                 <SheetTrigger asChild>
-                    <button className="relative p-4 text-gray-400 hover:text-orange-400 transition-all duration-300 hover:bg-white/5 rounded-full">
+                    <button className="relative p-4 w-18 h-18 text-gray-400 hover:text-orange-400 transition-all duration-300 hover:bg-white/5 rounded-full">
                         <ShoppingCart className="h-5 w-5" />
                         {totalItems > 0 && (
                             <span className="absolute top-2 right-2 bg-red-500 text-white text-xs font-bold rounded-full min-w-[18px] h-[18px] flex items-center justify-center z-10 border-2 border-gray-900 shadow-lg">
@@ -260,7 +260,7 @@ export default function Cart({ menuItems, menuAddons }: { menuItems: any[], menu
                                                         </div>
                                                         <div className="text-right">
                                                             <p className="text-sm font-medium">
-                                                                ${((item.menuItem?.price ?? 0) * (item.quantity || 1) + item.addons.reduce((acc: number, addon: any) => acc + (addon.addon.price ?? 0) * (addon.quantity ?? 1), 0)).toFixed(2)}
+                                                                ${((item.menuItem?.price ?? 0) * (item.quantity || 1) + (item.addons || []).reduce((acc: number, addon: any) => acc + (addon.addon?.price ?? 0) * (addon.quantity ?? 1), 0)).toFixed(2)}
                                                             </p>
                                                             <Button
                                                                 variant="ghost"
@@ -287,8 +287,8 @@ export default function Cart({ menuItems, menuAddons }: { menuItems: any[], menu
                                                 <div className="space-y-2">
                                                     {cartItems.map((item) => (
                                                         <div key={item.id} className="flex justify-between text-sm">
-                                                            <span>{item.quantity}x {item.menuItem.name}</span>
-                                                            <span>${((item.menuItem?.price ?? 0) * (item.quantity || 1) + item.addons.reduce((acc: number, addon: any) => acc + (addon.addon.price ?? 0) * (addon.quantity ?? 1), 0)).toFixed(2)}</span>
+                                                            <span>{item.quantity}x {item.menuItem?.name || 'Unknown Item'}</span>
+                                                            <span>${((item.menuItem?.price ?? 0) * (item.quantity || 1) + (item.addons || []).reduce((acc: number, addon: any) => acc + (addon.addon?.price ?? 0) * (addon.quantity ?? 1), 0)).toFixed(2)}</span>
                                                         </div>
                                                     ))}
                                                 </div>

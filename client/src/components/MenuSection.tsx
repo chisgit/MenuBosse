@@ -96,6 +96,8 @@ export default function MenuSection({ restaurantId, onItemClick, restaurantName,
     }
   };
 
+  const menuAddons = useAllMenuItemAddons(menuItems || []); // Moved above early return to keep hook order stable
+
   if (itemsLoading || categoriesLoading) {
     return (
       <div className="space-y-8">
@@ -127,12 +129,10 @@ export default function MenuSection({ restaurantId, onItemClick, restaurantName,
   // Debug grouped items
   console.log("Grouped Items:", groupedItems);
 
-  // Build menuAddons mapping using the custom hook
-  const menuAddons = useAllMenuItemAddons(menuItems || []);
+  // menuAddons already initialized above (kept outside conditional return to satisfy React hook rules)
 
   return (
     <>
-      <Cart menuItems={menuItems || []} menuAddons={menuAddons} />
       <section className="fade-in space-y-8">
         {/* Header with restaurant name and table */}
         <div className="text-center mb-12">
