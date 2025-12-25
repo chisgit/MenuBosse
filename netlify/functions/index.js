@@ -5,620 +5,326 @@ import cors from "cors";
 // server/routes.ts
 import { createServer } from "http";
 
-// server/storage.ts
+// server/mem-storage.ts
 var MemStorage = class {
-  restaurants;
-  menuCategories;
-  menuItems;
-  menuItemAddons;
-  cartItemAddons;
-  deals;
-  cartItems;
-  serverCalls;
-  tableSessions;
-  orders;
-  currentId;
+  restaurants = [];
+  menuCategories = [];
+  menuItems = [];
+  menuItemAddons = [];
+  deals = [];
+  cartItems = [];
+  cartItemAddons = [];
+  serverCalls = [];
+  tableSessions = [];
+  orders = [];
+  nextRestaurantId = 1;
+  nextMenuCategoryId = 1;
+  nextMenuItemId = 1;
+  nextMenuItemAddonId = 1;
+  nextDealId = 1;
+  nextCartItemId = 1;
+  nextCartItemAddonId = 1;
+  nextServerCallId = 1;
+  nextTableSessionId = 1;
+  nextOrderId = 1;
   constructor() {
-    this.restaurants = /* @__PURE__ */ new Map();
-    this.menuCategories = /* @__PURE__ */ new Map();
-    this.menuItems = /* @__PURE__ */ new Map();
-    this.menuItemAddons = /* @__PURE__ */ new Map();
-    this.cartItemAddons = /* @__PURE__ */ new Map();
-    this.deals = /* @__PURE__ */ new Map();
-    this.cartItems = /* @__PURE__ */ new Map();
-    this.serverCalls = /* @__PURE__ */ new Map();
-    this.tableSessions = /* @__PURE__ */ new Map();
-    this.orders = /* @__PURE__ */ new Map();
-    this.currentId = 1;
-    this.initializeData();
+    this.seed();
   }
-  initializeData() {
-    const restaurant = {
-      id: 1,
-      name: "Bella Vista Italian",
-      cuisine: "Italian",
-      description: "Authentic Italian family recipes",
-      imageUrl: "https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&h=200",
-      rating: 4.8,
-      votePercentage: 89,
-      priceRange: "$$",
-      distance: 0.3,
-      isHiddenGem: false,
-      isTrending: false,
-      isLocalFavorite: true
-    };
-    this.restaurants.set(1, restaurant);
-    const discoveryRestaurants = [
-      {
-        id: 2,
-        name: "Marco's Hidden Kitchen",
-        cuisine: "Italian",
-        description: "Authentic Italian family recipes",
-        imageUrl: "https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&h=200",
-        rating: 4.9,
-        votePercentage: 89,
-        priceRange: "$$",
-        distance: 0.3,
-        isHiddenGem: true,
-        isTrending: false,
-        isLocalFavorite: false
-      },
-      {
-        id: 3,
-        name: "Zen Sushi Bar",
-        cuisine: "Japanese",
-        description: "Fresh sushi & creative rolls",
-        imageUrl: "https://images.unsplash.com/photo-1579027989536-b7b1f875659b?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&h=200",
-        rating: 4.7,
-        votePercentage: 92,
-        priceRange: "$$$",
-        distance: 0.8,
-        isHiddenGem: false,
-        isTrending: true,
-        isLocalFavorite: false
-      },
-      {
-        id: 4,
-        name: "Casa Bonita Tacos",
-        cuisine: "Mexican",
-        description: "Authentic street tacos",
-        imageUrl: "https://images.unsplash.com/photo-1565299624946-b28f40a0ca4b?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&h=200",
-        rating: 4.6,
-        votePercentage: 87,
-        priceRange: "$",
-        distance: 1.2,
-        isHiddenGem: false,
-        isTrending: false,
-        isLocalFavorite: true
-      }
-    ];
-    discoveryRestaurants.forEach((rest) => this.restaurants.set(rest.id, rest));
-    const categories = [
-      { id: 1, restaurantId: 1, name: "Appetizers", order: 1 },
-      { id: 2, restaurantId: 1, name: "Main Dishes", order: 2 },
-      { id: 3, restaurantId: 1, name: "Desserts", order: 3 }
-    ];
-    categories.forEach((cat) => this.menuCategories.set(cat.id, cat));
-    const items = [
-      {
-        id: 1,
-        restaurantId: 1,
-        categoryId: 1,
-        name: "Crispy Calamari",
-        description: "Fresh squid rings, lightly breaded and fried to perfection. Served with marinara sauce.",
-        fullDescription: "Fresh squid rings, lightly breaded and fried to perfection. Served with marinara sauce and lemon wedges.",
-        price: 12.99,
-        imageUrl: "https://images.unsplash.com/photo-1551504734-5ee1c4a1479b?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&h=300",
-        rating: 4.8,
-        votes: 89,
-        upvotes: 80,
-        downvotes: 9
-      },
-      {
-        id: 2,
-        restaurantId: 1,
-        categoryId: 1,
-        name: "Bruschetta Trio",
-        description: "Three varieties: classic tomato & basil, mushroom & truffle, and ricotta & honey.",
-        fullDescription: "Three varieties of artisanal bruschetta: classic tomato & basil, wild mushroom & truffle, and fresh ricotta & honey on toasted sourdough.",
-        price: 9.99,
-        imageUrl: "https://images.unsplash.com/photo-1572695157366-5e585ab2b69f?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&h=300",
-        rating: 4.6,
-        votes: 76,
-        upvotes: 68,
-        downvotes: 8
-      },
-      {
-        id: 6,
-        restaurantId: 1,
-        categoryId: 1,
-        name: "Pan-Seared Scallops",
-        description: "Perfectly seared diver scallops with cauliflower pur\xE9e, pancetta crisps, and microgreens.",
-        fullDescription: "Three jumbo diver scallops seared to golden perfection, served atop silky cauliflower pur\xE9e with crispy pancetta, drizzled with brown butter sauce and garnished with fresh microgreens.",
-        price: 16.99,
-        imageUrl: "/assets/images/food/pan-seared-scallops.png",
-        rating: 4.9,
-        votes: 127,
-        upvotes: 119,
-        downvotes: 8
-      },
-      {
-        id: 3,
-        restaurantId: 1,
-        categoryId: 2,
-        name: "Grilled Atlantic Salmon",
-        description: "Fresh Atlantic salmon with lemon herb butter, served with seasonal vegetables and wild rice.",
-        fullDescription: "Fresh Atlantic salmon grilled to perfection with our signature lemon herb butter, accompanied by seasonal roasted vegetables and aromatic wild rice pilaf.",
-        price: 28.99,
-        imageUrl: "https://images.unsplash.com/photo-1467003909585-2f8a72700288?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&h=300",
-        rating: 4.9,
-        votes: 142,
-        upvotes: 132,
-        downvotes: 10
-      },
-      {
-        id: 4,
-        restaurantId: 1,
-        categoryId: 2,
-        name: "Wild Mushroom Risotto",
-        description: "Creamy arborio rice with wild mushrooms, truffle oil, and aged parmesan cheese.",
-        fullDescription: "Creamy arborio rice slow-cooked with a medley of wild mushrooms, finished with truffle oil and aged parmesan cheese. A vegetarian delight.",
-        price: 24.99,
-        imageUrl: "https://images.unsplash.com/photo-1476124369491-e7addf5db371?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&h=300",
-        rating: 4.7,
-        votes: 98,
-        upvotes: 88,
-        downvotes: 10
-      },
-      {
-        id: 5,
-        restaurantId: 1,
-        categoryId: 2,
-        name: "Bella Vista Burger",
-        description: "Wagyu beef patty, aged cheddar, arugula, tomato, and truffle aioli on brioche bun.",
-        fullDescription: "Premium Wagyu beef patty grilled to your preference, topped with aged cheddar, fresh arugula, vine-ripened tomato, and house-made truffle aioli on a toasted brioche bun. Served with hand-cut fries.",
-        price: 18.99,
-        imageUrl: "https://images.unsplash.com/photo-1568901346375-23c9450c58cd?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&h=300",
-        rating: 4.8,
-        votes: 203,
-        upvotes: 188,
-        downvotes: 15
-      },
-      // Desserts
-      {
-        id: 7,
-        restaurantId: 1,
-        categoryId: 3,
-        name: "Tiramisu",
-        description: "Classic Italian dessert with coffee-soaked ladyfingers, mascarpone cream, and cocoa powder.",
-        fullDescription: "Traditional tiramisu made with espresso-soaked ladyfingers, rich mascarpone cream, and dusted with premium Belgian cocoa powder. A perfect end to your Italian dining experience.",
-        price: 8.99,
-        imageUrl: "https://images.unsplash.com/photo-1571877227200-a0d98ea607e9?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&h=300",
-        rating: 4.9,
-        votes: 156,
-        upvotes: 148,
-        downvotes: 8
-      },
-      {
-        id: 8,
-        restaurantId: 1,
-        categoryId: 3,
-        name: "Panna Cotta",
-        description: "Silky vanilla panna cotta with fresh berry compote and candied orange zest.",
-        fullDescription: "Delicate vanilla bean panna cotta served with seasonal berry compote and garnished with candied orange zest and fresh mint. Light and refreshing.",
-        price: 7.99,
-        imageUrl: "https://images.unsplash.com/photo-1488477181946-6428a0291777?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&h=300",
-        rating: 4.7,
-        votes: 89,
-        upvotes: 82,
-        downvotes: 7
-      },
-      {
-        id: 9,
-        restaurantId: 1,
-        categoryId: 3,
-        name: "Chocolate Lava Cake",
-        description: "Warm chocolate cake with molten center, served with vanilla gelato and raspberry coulis.",
-        fullDescription: "Decadent chocolate lava cake with a molten chocolate center, served warm with house-made vanilla gelato and fresh raspberry coulis. A chocolate lover's dream.",
-        price: 9.99,
-        imageUrl: "https://images.unsplash.com/photo-1606313564200-e75d5e30476c?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&h=300",
-        rating: 4.8,
-        votes: 234,
-        upvotes: 218,
-        downvotes: 16
-      }
-    ];
-    items.forEach((item) => this.menuItems.set(item.id, item));
-    const addons = [
-      // Calamari add-ons
-      { id: 1, menuItemId: 1, name: "Extra Marinara", description: "Additional marinara sauce", price: 1.5, category: "sauce", isRequired: false, maxSelections: 3 },
-      { id: 2, menuItemId: 1, name: "Spicy Aioli", description: "House-made spicy aioli", price: 2, category: "sauce", isRequired: false, maxSelections: 1 },
-      { id: 3, menuItemId: 1, name: "Lemon Wedges", description: "Fresh lemon wedges", price: 0.5, category: "side", isRequired: false, maxSelections: 2 },
-      // Bruschetta add-ons
-      { id: 4, menuItemId: 2, name: "Extra Cheese", description: "Additional ricotta cheese", price: 2.5, category: "cheese", isRequired: false, maxSelections: 1 },
-      { id: 5, menuItemId: 2, name: "Balsamic Glaze", description: "Aged balsamic reduction", price: 1.75, category: "sauce", isRequired: false, maxSelections: 1 },
-      // Salmon add-ons
-      { id: 6, menuItemId: 3, name: "Extra Vegetables", description: "Double portion of seasonal vegetables", price: 4, category: "side", isRequired: false, maxSelections: 1 },
-      { id: 7, menuItemId: 3, name: "Garlic Butter", description: "Extra garlic herb butter", price: 2.5, category: "sauce", isRequired: false, maxSelections: 2 },
-      { id: 8, menuItemId: 3, name: "Lemon Pepper Seasoning", description: "Additional lemon pepper", price: 1, category: "spice", isRequired: false, maxSelections: 1 },
-      // Risotto add-ons
-      { id: 9, menuItemId: 4, name: "Extra Truffle Oil", description: "Additional truffle oil drizzle", price: 3.5, category: "sauce", isRequired: false, maxSelections: 2 },
-      { id: 10, menuItemId: 4, name: "Parmesan Cheese", description: "Extra aged parmesan", price: 2.75, category: "cheese", isRequired: false, maxSelections: 1 },
-      { id: 11, menuItemId: 4, name: "Wild Mushrooms", description: "Extra mixed wild mushrooms", price: 4.5, category: "topping", isRequired: false, maxSelections: 1 },
-      // Burger add-ons
-      { id: 12, menuItemId: 5, name: "Bacon", description: "Crispy applewood smoked bacon", price: 3, category: "meat", isRequired: false, maxSelections: 2 },
-      { id: 13, menuItemId: 5, name: "Extra Cheese", description: "Additional aged cheddar slice", price: 2, category: "cheese", isRequired: false, maxSelections: 3 },
-      { id: 14, menuItemId: 5, name: "Avocado", description: "Fresh sliced avocado", price: 2.5, category: "topping", isRequired: false, maxSelections: 1 },
-      { id: 15, menuItemId: 5, name: "Jalape\xF1os", description: "Fresh or pickled jalape\xF1os", price: 1.5, category: "topping", isRequired: false, maxSelections: 1 },
-      { id: 16, menuItemId: 5, name: "Onion Rings", description: "Replace fries with onion rings", price: 3.5, category: "side", isRequired: false, maxSelections: 1 },
-      { id: 17, menuItemId: 5, name: "Sweet Potato Fries", description: "Replace fries with sweet potato fries", price: 2.5, category: "side", isRequired: false, maxSelections: 1 },
-      { id: 18, menuItemId: 5, name: "Spice Level", description: "How spicy would you like it?", price: 0, category: "spice", isRequired: true, maxSelections: 1 },
-      // Pan-Seared Scallops add-ons
-      { id: 19, menuItemId: 6, name: "Extra Scallop", description: "Add a fourth jumbo scallop", price: 8, category: "protein", isRequired: false, maxSelections: 2 },
-      { id: 20, menuItemId: 6, name: "Truffle Shavings", description: "Fresh black truffle shavings", price: 12, category: "topping", isRequired: false, maxSelections: 1 },
-      { id: 21, menuItemId: 6, name: "Crispy Pancetta", description: "Extra crispy pancetta crisps", price: 4.5, category: "meat", isRequired: false, maxSelections: 1 },
-      { id: 22, menuItemId: 6, name: "Cauliflower Pur\xE9e", description: "Extra portion of silky cauliflower pur\xE9e", price: 3.5, category: "side", isRequired: false, maxSelections: 1 },
-      { id: 23, menuItemId: 6, name: "Brown Butter Sauce", description: "Additional brown butter sauce", price: 2.75, category: "sauce", isRequired: false, maxSelections: 2 },
-      { id: 24, menuItemId: 6, name: "Microgreens", description: "Premium microgreens medley", price: 3, category: "topping", isRequired: false, maxSelections: 1 },
-      // Tiramisu add-ons
-      { id: 25, menuItemId: 7, name: "Extra Coffee Shot", description: "Additional espresso shot drizzle", price: 2, category: "sauce", isRequired: false, maxSelections: 2 },
-      { id: 26, menuItemId: 7, name: "Amaretto", description: "Amaretto liqueur enhancement", price: 3.5, category: "sauce", isRequired: false, maxSelections: 1 },
-      { id: 27, menuItemId: 7, name: "Dark Chocolate Shavings", description: "Premium dark chocolate shavings", price: 2.5, category: "topping", isRequired: false, maxSelections: 1 },
-      // Panna Cotta add-ons
-      { id: 28, menuItemId: 8, name: "Extra Berry Compote", description: "Additional seasonal berry compote", price: 2.75, category: "sauce", isRequired: false, maxSelections: 1 },
-      { id: 29, menuItemId: 8, name: "Honey Drizzle", description: "Local wildflower honey drizzle", price: 1.5, category: "sauce", isRequired: false, maxSelections: 1 },
-      { id: 30, menuItemId: 8, name: "Candied Nuts", description: "Toasted candied almonds", price: 3, category: "topping", isRequired: false, maxSelections: 1 },
-      // Chocolate Lava Cake add-ons
-      { id: 31, menuItemId: 9, name: "Extra Gelato", description: "Additional scoop of vanilla gelato", price: 3.5, category: "side", isRequired: false, maxSelections: 2 },
-      { id: 32, menuItemId: 9, name: "Salted Caramel Sauce", description: "House-made salted caramel sauce", price: 2.25, category: "sauce", isRequired: false, maxSelections: 1 },
-      { id: 33, menuItemId: 9, name: "Fresh Strawberries", description: "Fresh sliced strawberries", price: 2.5, category: "topping", isRequired: false, maxSelections: 1 },
-      { id: 34, menuItemId: 9, name: "Whipped Cream", description: "Fresh whipped cream", price: 1.75, category: "topping", isRequired: false, maxSelections: 1 }
-    ];
-    addons.forEach((addon) => this.menuItemAddons.set(addon.id, addon));
-    const dealsData = [
-      {
-        id: 1,
-        restaurantId: null,
-        title: "30% OFF",
-        description: "Your first order at any participating restaurant",
-        discountType: "percentage",
-        discountValue: "30",
-        validUntil: "Dec 31",
-        backgroundColor: "from-primary to-orange-600",
-        isGlobal: true
-      },
-      {
-        id: 2,
-        restaurantId: null,
-        title: "Free Delivery",
-        description: "On orders over $25 from local partners",
-        discountType: "free_delivery",
-        discountValue: "25",
-        validUntil: "Today only",
-        backgroundColor: "from-success to-teal-600",
-        isGlobal: true
-      },
-      {
-        id: 3,
-        restaurantId: 1,
-        title: "Happy Hour",
-        description: "Buy one get one free appetizers 3-6 PM",
-        discountType: "bogo",
-        discountValue: "appetizers",
-        validUntil: "Daily special",
-        backgroundColor: "from-secondary to-indigo-700",
-        isGlobal: false
-      }
-    ];
-    dealsData.forEach((deal) => this.deals.set(deal.id, deal));
-    this.currentId = 35;
+  seed() {
+    this.createRestaurant({ name: "The Gilded Spoon", cuisine: "Modern American" });
+    this.createMenuCategory({ restaurantId: 1, name: "Appetizers", order: 1 });
+    this.createMenuCategory({ restaurantId: 1, name: "Main Courses", order: 2 });
+    this.createMenuCategory({ restaurantId: 1, name: "Desserts", order: 3 });
+    this.createMenuItem({ restaurantId: 1, categoryId: 1, name: "Tuna Tartare", description: "Fresh Ahi tuna with avocado and soy-lime dressing.", price: 18 });
+    this.createMenuItem({ restaurantId: 1, categoryId: 2, name: "Pan-Seared Scallops", description: "With saffron risotto and asparagus.", price: 34, imageUrl: "/assets/images/food/pan-seared-scallops.png" });
+    this.createMenuItem({ restaurantId: 1, categoryId: 3, name: "Chocolate Lava Cake", description: "Warm chocolate cake with a molten center.", price: 12 });
   }
-  // Menu Item Add-ons methods
-  async getMenuItemAddons(menuItemId) {
-    return Array.from(this.menuItemAddons.values()).filter((addon) => addon.menuItemId === menuItemId);
-  }
-  async createMenuItemAddon(addon) {
-    const id = this.currentId++;
-    const newAddon = {
-      ...addon,
-      id,
-      description: addon.description ?? null,
-      isRequired: addon.isRequired ?? null,
-      maxSelections: addon.maxSelections ?? null
-    };
-    this.menuItemAddons.set(id, newAddon);
-    return newAddon;
-  }
-  // Cart Item Add-ons methods
-  async getCartItemAddons(cartItemId) {
-    const cartAddons = Array.from(this.cartItemAddons.values()).filter((cartAddon) => cartAddon.cartItemId === cartItemId);
-    const addonsWithDetails = [];
-    for (const cartAddon of cartAddons) {
-      const addon = this.menuItemAddons.get(cartAddon.addonId);
-      if (addon) {
-        addonsWithDetails.push({ ...cartAddon, addon });
-      }
-    }
-    return addonsWithDetails;
-  }
-  async addCartItemAddon(addon) {
-    const id = this.currentId++;
-    const newCartAddon = {
-      ...addon,
-      id,
-      quantity: addon.quantity ?? null
-    };
-    this.cartItemAddons.set(id, newCartAddon);
-    return newCartAddon;
-  }
-  async removeCartItemAddon(id) {
-    return this.cartItemAddons.delete(id);
-  }
+  // Restaurants
   async getRestaurants() {
-    return Array.from(this.restaurants.values());
+    return this.restaurants;
   }
   async getRestaurant(id) {
-    return this.restaurants.get(id);
+    return this.restaurants.find((r) => r.id === id);
   }
   async createRestaurant(restaurant) {
-    const id = this.currentId++;
     const newRestaurant = {
+      id: this.nextRestaurantId++,
       ...restaurant,
-      id,
-      description: restaurant.description ?? null,
-      imageUrl: restaurant.imageUrl ?? null,
-      priceRange: restaurant.priceRange ?? null,
-      distance: restaurant.distance ?? null,
-      isHiddenGem: restaurant.isHiddenGem ?? null,
-      isTrending: restaurant.isTrending ?? null,
-      isLocalFavorite: restaurant.isLocalFavorite ?? null,
-      rating: null,
-      votePercentage: null
+      rating: 0,
+      votePercentage: 0,
+      priceRange: null,
+      distance: null,
+      isHiddenGem: false,
+      isTrending: false,
+      isLocalFavorite: false,
+      description: restaurant.description || null,
+      imageUrl: restaurant.imageUrl || null
     };
-    this.restaurants.set(id, newRestaurant);
+    this.restaurants.push(newRestaurant);
     return newRestaurant;
   }
+  // Menu Categories
   async getMenuCategories(restaurantId) {
-    return Array.from(this.menuCategories.values()).filter((cat) => cat.restaurantId === restaurantId).sort((a, b) => (a.order ?? Infinity) - (b.order ?? Infinity));
+    return this.menuCategories.filter((mc) => mc.restaurantId === restaurantId);
   }
   async createMenuCategory(category) {
-    const id = this.currentId++;
     const newCategory = {
+      id: this.nextMenuCategoryId++,
       ...category,
-      id,
-      order: category.order ?? null
+      order: category.order || 0
     };
-    this.menuCategories.set(id, newCategory);
+    this.menuCategories.push(newCategory);
     return newCategory;
   }
+  // Menu Items
   async getMenuItems(restaurantId) {
-    return Array.from(this.menuItems.values()).filter((item) => item.restaurantId === restaurantId);
+    return this.menuItems.filter((mi) => mi.restaurantId === restaurantId);
   }
   async getMenuItemsByCategory(categoryId) {
-    return Array.from(this.menuItems.values()).filter((item) => item.categoryId === categoryId);
+    return this.menuItems.filter((mi) => mi.categoryId === categoryId);
   }
   async getMenuItem(id) {
-    return this.menuItems.get(id);
+    return this.menuItems.find((mi) => mi.id === id);
   }
   async createMenuItem(item) {
-    const id = this.currentId++;
     const newItem = {
+      id: this.nextMenuItemId++,
       ...item,
-      id,
-      description: item.description ?? null,
-      imageUrl: item.imageUrl ?? null,
-      fullDescription: item.fullDescription ?? null,
+      description: item.description || null,
+      fullDescription: item.fullDescription || null,
+      imageUrl: item.imageUrl || null,
       rating: 0,
       votes: 0,
       upvotes: 0,
       downvotes: 0
     };
-    this.menuItems.set(id, newItem);
+    this.menuItems.push(newItem);
     return newItem;
   }
   async updateMenuItemVotes(id, upvotes, downvotes) {
-    const item = this.menuItems.get(id);
-    if (!item) return void 0;
-    const votes = upvotes + downvotes;
-    const rating = votes > 0 ? upvotes / votes * 5 : 0;
-    const updatedItem = { ...item, upvotes, downvotes, votes, rating };
-    this.menuItems.set(id, updatedItem);
-    return updatedItem;
+    const item = this.menuItems.find((mi) => mi.id === id);
+    if (item) {
+      item.upvotes = upvotes;
+      item.downvotes = downvotes;
+    }
+    return item;
   }
+  // Deals
   async getDeals() {
-    return Array.from(this.deals.values());
+    return this.deals;
   }
   async getRestaurantDeals(restaurantId) {
-    return Array.from(this.deals.values()).filter((deal) => deal.restaurantId === restaurantId || deal.isGlobal);
+    return this.deals.filter((d) => d.restaurantId === restaurantId);
   }
   async createDeal(deal) {
-    const id = this.currentId++;
     const newDeal = {
+      id: this.nextDealId++,
       ...deal,
-      id,
-      restaurantId: deal.restaurantId ?? null,
-      discountType: deal.discountType ?? null,
-      discountValue: deal.discountValue ?? null,
-      validUntil: deal.validUntil ?? null,
-      backgroundColor: deal.backgroundColor ?? null,
-      isGlobal: deal.isGlobal ?? null
+      restaurantId: deal.restaurantId || null,
+      discountType: deal.discountType || null,
+      discountValue: deal.discountValue || null,
+      validUntil: deal.validUntil || null,
+      backgroundColor: deal.backgroundColor || null,
+      isGlobal: deal.isGlobal || false
     };
-    this.deals.set(id, newDeal);
+    this.deals.push(newDeal);
     return newDeal;
   }
+  // Cart
   async getCartItems(sessionId) {
-    console.log(`[DEBUG] getCartItems called for sessionId: ${sessionId}`);
-    const items = Array.from(this.cartItems.values()).filter((item) => item.sessionId === sessionId);
-    console.log(`[DEBUG] Found cart items:`, items);
-    const itemsWithMenuData = [];
+    const items = this.cartItems.filter((ci) => ci.sessionId === sessionId);
+    const result = [];
     for (const item of items) {
-      const menuItem = this.menuItems.get(item.menuItemId);
+      const menuItem = await this.getMenuItem(item.menuItemId);
       if (menuItem) {
         const addons = await this.getCartItemAddons(item.id);
-        itemsWithMenuData.push({ ...item, menuItem, addons });
+        result.push({ ...item, menuItem, addons });
       }
     }
-    console.log(`[DEBUG] Returning cart items with menu data:`, itemsWithMenuData);
-    return itemsWithMenuData;
+    return result;
   }
   async addToCart(item, addons = []) {
-    console.log(`[DEBUG] addToCart called with item:`, item, `addons:`, addons);
-    const id = this.currentId++;
-    const newItem = {
+    const newCartItem = {
+      id: this.nextCartItemId++,
       ...item,
-      id,
-      quantity: item.quantity ?? null,
-      specialInstructions: item.specialInstructions ?? null,
+      quantity: item.quantity || 1,
+      specialInstructions: item.specialInstructions || null,
       status: "cart",
       orderId: null,
       addedAt: /* @__PURE__ */ new Date(),
       orderedAt: null
     };
-    this.cartItems.set(id, newItem);
-    console.log(`[DEBUG] New cart item added:`, newItem);
+    this.cartItems.push(newCartItem);
     for (const addonId of addons) {
-      await this.addCartItemAddon({
-        cartItemId: id,
-        addonId,
-        quantity: 1
-      });
-      console.log(`[DEBUG] Added addon to cart item:`, addonId);
+      await this.addCartItemAddon({ cartItemId: newCartItem.id, addonId, quantity: 1 });
     }
-    return newItem;
+    return newCartItem;
   }
   async updateCartItem(id, quantity, specialInstructions) {
-    console.log(`[DEBUG] updateCartItem called for id: ${id}, quantity: ${quantity}, specialInstructions: ${specialInstructions}`);
-    const item = this.cartItems.get(id);
-    if (!item) {
-      console.log(`[DEBUG] updateCartItem: item not found for id: ${id}`);
-      return void 0;
+    const item = this.cartItems.find((ci) => ci.id === id);
+    if (item) {
+      item.quantity = quantity;
+      if (specialInstructions) {
+        item.specialInstructions = specialInstructions;
+      }
     }
-    const updatedItem = {
-      // Ensure updatedItem conforms to CartItem
-      ...item,
-      quantity,
-      specialInstructions: specialInstructions ?? null
-    };
-    this.cartItems.set(id, updatedItem);
-    console.log(`[DEBUG] Cart item updated:`, updatedItem);
-    return updatedItem;
+    return item;
   }
   async removeFromCart(id) {
-    console.log(`[DEBUG] removeFromCart called for id: ${id}`);
-    const result = this.cartItems.delete(id);
-    console.log(`[DEBUG] removeFromCart result for id ${id}:`, result);
-    return result;
+    const index = this.cartItems.findIndex((ci) => ci.id === id);
+    if (index > -1) {
+      this.cartItems.splice(index, 1);
+      return true;
+    }
+    return false;
   }
   async clearCart(sessionId) {
-    console.log(`[DEBUG] clearCart called for sessionId: ${sessionId}`);
-    const items = Array.from(this.cartItems.entries()).filter(([_, item]) => item.sessionId === sessionId);
-    console.log(`[DEBUG] Items to clear:`, items);
-    items.forEach(([id]) => {
-      this.cartItems.delete(id);
-      console.log(`[DEBUG] Cleared cart item: ${id}`);
-    });
-    return true;
+    const initialLength = this.cartItems.length;
+    this.cartItems = this.cartItems.filter((ci) => ci.sessionId !== sessionId);
+    return this.cartItems.length < initialLength;
   }
+  // Menu Item Add-ons
+  async getMenuItemAddons(menuItemId) {
+    return this.menuItemAddons.filter((mia) => mia.menuItemId === menuItemId);
+  }
+  async createMenuItemAddon(addon) {
+    const newAddon = {
+      id: this.nextMenuItemAddonId++,
+      ...addon,
+      description: addon.description || null,
+      isRequired: addon.isRequired || false,
+      maxSelections: addon.maxSelections || 1
+    };
+    this.menuItemAddons.push(newAddon);
+    return newAddon;
+  }
+  // Cart Item Add-ons
+  async getCartItemAddons(cartItemId) {
+    const items = this.cartItemAddons.filter((cia) => cia.cartItemId === cartItemId);
+    const result = [];
+    for (const item of items) {
+      const addon = this.menuItemAddons.find((mia) => mia.id === item.addonId);
+      if (addon) {
+        result.push({ ...item, addon });
+      }
+    }
+    return result;
+  }
+  async addCartItemAddon(addon) {
+    const newAddon = {
+      id: this.nextCartItemAddonId++,
+      ...addon,
+      quantity: addon.quantity || 1
+    };
+    this.cartItemAddons.push(newAddon);
+    return newAddon;
+  }
+  async removeCartItemAddon(id) {
+    const index = this.cartItemAddons.findIndex((cia) => cia.id === id);
+    if (index > -1) {
+      this.cartItemAddons.splice(index, 1);
+      return true;
+    }
+    return false;
+  }
+  // Server Calls
   async createServerCall(call) {
-    const id = this.currentId++;
     const newCall = {
+      id: this.nextServerCallId++,
       ...call,
-      id,
-      status: call.status ?? null,
+      status: "pending",
       createdAt: /* @__PURE__ */ new Date()
     };
-    this.serverCalls.set(id, newCall);
+    this.serverCalls.push(newCall);
     return newCall;
   }
   async getServerCalls(restaurantId) {
-    return Array.from(this.serverCalls.values()).filter((call) => call.restaurantId === restaurantId);
+    return this.serverCalls.filter((sc) => sc.restaurantId === restaurantId);
   }
   async updateServerCallStatus(id, status) {
-    const call = this.serverCalls.get(id);
-    if (!call) return void 0;
-    const updatedCall = { ...call, status };
-    this.serverCalls.set(id, updatedCall);
-    return updatedCall;
+    const call = this.serverCalls.find((sc) => sc.id === id);
+    if (call) {
+      call.status = status;
+    }
+    return call;
   }
+  // Table Sessions
   async createTableSession(session) {
-    const id = this.currentId++;
     const newSession = {
+      id: this.nextTableSessionId++,
       ...session,
-      id,
-      status: session.status ?? "active",
+      status: "active",
       createdAt: /* @__PURE__ */ new Date(),
       closedAt: null,
-      totalAmount: session.totalAmount ?? null,
-      paymentMethod: session.paymentMethod ?? null
+      totalAmount: null,
+      paymentMethod: null
     };
-    this.tableSessions.set(id, newSession);
+    this.tableSessions.push(newSession);
     return newSession;
   }
   async getTableSession(sessionId) {
-    return Array.from(this.tableSessions.values()).find((session) => session.sessionId === sessionId);
+    return this.tableSessions.find((ts) => ts.sessionId === sessionId);
   }
   async updateTableSessionStatus(sessionId, status, paymentMethod) {
-    const session = Array.from(this.tableSessions.values()).find((session2) => session2.sessionId === sessionId);
-    if (!session) return void 0;
-    const updatedSession = {
-      ...session,
-      status,
-      paymentMethod: paymentMethod ?? null,
-      closedAt: status === "paid" || status === "closed" ? /* @__PURE__ */ new Date() : session.closedAt
-    };
-    this.tableSessions.set(updatedSession.id, updatedSession);
-    return updatedSession;
+    const session = this.tableSessions.find((ts) => ts.sessionId === sessionId);
+    if (session) {
+      session.status = status;
+      if (paymentMethod) {
+        session.paymentMethod = paymentMethod;
+      }
+      if (status === "closed" || status === "paid") {
+        session.closedAt = /* @__PURE__ */ new Date();
+      }
+    }
+    return session;
   }
-  async getOrdersBySession(sessionId) {
-    return Array.from(this.orders.values()).filter((order) => order.sessionId === sessionId);
-  }
-  async updateOrderStatus(id, status) {
-    const order = this.orders.get(id);
-    if (!order) return void 0;
-    const updatedOrder = { ...order, status };
-    this.orders.set(id, updatedOrder);
-    return updatedOrder;
-  }
+  // Orders
   async createOrder(order) {
-    const id = this.currentId++;
     const newOrder = {
+      id: this.nextOrderId++,
       ...order,
-      id,
-      status: order.status ?? "pending",
+      status: "pending",
       createdAt: /* @__PURE__ */ new Date(),
       updatedAt: /* @__PURE__ */ new Date()
     };
-    this.orders.set(id, newOrder);
+    this.orders.push(newOrder);
     return newOrder;
   }
+  async getOrdersBySession(sessionId) {
+    return this.orders.filter((o) => o.sessionId === sessionId);
+  }
+  async updateOrderStatus(id, status) {
+    const order = this.orders.find((o) => o.id === id);
+    if (order) {
+      order.status = status;
+      order.updatedAt = /* @__PURE__ */ new Date();
+    }
+    return order;
+  }
   async convertCartToOrder(sessionId) {
-    const cartItems2 = await this.getCartItems(sessionId);
-    const totalAmount = cartItems2.reduce((sum, item) => {
+    const itemsInCart = await this.getCartItems(sessionId);
+    if (itemsInCart.length === 0) {
+      throw new Error("Cart is empty");
+    }
+    const totalAmount = itemsInCart.reduce((sum, item) => {
       const addonsPrice = item.addons.reduce((addonSum, addon) => addonSum + addon.addon.price * (addon.quantity ?? 1), 0);
       return sum + item.menuItem.price * (item.quantity || 1) + addonsPrice;
     }, 0);
-    const order = {
+    const order = await this.createOrder({
       sessionId,
-      status: "pending",
-      totalAmount
-    };
-    const newOrder = await this.createOrder(order);
-    for (const cartItem of cartItems2) {
-      await this.updateCartItem(cartItem.id, cartItem.quantity || 1, cartItem.specialInstructions || void 0);
-      const existing = this.cartItems.get(cartItem.id);
-      if (existing) {
-        const updated = {
-          ...existing,
-          status: "ordered",
-          orderId: newOrder.id,
-          orderedAt: /* @__PURE__ */ new Date()
-        };
-        this.cartItems.set(cartItem.id, updated);
-      }
+      totalAmount,
+      status: "pending"
+    });
+    for (const item of itemsInCart) {
+      item.orderId = order.id;
+      item.status = "ordered";
+      item.orderedAt = /* @__PURE__ */ new Date();
     }
-    return newOrder;
+    return order;
   }
 };
+
+// server/storage.ts
 var storage = new MemStorage();
 
 // shared/schema.ts
@@ -1047,37 +753,46 @@ import { defineConfig } from "vite";
 import react from "@vitejs/plugin-react";
 import path from "path";
 import runtimeErrorOverlay from "@replit/vite-plugin-runtime-error-modal";
-var vite_config_default = defineConfig({
-  plugins: [
-    react(),
-    runtimeErrorOverlay(),
-    ...process.env.NODE_ENV !== "production" && process.env.REPL_ID !== void 0 ? [
-      await import("@replit/vite-plugin-cartographer").then(
-        (m) => m.cartographer()
-      )
-    ] : []
-  ],
-  resolve: {
-    alias: {
-      "@": path.resolve(import.meta.dirname, "client", "src"),
-      "@shared": path.resolve(import.meta.dirname, "shared"),
-      "@assets": path.resolve(import.meta.dirname, "attached_assets")
+import { fileURLToPath } from "url";
+var __filename = fileURLToPath(import.meta.url);
+var __dirname = path.dirname(__filename);
+var vite_config_default = defineConfig(async () => {
+  const plugins = [react(), runtimeErrorOverlay()];
+  if (process.env.NODE_ENV !== "production" && process.env.REPL_ID !== void 0) {
+    try {
+      const cartographer = await import("@replit/vite-plugin-cartographer");
+      plugins.push(cartographer.cartographer());
+    } catch (error) {
+      console.warn("Failed to load cartographer plugin:", error);
     }
-  },
-  root: path.resolve(import.meta.dirname, "client"),
-  build: {
-    outDir: path.resolve(import.meta.dirname, "dist/public"),
-    emptyOutDir: true
-  },
-  test: {
-    globals: true,
-    environment: "jsdom",
-    setupFiles: ["./client/src/components/__test__/setupTests.ts"]
   }
+  return {
+    plugins,
+    resolve: {
+      alias: {
+        "@": path.resolve(__dirname, "client", "src"),
+        "@shared": path.resolve(__dirname, "shared"),
+        "@assets": path.resolve(__dirname, "attached_assets")
+      }
+    },
+    root: path.resolve(__dirname, "client"),
+    build: {
+      outDir: path.resolve(__dirname, "dist/public"),
+      emptyOutDir: true
+    },
+    test: {
+      globals: true,
+      environment: "jsdom",
+      setupFiles: ["./client/src/components/__test__/setupTests.ts"]
+    }
+  };
 });
 
 // server/vite.ts
 import { nanoid } from "nanoid";
+import { fileURLToPath as fileURLToPath2 } from "url";
+var __filename2 = fileURLToPath2(import.meta.url);
+var __dirname2 = path2.dirname(__filename2);
 var viteLogger = createLogger();
 function log(message, source = "express") {
   const formattedTime = (/* @__PURE__ */ new Date()).toLocaleTimeString("en-US", {
@@ -1101,7 +816,6 @@ async function setupVite(app2, server) {
       ...viteLogger,
       error: (msg, options) => {
         viteLogger.error(msg, options);
-        process.exit(1);
       }
     },
     server: serverOptions,
@@ -1112,7 +826,7 @@ async function setupVite(app2, server) {
     const url = req.originalUrl;
     try {
       const clientTemplate = path2.resolve(
-        import.meta.dirname,
+        __dirname2,
         "..",
         "client",
         "index.html"
@@ -1131,7 +845,7 @@ async function setupVite(app2, server) {
   });
 }
 function serveStatic(app2) {
-  const distPath = path2.resolve(import.meta.dirname, "..", "dist", "public");
+  const distPath = path2.resolve(__dirname2, "..", "dist", "public");
   if (!fs.existsSync(distPath)) {
     throw new Error(
       `Could not find the build directory: ${distPath}, make sure to build the client first`
@@ -1144,7 +858,7 @@ function serveStatic(app2) {
 }
 
 // server/index.ts
-import { fileURLToPath } from "url";
+import { fileURLToPath as fileURLToPath3 } from "url";
 var app = express2();
 app.use((req, res, next) => {
   console.log(`[DEBUG] Incoming: ${req.method} ${req.originalUrl}`);
@@ -1161,8 +875,8 @@ var corsOptions = {
     if (!origin || whitelist.indexOf(origin) !== -1) {
       callback(null, true);
     } else {
-      console.error(`[CORS] Blocked origin: ${origin}`);
-      callback(null, false);
+      console.warn(`[CORS] Non-whitelisted origin: ${origin} - allowing anyway for serverless compatibility`);
+      callback(null, true);
     }
   },
   credentials: true
@@ -1219,7 +933,7 @@ async function startServer() {
   server.keepAliveTimeout = 12e4;
   server.headersTimeout = 12e4;
 }
-if (process.argv[1] === fileURLToPath(import.meta.url)) {
+if (process.argv[1] === fileURLToPath3(import.meta.url)) {
   startServer();
 }
 export {

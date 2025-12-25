@@ -1,5 +1,5 @@
-# Internal API routing
-/api/* /api/:splat 200
+# API routing to Netlify functions
+/api/* /.netlify/functions/api/:splat 200
 
 # Catch-all redirect for client-side routing
 /* /index.html 200

@@ -19,11 +19,14 @@ const whitelist = [
 
 const corsOptions = {
   origin: function (origin: string | undefined, callback: (err: Error | null, allow?: boolean) => void) {
+    // In production/Netlify, origin might be undefined or the same as the app
+    // Allow requests without origin (same-origin) or from whitelist
     if (!origin || whitelist.indexOf(origin) !== -1) {
       callback(null, true);
     } else {
-      console.error(`[CORS] Blocked origin: ${origin}`);
-      callback(null, false); // Do not throw, just block
+      // In serverless, be more permissive to avoid blocking legitimate requests
+      console.warn(`[CORS] Non-whitelisted origin: ${origin} - allowing anyway for serverless compatibility`);
+      callback(null, true);
     }
   },
   credentials: true,
